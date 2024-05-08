@@ -1,5 +1,5 @@
 ## About Us
-Team Name: BBY-XX OR DTC-XX
+Team Name: DTC-14
 Team Members: 
 - Ephraim Hsu
 - Tommy Ju
