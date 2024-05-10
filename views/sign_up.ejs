@@ -1,0 +1,9 @@
+<%- include("templates/header.ejs") %>
+    <h1>Create a new account</h1>
+    <form action='/submitUser' method='post'>
+    <input name='username' type='text' placeholder='username'><br>
+    <input name='email' type='email' placeholder='email'><br>
+    <input name='password' type='password' placeholder='password'><br>
+    <button type="submit">Submit</button>
+    </form>
+<%- include("templates/footer.ejs") %>
