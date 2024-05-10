@@ -1,0 +1,28 @@
+{
+  "name": "2800-202410-dtc14",
+  "version": "1.0.0",
+  "description": "Team Name: DTC-14 Team Members:  - Ephraim Hsu - Tommy Ju - Alzen Landayan - Michael McBride - Matthew Yoon ## More details to come TBA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TommyJu/2800-202410-DTC14.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TommyJu/2800-202410-DTC14/issues"
+  },
+  "homepage": "https://github.com/TommyJu/2800-202410-DTC14#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "joi": "^17.13.1",
+    "mongodb": "^6.6.1"
+  }
+}
