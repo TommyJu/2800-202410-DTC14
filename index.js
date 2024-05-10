@@ -162,7 +162,15 @@ app.get('/logout', async (req,res) => {
     res.redirect('/');
 });
 
-// TODO: Add 404 not found page here
+// 404 not found page ------------------
+app.get("/does_not_exist", (req, res) => {
+    res.status(404);
+    res.render(`404_not_found.ejs`);
+  })
+
+  app.get("*", (req,res) => {
+	res.redirect('/does_not_exist');
+})
 
 app.listen(port, () => {
     console.log('Server running on port ' + port);
