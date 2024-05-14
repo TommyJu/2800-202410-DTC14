@@ -110,16 +110,16 @@ app.post('/submitUser', async (req,res) => {
   
   // Log in submission and verification
   app.post('/loggingin', async (req,res) => {
-    var email = req.body.email;
+    var username = req.body.username;
     var password = req.body.password;
 
-    const emailSchema = Joi.string().max(40).required();
+    const usernameSchema = Joi.string().max(40).required();
     const passwordSchema =  Joi.string().max(20).required();
     
-    // Email verification
-    const emailValidationResult = emailSchema.validate(email);
-    if (emailValidationResult.error != null) {
-      res.render("invalid_log_in.ejs", {type: "email"});
+    // username verification
+    const usernameValidationResult = usernameSchema.validate(username);
+    if (usernameValidationResult.error != null) {
+      res.render("invalid_log_in.ejs", {type: "username"});
       return;
     }
 
@@ -131,12 +131,12 @@ app.post('/submitUser', async (req,res) => {
     }
 
     // Secure database access (user name not input field)
-    const result = await userCollection.find({email: email}).project({username: 1, email: 1, password: 1, in_game_name: 1, _id: 1}).toArray();
+    const result = await userCollection.find({username: username}).project({username: 1, email: 1, password: 1, in_game_name: 1, _id: 1}).toArray();
     
     // User not found
     console.log(result);
     if (result.length != 1) {
-      res.render("invalid_log_in.ejs", {type: "email (user not found)"});
+      res.render("invalid_log_in.ejs", {type: "username (user not found)"});
       return;
     }
     // Correct password
