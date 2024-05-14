@@ -23,7 +23,10 @@
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
+    "gitignore": "^0.7.0",
     "joi": "^17.13.1",
-    "mongodb": "^6.6.1"
+    "mongodb": "^6.6.1",
+    "mongoose": "^8.3.4",
+    "node": "^20.13.1"
   }
 }
