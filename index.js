@@ -201,7 +201,7 @@ app.post('/security_question', async (req, res) => {
     {projection: {securityQuestion: 1}});
   securityQuestion = user.securityQuestion;
 
-  // Render security answer
+  // Render security question
   res.render("security_question.ejs", {
     username: username,
     securityQuestion: securityQuestion})
@@ -255,6 +255,27 @@ app.get('/logout', async (req, res) => {
   req.session.destroy();
   res.redirect('/');
 });
+
+// Game page
+app.get('/game', (req, res) => {
+  res.render("game.ejs");
+})
+// Fitness page
+app.get('/fitness', (req, res) => {
+  res.render("fitness.ejs");
+})
+// Diet page
+app.get('/diet', (req, res) => {
+  res.render("diet.ejs");
+})
+// Friends page
+app.get('/friends', (req, res) => {
+  res.render("friends.ejs");
+})
+// Profile page
+app.get('/profile', (req, res) => {
+  res.render("profile.ejs");
+})
 
 // 404 not found page ------------------
 app.get("/does_not_exist", (req, res) => {
