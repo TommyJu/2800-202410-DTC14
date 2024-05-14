@@ -30,19 +30,19 @@ const userCollection = database.db(mongodb_database).collection('users');
 
 // Store sessions in db
 var mongoStore = MongoStore.create({
-    mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
-    crypto: {
-        secret: mongodb_session_secret
-    }
+  mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
+  crypto: {
+    secret: mongodb_session_secret
+  }
 })
 
 app.use(express.urlencoded({ extended: false }));
 
 app.use(session({
-    secret: node_session_secret,
-    store: mongoStore,
-    saveUninitialized: false,
-    resave: true
+  secret: node_session_secret,
+  store: mongoStore,
+  saveUninitialized: false,
+  resave: true
 }
 ));
 
@@ -50,134 +50,155 @@ app.use(express.static(__dirname + "/public"));
 
 // Home page ---------------------------
 app.get('/', (req, res) => {
-    if (req.session.authenticated) {
-        res.render("home_logged_in.ejs", {username: req.session.username});
-        return;
-    }
-    res.render("home_logged_out.ejs");
-  })
+  if (req.session.authenticated) {
+    res.render("home_logged_in.ejs", { username: req.session.username });
+    return;
+  }
+  res.render("home_logged_out.ejs");
+})
 
 // Sign up ----------------------------
-app.get('/signup', (req,res) => {
-    res.render("sign_up.ejs");
+app.get('/signup', (req, res) => {
+  res.render("sign_up.ejs");
 });
 
 // Submit new user to database and validate inputs
-app.post('/submitUser', async (req,res) => {
-    var username = req.body.username;
-    var email = req.body.email;
-    var password = req.body.password;
+app.post('/submitUser', async (req, res) => {
+  var username = req.body.username;
+  var email = req.body.email;
+  var password = req.body.password;
+  var securityQuestion = req.body.securityQuestion;
+  var securityAnswer = req.body.securityAnswer
 
-    const usernameSchema =  Joi.string().max(40).required();
-    const emailSchema = Joi.string().max(40).required();
-    const passwordSchema =  Joi.string().max(20).required();
+  const usernameSchema = Joi.string().max(20).required();
+  const emailSchema = Joi.string().max(40).required();
+  const passwordSchema = Joi.string().max(20).required();
+  const securityAnswerSchema = Joi.string().max(20).required();
 
-    // Username verification
-    const usernameValidationResult = usernameSchema.validate(username);
-    if (usernameValidationResult.error != null) {
-      res.render("invalid_sign_up.ejs", {type: "username"})
-      return;
-    }
-    
-    // Check if username is taken
-    if (await userCollection.findOne({username: usernameValidationResult.value}) != null) {
-      res.render("invalid_sign_up.ejs", {type: "username (username is taken)"})
-      return;
-    }
-    
-    // Email verification
-    const emailValidationResult = emailSchema.validate(email);
-    if (emailValidationResult.error != null) {
-      res.render("invalid_sign_up.ejs", {type: "email"})
-      return;
-    }
+  // Username verification
+  const usernameValidationResult = usernameSchema.validate(username);
+  if (usernameValidationResult.error != null) {
+    res.render("invalid_sign_up.ejs", { type: "username" })
+    return;
+  }
 
-    // Password verification
-    const passwordValidationResult = passwordSchema.validate(password);
-    if (passwordValidationResult.error != null) {
-      res.render("invalid_sign_up.ejs", {type: "password"})
-      return;
-    }
-    
-    // Hash password
-    var hashedPassword = await bcrypt.hash(password, saltRounds);
-	
-    // Insert user into collection
-    await userCollection.insertOne({username: username, email: email, password: hashedPassword, in_game_name: null});
-      req.session.authenticated = true;
-      req.session.username = username;
-      res.redirect('/');
+  // Check if username is taken
+  if (await userCollection.findOne({ username: usernameValidationResult.value }) != null) {
+    res.render("invalid_sign_up.ejs", { type: "username (username is taken)" })
+    return;
+  }
+
+  // Email verification
+  const emailValidationResult = emailSchema.validate(email);
+  if (emailValidationResult.error != null) {
+    res.render("invalid_sign_up.ejs", { type: "email" })
+    return;
+  }
+
+  // Password verification
+  const passwordValidationResult = passwordSchema.validate(password);
+  if (passwordValidationResult.error != null) {
+    res.render("invalid_sign_up.ejs", { type: "password" })
+    return;
+  }
+
+  // Security question answer verification
+  const securityAnswerValidationResult = securityAnswerSchema.validate(securityAnswer);
+  if (securityAnswerValidationResult.error != null) {
+    res.render("invalid_sign_up.ejs", { type: "security answer" })
+    return;
+  }
+
+  // Hash password
+  var hashedPassword = await bcrypt.hash(password, saltRounds);
+
+  // Hash security question answer
+  var hashedSecurityAnswer = await bcrypt.hash(securityAnswer, saltRounds);
+
+  // Insert user into collection
+  await userCollection.insertOne({
+    username: username,
+    email: email,
+    password: hashedPassword,
+    in_game_name: null,
+    securityQuestion: securityQuestion,
+    securityAnswer: hashedSecurityAnswer
+  });
+
+  req.session.authenticated = true;
+  req.session.username = username;
+  res.redirect('/');
 });
 
-  // Log in page -------------------------------
-  app.get('/login', (req, res) => {
-    res.render("log_in.ejs");
-  })
-  
-  // Log in submission and verification
-  app.post('/loggingin', async (req,res) => {
-    var username = req.body.username;
-    var password = req.body.password;
+// Log in page -------------------------------
+app.get('/login', (req, res) => {
+  res.render("log_in.ejs");
+})
 
-    const usernameSchema = Joi.string().max(40).required();
-    const passwordSchema =  Joi.string().max(20).required();
-    
-    // username verification
-    const usernameValidationResult = usernameSchema.validate(username);
-    if (usernameValidationResult.error != null) {
-      res.render("invalid_log_in.ejs", {type: "username"});
-      return;
-    }
+// Log in submission and verification
+app.post('/loggingin', async (req, res) => {
+  var username = req.body.username;
+  var password = req.body.password;
 
-    // Password verification
-    const passwordValidationResult = passwordSchema.validate(password);
-    if (passwordValidationResult.error != null) {
-      res.render("invalid_log_in.ejs", {type: "password"});
-      return;
-    }
+  const usernameSchema = Joi.string().max(20).required();
+  const passwordSchema = Joi.string().max(20).required();
 
-    // Secure database access (user name not input field)
-    const result = await userCollection.find({username: username}).project({username: 1, email: 1, password: 1, in_game_name: 1, _id: 1}).toArray();
-    
-    // User not found
-    console.log(result);
-    if (result.length != 1) {
-      res.render("invalid_log_in.ejs", {type: "username (user not found)"});
-      return;
-    }
-    // Correct password
-    if (await bcrypt.compare(password, result[0].password)) {
-      req.session.authenticated = true;
-      req.session.username = result[0].username;
-      req.session.cookie.maxAge = expireTime;
+  // username verification
+  const usernameValidationResult = usernameSchema.validate(username);
+  if (usernameValidationResult.error != null) {
+    res.render("invalid_log_in.ejs", { type: "username" });
+    return;
+  }
 
-      res.redirect('/');
-      return;
-    }
-    else {
-      res.render("invalid_log_in.ejs", {type: "password"});
-      return;
-    }
+  // Password verification
+  const passwordValidationResult = passwordSchema.validate(password);
+  if (passwordValidationResult.error != null) {
+    res.render("invalid_log_in.ejs", { type: "password" });
+    return;
+  }
+
+  // Secure database access (user name not input field)
+  const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, in_game_name: 1, _id: 1 }).toArray();
+
+  // User not found
+  console.log(result);
+  if (result.length != 1) {
+    res.render("invalid_log_in.ejs", { type: "username (user not found)" });
+    return;
+  }
+  // Correct password
+  if (await bcrypt.compare(password, result[0].password)) {
+    req.session.authenticated = true;
+    req.session.username = result[0].username;
+    req.session.cookie.maxAge = expireTime;
+
+    res.redirect('/');
+    return;
+  }
+  else {
+    res.render("invalid_log_in.ejs", { type: "password" });
+    return;
+  }
 });
 
 // Log out
-app.get('/logout', async (req,res) => {
-    const userCollection = database.db(mongodb_database).collection('users')
-    await userCollection.deleteOne({ _id: req.session._id });
-    req.session.destroy();
-    res.redirect('/');
+app.get('/logout', async (req, res) => {
+  const userCollection = database.db(mongodb_database).collection('users')
+  await userCollection.deleteOne({ _id: req.session._id });
+  req.session.destroy();
+  res.redirect('/');
 });
 
 // 404 not found page ------------------
 app.get("/does_not_exist", (req, res) => {
-    res.status(404);
-    res.render(`404_not_found.ejs`);
-  })
+  res.status(404);
+  res.render(`404_not_found.ejs`);
+})
 
-  app.get("*", (req,res) => {
-	res.redirect('/does_not_exist');
+app.get("*", (req, res) => {
+  res.redirect('/does_not_exist');
 })
 
 app.listen(port, () => {
-    console.log('Server running on port ' + port);
-  })
+  console.log('Server running on port ' + port);
+})
