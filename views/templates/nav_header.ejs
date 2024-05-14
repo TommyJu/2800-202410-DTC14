@@ -1,33 +1,35 @@
-<!-- Logo -->
-<a class="navbar-brand" href="">
-    <img src="./images/logo.png" height="60px" />
-</a>
+<nav id="navbarTemplate" class="navbar nav-header sticky top-0">
+    <!-- Logo -->
+    <a class="navbar-brand" href="">
+        <img src="./images/logo.png" height="60px" />
+    </a>
 
-<!-- Hamburger Menu-->
-<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-    aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-</button>
-<div class="offcanvas offcanvas-top" style="background-color: #c6cdef" tabindex="-1" id="offcanvasNavbar"
-    aria-labelledby="offcanvasNavbarLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-        <button type="button" class="btn-close" style="width: 32px; height: 32px" data-bs-dismiss="offcanvas"
-            aria-label="Close"></button>
+    <!-- Hamburger Menu-->
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+        aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-top" style="background-color: #c6cdef" tabindex="-1" id="offcanvasNavbar"
+        aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+            <button type="button" class="btn-close" style="width: 32px; height: 32px" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <hr style="margin-top: 2px; margin-bottom: 2px" />
+                <li class="nav-item">
+                    <a class="nav-link" href="">Home</a>
+                </li>
+                <hr style="margin-top: 2px; margin-bottom: 2px" />
+                <li class="nav-item">
+                    <a class="nav-link" href="">Profile</a>
+                </li>
+            </ul>
+        </div>
+        <div class="p-3">
+            <a id="logoutButton" class="nav-link active" aria-current="page" href="">log out</a>
+        </div>
     </div>
-    <div class="offcanvas-body">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <hr style="margin-top: 2px; margin-bottom: 2px" />
-            <li class="nav-item">
-                <a class="nav-link" href="">Home</a>
-            </li>
-            <hr style="margin-top: 2px; margin-bottom: 2px" />
-            <li class="nav-item">
-                <a class="nav-link" href="">Profile</a>
-            </li>
-        </ul>
-    </div>
-    <div class="p-3">
-        <a id="logoutButton" class="nav-link active" aria-current="page" href="">log out</a>
-    </div>
-</div>
+</nav>
