@@ -1,9 +1,17 @@
 <%- include("templates/header.ejs") %>
     <h1>Create a new account</h1>
     <form action='/submitUser' method='post'>
-    <input name='username' type='text' placeholder='username'><br>
-    <input name='email' type='email' placeholder='email'><br>
-    <input name='password' type='password' placeholder='password'><br>
+    <input name='username' type='text' placeholder='username'>
+    <input name='email' type='email' placeholder='email'>
+    <input name='password' type='password' placeholder='password'>
+    <label for="security-question">Choose a security question:</label>
+    <select name="security-question" id="security-question">
+        <option value="In what city were you born?">In what city were you born?</option>
+        <option value="What is the name of your favourite pet?">What is the name of your favourite pet?</option>
+        <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+        <option value="What was the name of your first childhood friend?">What was the name of your first childhood friend?</option>
+    </select>
+    <input name='security-question-answer' type='text' placeholder='security question answer'>
     <button type="submit">Submit</button>
     </form>
 <%- include("templates/footer.ejs") %>
