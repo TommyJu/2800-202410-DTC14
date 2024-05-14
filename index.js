@@ -36,6 +36,8 @@ var mongoStore = MongoStore.create({
     }
 })
 
+app.use(favicon(path.join(__dirname, 'public', 'test.ico')));
+
 app.use(express.urlencoded({ extended: false }));
 
 app.use(session({
