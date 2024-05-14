@@ -1,4 +1,4 @@
-<%- include("templates/header.ejs") %>
+<%- include("templates/header_plain.ejs") %>
     <h1>Create a new account</h1>
     <form action='/submitUser' method='post'>
     <input name='username' type='text' placeholder='username'>
@@ -14,4 +14,3 @@
     <input name='securityAnswer' type='password' placeholder='security answer'>
     <button type="submit">Submit</button>
     </form>
-<%- include("templates/footer.ejs") %>
