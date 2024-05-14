@@ -196,17 +196,26 @@ app.post('/security_question', async (req, res) => {
     return;
   }
 
-  user = await userCollection.findOne({username: username}, {projection: {securityQuestion: 1}});
+  user = await userCollection.findOne(
+    {username: username}, 
+    {projection: {securityQuestion: 1}});
   securityQuestion = user.securityQuestion;
 
   // Render security answer
-  res.render("security_question.ejs", {username: username, securityQuestion: securityQuestion})
+  res.render("security_question.ejs", {
+    username: username,
+    securityQuestion: securityQuestion})
 })
 
-app.post('/password_reset', (req, res) => {
+app.post('/password_reset', async (req, res) => {
   // Validate new password and security answer input
   newPassword = req.body.newPassword;
   securityAnswer = req.body.securityAnswer;
+  username = req.body.username;
+
+  user = await userCollection.findOne(
+    {username: username}, 
+    {projection: {securityAnswer: 1}});
 
   const newPasswordSchema = Joi.string().max(20).required();
   const newPasswordValidationResult = newPasswordSchema.validate(newPassword);
@@ -223,6 +232,22 @@ app.post('/password_reset', (req, res) => {
     return;
   }
 
+  // Check if security answer matches
+  console.log(user.securityAnswer);
+  if (await bcrypt.compare(securityAnswer, user.securityAnswer)) {
+    // Change password
+    hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+    await userCollection.updateOne(
+      {username: username}, 
+      {$set: {password: hashedNewPassword}});
+      
+      console.log("Password changed successfully")
+    res.redirect('/login');
+    return;
+  } else {
+    res.render("invalid_password_recovery.ejs", { type: "security answer" });
+    return;
+  }
 })
 
 // Log out

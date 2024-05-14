@@ -2,6 +2,7 @@
 
     <h1>Password recovery for <%= username %></h1>
     <form action="/password_reset" method="post">
+    <input type="hidden" name="username" value="<%= username %>">
     <label for="securityAnswer"><%= securityQuestion %></label>
     <input type="password" name="securityAnswer" placeholder="security answer"/>
     <input type="password" name="newPassword" placeholder='new password'/>
