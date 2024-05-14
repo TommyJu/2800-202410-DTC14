@@ -233,7 +233,6 @@ app.post('/password_reset', async (req, res) => {
   }
 
   // Check if security answer matches
-  console.log(user.securityAnswer);
   if (await bcrypt.compare(securityAnswer, user.securityAnswer)) {
     // Change password
     hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
@@ -241,8 +240,7 @@ app.post('/password_reset', async (req, res) => {
       {username: username}, 
       {$set: {password: hashedNewPassword}});
       
-      console.log("Password changed successfully")
-    res.redirect('/login');
+    res.render("successful_password_recovery.ejs");
     return;
   } else {
     res.render("invalid_password_recovery.ejs", { type: "security answer" });
