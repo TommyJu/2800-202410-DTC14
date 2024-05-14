@@ -68,7 +68,7 @@ app.post('/submitUser', async (req,res) => {
     var email = req.body.email;
     var password = req.body.password;
 
-    const usernameSchema =  Joi.string().max(20).required();
+    const usernameSchema =  Joi.string().max(40).required();
     const emailSchema = Joi.string().max(40).required();
     const passwordSchema =  Joi.string().max(20).required();
 
@@ -76,6 +76,12 @@ app.post('/submitUser', async (req,res) => {
     const usernameValidationResult = usernameSchema.validate(username);
     if (usernameValidationResult.error != null) {
       res.render("invalid_sign_up.ejs", {type: "username"})
+      return;
+    }
+    
+    // Check if username is taken
+    if (await userCollection.findOne({username: usernameValidationResult.value}) != null) {
+      res.render("invalid_sign_up.ejs", {type: "username (username is taken)"})
       return;
     }
     
