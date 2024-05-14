@@ -181,6 +181,50 @@ app.post('/loggingin', async (req, res) => {
   }
 });
 
+app.get('/password_recovery', (req, res) => {
+  res.render("password_recovery.ejs");
+})
+
+app.post('/security_question', async (req, res) => {
+  // Validate username input
+  username = req.body.username;
+  const usernameSchema = Joi.string().max(20).required();
+  const usernameValidationResult = usernameSchema.validate(username);
+
+  if (usernameValidationResult.error != null) {
+    res.render("invalid_password_recovery.ejs", { type: "username" });
+    return;
+  }
+
+  user = await userCollection.findOne({username: username}, {projection: {securityQuestion: 1}});
+  securityQuestion = user.securityQuestion;
+
+  // Render security answer
+  res.render("security_question.ejs", {username: username, securityQuestion: securityQuestion})
+})
+
+app.post('/password_reset', (req, res) => {
+  // Validate new password and security answer input
+  newPassword = req.body.newPassword;
+  securityAnswer = req.body.securityAnswer;
+
+  const newPasswordSchema = Joi.string().max(20).required();
+  const newPasswordValidationResult = newPasswordSchema.validate(newPassword);
+  const securityAnswerSchema = Joi.string().max(20).required();
+  const securityAnswerValidationResult = securityAnswerSchema.validate(securityAnswer);
+
+  if (newPasswordValidationResult.error != null) {
+    res.render("invalid_password_recovery.ejs", { type: "new password" });
+    return;
+  }
+
+  if (securityAnswerValidationResult.error != null) {
+    res.render("invalid_password_recovery.ejs", { type: "security answer" });
+    return;
+  }
+
+})
+
 // Log out
 app.get('/logout', async (req, res) => {
   const userCollection = database.db(mongodb_database).collection('users')
