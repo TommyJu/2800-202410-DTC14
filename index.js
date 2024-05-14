@@ -3,6 +3,8 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
+const path = require('path');
+const favicon = require('serve-favicon');
 
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -35,6 +37,8 @@ var mongoStore = MongoStore.create({
     secret: mongodb_session_secret
   }
 })
+
+app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 app.use(express.urlencoded({ extended: false }));
 
