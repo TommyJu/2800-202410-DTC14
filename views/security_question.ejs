@@ -1,5 +1,5 @@
 
-<%- include("templates/header_plain.ejs") %>
+<%- include("templates/header_logo_only.ejs") %>
     <h1>Password recovery for <%= username %></h1>
     <form action="/password_reset" method="post">
     <input type="hidden" name="username" value="<%= username %>">
