@@ -1,16 +1,17 @@
 const { match } = require("assert");
 const { get } = require("http");
 
+//this stuff goes into env
 const user_name = 'yehsu';
 const user_tag = 'na1';
 const daily_api_key = 'RGAPI-d3940fab-ce91-4c3e-81ae-7b03bac1e1f2';
 
 
-async function calculateWinLoss(match_ids) {
+async function calculateWinLoss(match_ids, PUUID) {
   const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
   for (let match_id of match_ids) {
     console.log(match_id);
-    fetch(`https://americas.api.riotgames.com/lol/match/v5/matches/NA1_4983533698?api_key=RGAPI-d3940fab-ce91-4c3e-81ae-7b03bac1e1f2`)
+    fetch(`https://americas.api.riotgames.com/lol/match/v5/matches/${match_id}?api_key=RGAPI-d3940fab-ce91-4c3e-81ae-7b03bac1e1f2`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok ' + response.statusText);
@@ -18,9 +19,13 @@ async function calculateWinLoss(match_ids) {
       return response.json(); // Parse the JSON from the response
     })
     .then(data => {
-      console.log(data.info.teams[0].win);
-    })
-    await delay(1000);
+      // console.log(data.info.participants)
+      for (let participant of data.info.participants) {
+        if (participant.puuid === PUUID) {
+          console.log("win:" + participant.win);
+        }
+      }});
+      await delay(500);
   };
 }
 
@@ -34,7 +39,7 @@ function getMatchHistory(PUUID) {
   })
   .then(data => {
     console.log(data); // Handle the data from the API
-    calculateWinLoss(data);
+    calculateWinLoss(data, PUUID);
   })
   .catch(error => {
     console.error('There has been a problem with your fetch operation:', error);
@@ -42,7 +47,7 @@ function getMatchHistory(PUUID) {
 }
 
 function getRiotPUUID() {
-  fetch('https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/yehsu/na1?api_key=RGAPI-d3940fab-ce91-4c3e-81ae-7b03bac1e1f2')
+  fetch(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${user_name}/${user_tag}?api_key=${daily_api_key}`)
   .then(response => {
     if (!response.ok) {
       throw new Error('Network response was not ok ' + response.statusText);
