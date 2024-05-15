@@ -258,23 +258,43 @@ app.get('/logout', async (req, res) => {
 
 // Game page
 app.get('/game', (req, res) => {
-  res.render("game.ejs");
+  if (req.session.authenticated) {
+    res.render("game.ejs");
+    return;
+  }
+  res.redirect("/");
 })
 // Fitness page
 app.get('/fitness', (req, res) => {
-  res.render("fitness.ejs");
+  if (req.session.authenticated) {
+    res.render("fitness.ejs");
+    return;
+  }
+  res.redirect("/");
 })
 // Diet page
 app.get('/diet', (req, res) => {
-  res.render("diet.ejs");
+  if (req.session.authenticated) {
+    res.render("diet.ejs");
+    return;
+  }
+  res.redirect("/");
 })
 // Friends page
 app.get('/friends', (req, res) => {
-  res.render("friends.ejs");
+  if (req.session.authenticated) {
+    res.render("friends.ejs");
+    return;
+  }
+  res.redirect("/");
 })
 // Profile page
 app.get('/profile', (req, res) => {
-  res.render("profile.ejs");
+  if (req.session.authenticated) {
+    res.render("profile.ejs");
+    return;
+  }
+  res.redirect("/");
 })
 
 // 404 not found page ------------------
