@@ -50,6 +50,8 @@ app.use(session({
 }
 ));
 
+const lolAPI = require('./riotLeagueAPI.js');
+
 app.use(express.static(__dirname + "/public"));
 
 // Home page ---------------------------
@@ -264,6 +266,11 @@ app.get('/logout', async (req, res) => {
 app.get("/does_not_exist", (req, res) => {
   res.status(404);
   res.render(`404_not_found.ejs`);
+})
+
+app.get("/tempGame", (req, res) => {
+  res.render("tempGame.ejs");
+  lolAPI.getRiotPUUID();
 })
 
 app.get("*", (req, res) => {

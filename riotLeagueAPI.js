@@ -1,14 +1,7 @@
-const { match } = require("assert");
-const { get } = require("http");
-
 //this stuff goes into env
 const user_name = 'yehsu';
 const user_tag = 'na1';
-const daily_api_key = 'RGAPI-d3940fab-ce91-4c3e-81ae-7b03bac1e1f2';
-// const daily_api_key = 'RGAPI-d3940fab-ce91-4c3e-81ae-7b03bac1e1f2';
-
-
-
+const daily_api_key = 'RGAPI-435df765-6b62-418a-ad22-7019d807a66e';
 
 async function calculateWinLoss(match_ids, PUUID) {
   const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
