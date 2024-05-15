@@ -6,6 +6,7 @@ const daily_api_key = 'RGAPI-d3940fab-ce91-4c3e-81ae-7b03bac1e1f2';
 
 async function calculateWinLoss(match_ids, PUUID) {
   const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+  var wins = 0;
   for (let match_id of match_ids) {
     console.log(match_id);
     fetch(`https://americas.api.riotgames.com/lol/match/v5/matches/${match_id}?api_key=RGAPI-d3940fab-ce91-4c3e-81ae-7b03bac1e1f2`)
@@ -19,11 +20,15 @@ async function calculateWinLoss(match_ids, PUUID) {
       // console.log(data.info.participants)
       for (let participant of data.info.participants) {
         if (participant.puuid === PUUID) {
-          console.log("win:" + participant.win);
+          // console.log("win:" + participant.win);
+          if (participant.win === true) {
+            wins++;
+          }
         }
       }});
       await delay(500);
   };
+  console.log("wins: " + wins);
 }
 
 function getMatchHistory(PUUID) {
