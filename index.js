@@ -46,6 +46,7 @@ app.use(session({
 }
 ));
 
+app.use(express.static(__dirname + "/login"));
 app.use(express.static(__dirname + "/public"));
 
 // Home page ---------------------------
