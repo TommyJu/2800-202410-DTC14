@@ -16,7 +16,7 @@ async function calculateWinLoss(match_ids, PUUID) {
   var kills = 0;
   var deaths = 0;
   for (let match_id of match_ids) {
-    console.log(match_id);
+    // console.log(match_id);
     fetch(`https://americas.api.riotgames.com/lol/match/v5/matches/${match_id}?api_key=${daily_api_key}`)
     .then(response => {
       if (!response.ok) {
@@ -39,10 +39,10 @@ async function calculateWinLoss(match_ids, PUUID) {
       }});
       await delay(500);
   };
-  let kda = kills/deaths;
+  let kd = kills/deaths;
   let decimal_places = 2;
   console.log("wins: " + wins);
-  console.log("KDA:" + kda.toFixed(decimal_places))
+  console.log("KD:" + kd.toFixed(decimal_places))
 }
 
 function getMatchHistory(PUUID) {
@@ -63,7 +63,25 @@ function getMatchHistory(PUUID) {
   });
 }
 
-function getSummonerLevel(PUUID) {
+function getSummonerRank(encryptedSummonerId) {
+  fetch(`https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/${encryptedSummonerId}?api_key=${daily_api_key}`)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    return response.json(); // Parse the JSON from the response
+  })
+  .then(data => {
+    if (data.length === 0) {
+      console.log("Currrent rank: unranked");
+    }
+  })
+  .catch(error => {
+    console.error('There has been a problem with your fetch operation:', error);
+  });
+};
+
+function getSummonerDetails(PUUID) {
   fetch(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${PUUID}?api_key=${daily_api_key}`)
   .then(response => {
     if (!response.ok) {
@@ -74,6 +92,8 @@ function getSummonerLevel(PUUID) {
   .then(data => {
     // console.log(data); // Handle the data from the API
     console.log("summoner level: " + data.summonerLevel);
+    let encryptedSummonerId = data.id;
+    getSummonerRank(encryptedSummonerId);
   })
   .catch(error => {
     console.error('There has been a problem with your fetch operation:', error);
@@ -91,7 +111,7 @@ async function getRiotPUUID() {
   .then(data => {
     // console.log("account_puuid =" + data.puuid); // Handle the data from the API
     let PUUID = data.puuid;
-    getSummonerLevel(PUUID);
+    getSummonerDetails(PUUID);
     getMatchHistory(PUUID);
   })
   .catch(error => {
