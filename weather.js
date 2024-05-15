@@ -12,10 +12,12 @@ app.listen(3000, () => {
     });
 
 app.get("/getWeatherOfACityByName", (req, res) => {
-    fetch (`https://api.openweathermap.org/data/2.5/weather?q=Vancouver&appid=${weatherKey}`)
-    .then((resp) => resp.json())
-    .then((resp) => {
-        const weatherToday = resp.weather[0].main;
-        res.send(weatherToday);
+    fetch (`https://api.openweathermap.org/data/2.5/weather?q=Vancouver, BC, CAS&appid=${weatherKey}`)
+    .then((current) => current.json())
+    .then((current) => {
+        if (current.message === 'city not found')
+            return res.send('City not found')
+        const weatherToday = current.weather[0].main
+        res.send("The weather today is " + weatherToday)
     });
 });
