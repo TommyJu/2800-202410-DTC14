@@ -39,9 +39,10 @@ async function calculateWinLoss(match_ids, PUUID) {
       }});
       await delay(500);
   };
+  let winrate = wins/match_ids.length * 100;
   let kd = kills/deaths;
   let decimal_places = 2;
-  console.log("wins: " + wins);
+  console.log("winrate: " + winrate.toFixed(decimal_places) + "%");
   console.log("KD:" + kd.toFixed(decimal_places))
 }
 
