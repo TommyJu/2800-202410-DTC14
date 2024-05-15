@@ -122,7 +122,8 @@ app.post('/submitUser', async (req, res) => {
     password: hashedPassword,
     in_game_name: null,
     securityQuestion: securityQuestion,
-    securityAnswer: hashedSecurityAnswer
+    securityAnswer: hashedSecurityAnswer,
+    tasks: []
   });
 
   req.session.authenticated = true;
@@ -294,6 +295,20 @@ app.get('/profile', (req, res) => {
     res.render("profile.ejs");
     return;
   }
+  res.redirect("/");
+})
+
+app.post('/add_task', async (req, res) => {
+  newTask = {
+    title: req.body.title,
+    description: req.body.description,
+    category: req.body.category
+  }
+
+  await userCollection.updateOne(
+    { username: req.session.username },
+    { $push: { tasks: newTask } }
+  );
   res.redirect("/");
 })
 
