@@ -126,7 +126,8 @@ app.post('/submitUser', async (req, res) => {
     password: hashedPassword,
     in_game_name: null,
     securityQuestion: securityQuestion,
-    securityAnswer: hashedSecurityAnswer
+    securityAnswer: hashedSecurityAnswer,
+    tasks: []
   });
 
   req.session.authenticated = true;
@@ -205,7 +206,7 @@ app.post('/security_question', async (req, res) => {
     {projection: {securityQuestion: 1}});
   securityQuestion = user.securityQuestion;
 
-  // Render security answer
+  // Render security question
   res.render("security_question.ejs", {
     username: username,
     securityQuestion: securityQuestion})
@@ -259,6 +260,61 @@ app.get('/logout', async (req, res) => {
   req.session.destroy();
   res.redirect('/');
 });
+
+// Game page
+app.get('/game', (req, res) => {
+  if (req.session.authenticated) {
+    res.render("game.ejs");
+    return;
+  }
+  res.redirect("/");
+})
+// Fitness page
+app.get('/fitness', (req, res) => {
+  if (req.session.authenticated) {
+    res.render("fitness.ejs");
+    return;
+  }
+  res.redirect("/");
+})
+// Diet page
+app.get('/diet', (req, res) => {
+  if (req.session.authenticated) {
+    res.render("diet.ejs");
+    return;
+  }
+  res.redirect("/");
+})
+// Friends page
+app.get('/friends', (req, res) => {
+  if (req.session.authenticated) {
+    res.render("friends.ejs");
+    return;
+  }
+  res.redirect("/");
+})
+// Profile page
+app.get('/profile', (req, res) => {
+  if (req.session.authenticated) {
+    res.render("profile.ejs");
+    return;
+  }
+  res.redirect("/");
+})
+
+app.post('/add_task', async (req, res) => {
+  newTask = {
+    title: req.body.title,
+    description: req.body.description,
+    category: req.body.category
+  }
+
+  await userCollection.updateOne(
+    { username: req.session.username },
+    { $push: { tasks: newTask } }
+  );
+  res.redirect("/");
+})
 
 // 404 not found page ------------------
 app.get("/does_not_exist", (req, res) => {
