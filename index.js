@@ -1,6 +1,7 @@
 require("./utils.js");
 require('dotenv').config();
 var { addTask } = include('add_task');
+var { getTasksByCategory } = include('get_user_tasks_by_category');
 
 const express = require('express');
 const app = express();
@@ -268,10 +269,8 @@ app.get('/logout', async (req, res) => {
 // Game page
 app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
-    user = await userCollection.findOne(
-      {username: req.session.username}, 
-      {projection: {gameTasks: 1}});
-    res.render("game.ejs", {tasks: user.gameTasks});
+    tasks = await getTasksByCategory("game", req.session.username, userCollection);
+    res.render("game.ejs", { tasks: tasks });
     return;
   }
   res.redirect("/");
@@ -279,10 +278,8 @@ app.get('/game', async (req, res) => {
 // Fitness page
 app.get('/fitness', async (req, res) => {
   if (req.session.authenticated) {
-    user = await userCollection.findOne(
-      {username: req.session.username}, 
-      {projection: {fitnessTasks: 1}});
-    res.render("fitness.ejs", {tasks: user.fitnessTasks});
+    tasks = await getTasksByCategory("fitness", req.session.username, userCollection);
+    res.render("fitness.ejs", { tasks: tasks });
     return;
   }
   res.redirect("/");
@@ -290,10 +287,8 @@ app.get('/fitness', async (req, res) => {
 // Diet page
 app.get('/diet', async (req, res) => {
   if (req.session.authenticated) {
-    user = await userCollection.findOne(
-      {username: req.session.username}, 
-      {projection: {dietTasks: 1}});
-    res.render("diet.ejs", {tasks: user.dietTasks});
+    tasks = await getTasksByCategory("diet", req.session.username, userCollection);
+    res.render("diet.ejs", { tasks: tasks });
     return;
   }
   res.redirect("/");
@@ -314,7 +309,7 @@ app.get('/profile', (req, res) => {
   }
   res.redirect("/");
 })
-
+// Add task from modal form
 app.post('/add_task', async (req, res) => {
   title = req.body.title;
   description = req.body.description;
