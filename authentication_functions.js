@@ -3,7 +3,7 @@ const Joi = require('joi');
 const saltRounds = 12;
 const expireTime = 1 * 60 * 60 * 1000; // one hour expiry time
 
-module.exports = { submitUser, logInUser };
+module.exports = { submitUser, logInUser, resetPassword};
 
 async function submitUser(
   req, res,
@@ -111,6 +111,42 @@ async function logInUser(req, res, username, password, userCollection) {
   }
   else {
     res.render("invalid_log_in.ejs", { type: "password" });
+    return;
+  }
+}
+
+async function resetPassword(req, res, username, securityAnswer, newPassword, userCollection) {
+  user = await userCollection.findOne(
+    { username: username },
+    { projection: { securityAnswer: 1 } });
+
+  const newPasswordSchema = Joi.string().max(20).required();
+  const newPasswordValidationResult = newPasswordSchema.validate(newPassword);
+  const securityAnswerSchema = Joi.string().max(20).required();
+  const securityAnswerValidationResult = securityAnswerSchema.validate(securityAnswer);
+
+  if (newPasswordValidationResult.error != null) {
+    res.render("invalid_password_recovery.ejs", { type: "new password" });
+    return;
+  }
+
+  if (securityAnswerValidationResult.error != null) {
+    res.render("invalid_password_recovery.ejs", { type: "security answer" });
+    return;
+  }
+
+  // Check if security answer matches
+  if (await bcrypt.compare(securityAnswer, user.securityAnswer)) {
+    // Change password
+    hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+    await userCollection.updateOne(
+      { username: username },
+      { $set: { password: hashedNewPassword } });
+
+    res.render("successful_password_recovery.ejs");
+    return;
+  } else {
+    res.render("invalid_password_recovery.ejs", { type: "security answer" });
     return;
   }
 }

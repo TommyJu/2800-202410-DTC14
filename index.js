@@ -166,43 +166,45 @@ app.post('/security_question', async (req, res) => {
 
 app.post('/password_reset', async (req, res) => {
   // Validate new password and security answer input
-  newPassword = req.body.newPassword;
-  securityAnswer = req.body.securityAnswer;
   username = req.body.username;
+  securityAnswer = req.body.securityAnswer;
+  newPassword = req.body.newPassword;
 
-  user = await userCollection.findOne(
-    { username: username },
-    { projection: { securityAnswer: 1 } });
+  await authenticationFunctions.resetPassword(req, res, username, securityAnswer, newPassword, userCollection);
 
-  const newPasswordSchema = Joi.string().max(20).required();
-  const newPasswordValidationResult = newPasswordSchema.validate(newPassword);
-  const securityAnswerSchema = Joi.string().max(20).required();
-  const securityAnswerValidationResult = securityAnswerSchema.validate(securityAnswer);
+  // user = await userCollection.findOne(
+  //   { username: username },
+  //   { projection: { securityAnswer: 1 } });
 
-  if (newPasswordValidationResult.error != null) {
-    res.render("invalid_password_recovery.ejs", { type: "new password" });
-    return;
-  }
+  // const newPasswordSchema = Joi.string().max(20).required();
+  // const newPasswordValidationResult = newPasswordSchema.validate(newPassword);
+  // const securityAnswerSchema = Joi.string().max(20).required();
+  // const securityAnswerValidationResult = securityAnswerSchema.validate(securityAnswer);
 
-  if (securityAnswerValidationResult.error != null) {
-    res.render("invalid_password_recovery.ejs", { type: "security answer" });
-    return;
-  }
+  // if (newPasswordValidationResult.error != null) {
+  //   res.render("invalid_password_recovery.ejs", { type: "new password" });
+  //   return;
+  // }
 
-  // Check if security answer matches
-  if (await bcrypt.compare(securityAnswer, user.securityAnswer)) {
-    // Change password
-    hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
-    await userCollection.updateOne(
-      { username: username },
-      { $set: { password: hashedNewPassword } });
+  // if (securityAnswerValidationResult.error != null) {
+  //   res.render("invalid_password_recovery.ejs", { type: "security answer" });
+  //   return;
+  // }
 
-    res.render("successful_password_recovery.ejs");
-    return;
-  } else {
-    res.render("invalid_password_recovery.ejs", { type: "security answer" });
-    return;
-  }
+  // // Check if security answer matches
+  // if (await bcrypt.compare(securityAnswer, user.securityAnswer)) {
+  //   // Change password
+  //   hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+  //   await userCollection.updateOne(
+  //     { username: username },
+  //     { $set: { password: hashedNewPassword } });
+
+  //   res.render("successful_password_recovery.ejs");
+  //   return;
+  // } else {
+  //   res.render("invalid_password_recovery.ejs", { type: "security answer" });
+  //   return;
+  // }
 })
 
 // Log out
