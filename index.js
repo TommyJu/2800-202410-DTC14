@@ -1,7 +1,7 @@
 require("./utils.js");
 require('dotenv').config();
 const taskFunctions = require("./task_functions.js");
-const signUpFunctions = require("./sign_up_functions.js");
+const authenticationFunctions = require("./authentication_functions.js");
 
 const express = require('express');
 const app = express();
@@ -77,7 +77,7 @@ app.post('/submitUser', async (req, res) => {
   var securityQuestion = req.body.securityQuestion;
   var securityAnswer = req.body.securityAnswer
 
-  await signUpFunctions.submitUser(
+  await authenticationFunctions.submitUser(
     req, res,
     username, userCollection,
     email, password,
@@ -94,45 +94,47 @@ app.post('/loggingin', async (req, res) => {
   var username = req.body.username;
   var password = req.body.password;
 
-  const usernameSchema = Joi.string().max(20).required();
-  const passwordSchema = Joi.string().max(20).required();
+  await authenticationFunctions.logInUser(req, res, username, password, userCollection);
 
-  // username verification
-  const usernameValidationResult = usernameSchema.validate(username);
-  if (usernameValidationResult.error != null) {
-    res.render("invalid_log_in.ejs", { type: "username" });
-    return;
-  }
+  // const usernameSchema = Joi.string().max(20).required();
+  // const passwordSchema = Joi.string().max(20).required();
 
-  // Password verification
-  const passwordValidationResult = passwordSchema.validate(password);
-  if (passwordValidationResult.error != null) {
-    res.render("invalid_log_in.ejs", { type: "password" });
-    return;
-  }
+  // // username verification
+  // const usernameValidationResult = usernameSchema.validate(username);
+  // if (usernameValidationResult.error != null) {
+  //   res.render("invalid_log_in.ejs", { type: "username" });
+  //   return;
+  // }
 
-  // Secure database access (user name not input field)
-  const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, in_game_name: 1, _id: 1 }).toArray();
+  // // Password verification
+  // const passwordValidationResult = passwordSchema.validate(password);
+  // if (passwordValidationResult.error != null) {
+  //   res.render("invalid_log_in.ejs", { type: "password" });
+  //   return;
+  // }
 
-  // User not found
-  console.log(result);
-  if (result.length != 1) {
-    res.render("invalid_log_in.ejs", { type: "username (user not found)" });
-    return;
-  }
-  // Correct password
-  if (await bcrypt.compare(password, result[0].password)) {
-    req.session.authenticated = true;
-    req.session.username = result[0].username;
-    req.session.cookie.maxAge = expireTime;
+  // // Secure database access (user name not input field)
+  // const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, in_game_name: 1, _id: 1 }).toArray();
 
-    res.redirect('/');
-    return;
-  }
-  else {
-    res.render("invalid_log_in.ejs", { type: "password" });
-    return;
-  }
+  // // User not found
+  // console.log(result);
+  // if (result.length != 1) {
+  //   res.render("invalid_log_in.ejs", { type: "username (user not found)" });
+  //   return;
+  // }
+  // // Correct password
+  // if (await bcrypt.compare(password, result[0].password)) {
+  //   req.session.authenticated = true;
+  //   req.session.username = result[0].username;
+  //   req.session.cookie.maxAge = expireTime;
+
+  //   res.redirect('/');
+  //   return;
+  // }
+  // else {
+  //   res.render("invalid_log_in.ejs", { type: "password" });
+  //   return;
+  // }
 });
 
 app.get('/password_recovery', (req, res) => {

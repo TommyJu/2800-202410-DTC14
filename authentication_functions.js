@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const saltRounds = 12;
+const expireTime = 1 * 60 * 60 * 1000; // one hour expiry time
 
-module.exports = { submitUser };
+module.exports = { submitUser, logInUser };
 
 async function submitUser(
   req, res,
@@ -70,4 +71,46 @@ async function submitUser(
   req.session.authenticated = true;
   req.session.username = username;
   res.redirect('/');
+}
+
+async function logInUser(req, res, username, password, userCollection) {
+  const usernameSchema = Joi.string().max(20).required();
+  const passwordSchema = Joi.string().max(20).required();
+
+  // username verification
+  const usernameValidationResult = usernameSchema.validate(username);
+  if (usernameValidationResult.error != null) {
+    res.render("invalid_log_in.ejs", { type: "username" });
+    return;
+  }
+
+  // Password verification
+  const passwordValidationResult = passwordSchema.validate(password);
+  if (passwordValidationResult.error != null) {
+    res.render("invalid_log_in.ejs", { type: "password" });
+    return;
+  }
+
+  // Secure database access (user name not input field)
+  const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, in_game_name: 1, _id: 1 }).toArray();
+
+  // User not found
+  console.log(result);
+  if (result.length != 1) {
+    res.render("invalid_log_in.ejs", { type: "username (user not found)" });
+    return;
+  }
+  // Correct password
+  if (await bcrypt.compare(password, result[0].password)) {
+    req.session.authenticated = true;
+    req.session.username = result[0].username;
+    req.session.cookie.maxAge = expireTime;
+
+    res.redirect('/');
+    return;
+  }
+  else {
+    res.render("invalid_log_in.ejs", { type: "password" });
+    return;
+  }
 }
