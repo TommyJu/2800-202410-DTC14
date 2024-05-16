@@ -316,7 +316,8 @@ app.post('/add_task', async (req, res) => {
     { username: req.session.username },
     { $push: { tasks: newTask } }
   );
-  res.redirect("/");
+  // Redirect to the previous page
+  res.redirect(req.get('referer'));
 })
 
 // 404 not found page ------------------
