@@ -50,6 +50,7 @@ app.use(session({
 }
 ));
 
+// Importing the API logic functions to link back end data to front end display.
 const lolAPI = require('./riotLeagueAPI.js');
 
 app.use(express.static(__dirname + "/public"));
@@ -268,9 +269,10 @@ app.get("/does_not_exist", (req, res) => {
   res.render(`404_not_found.ejs`);
 })
 
-app.get("/tempGame", (req, res) => {
-  res.render("tempGame.ejs");
-  lolAPI.getRiotPUUID();
+app.get("/tempGame", async (req, res) => {
+  const PUUID = await lolAPI.getRiotPUUID();
+  req.session.PUUID = PUUID;
+  res.render("tempGame.ejs", { PUUID: PUUID });
 })
 
 app.get("*", (req, res) => {

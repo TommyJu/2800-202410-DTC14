@@ -75,42 +75,59 @@ function getSummonerRank(encryptedSummonerId) {
   });
 };
 
-function getSummonerDetails(PUUID) {
-  fetch(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${PUUID}?api_key=${daily_api_key}`)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok ' + response.statusText);
-    }
-    return response.json(); // Parse the JSON from the response
-  })
-  .then(data => {
-    // console.log(data); // Handle the data from the API
-    console.log("summoner level: " + data.summonerLevel);
-    let encryptedSummonerId = data.id;
-    getSummonerRank(encryptedSummonerId);
-  })
-  .catch(error => {
+async function getSummonerDetails(PUUID) {
+  // fetch(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${PUUID}?api_key=${daily_api_key}`)
+  // .then(response => {
+  //   if (!response.ok) {
+  //     throw new Error('Network response was not ok ' + response.statusText);
+  //   }
+  //   return response.json(); // Parse the JSON from the response
+  // })
+  // .then(data => {
+  //   // console.log(data); // Handle the data from the API
+  //   console.log("summoner level: " + data.summonerLevel);
+  //   let encryptedSummonerId = data.id;
+  //   getSummonerRank(encryptedSummonerId);
+  // })
+  // .catch(error => {
+  //   console.error('There has been a problem with your fetch operation:', error);
+  // });
+  try {
+    await fetch(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${PUUID}?api_key=${daily_api_key}`)
+  } catch (error) {
     console.error('There has been a problem with your fetch operation:', error);
-  });
+  }
 }
 
 async function getRiotPUUID() {
-  fetch(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${user_name}/${user_tag}?api_key=${daily_api_key}`)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok ' + response.statusText);
-    }
-    return response.json(); // Parse the JSON from the response
-  })
-  .then(data => {
-    // console.log("account_puuid =" + data.puuid); // Handle the data from the API
-    let PUUID = data.puuid;
-    getSummonerDetails(PUUID);
-    getMatchHistory(PUUID);
-  })
-  .catch(error => {
+  // await await fetch(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${user_name}/${user_tag}?api_key=${daily_api_key}`)
+  // .then(response => {
+  //   if (!response.ok) {
+  //     throw new Error('Network response was not ok ' + response.statusText);
+  //   }
+  //   return response.json(); // Parse the JSON from the response
+  // })
+  // .then(data => {
+  //   // console.log("account_puuid =" + data.puuid); // Handle the data from the API
+    
+  //   // getSummonerDetails(PUUID);
+  //   // getMatchHistory(PUUID);
+  // })
+  // .catch(error => {
+  //   console.error('There has been a problem with your fetch operation:', error);
+  // });
+  try {
+    const data = await fetch(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${user_name}/${user_tag}?api_key=${daily_api_key}`)
+    const dataJson = await data.json();
+    const PUUID = dataJson.puuid;
+    console.log("account_puuid =" + PUUID);
+    return PUUID;
+  } catch (error){
     console.error('There has been a problem with your fetch operation:', error);
-  });
+  }
 }
 
-getRiotPUUID();
+//Exporting my API logic functions so they may be used in the index.js file.
+module.exports = {
+  getRiotPUUID,
+};
