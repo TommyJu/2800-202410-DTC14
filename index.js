@@ -1,7 +1,7 @@
 require("./utils.js");
 require('dotenv').config();
-var { addTask } = include('add_task');
-var { getTasksByCategory } = include('get_user_tasks_by_category');
+const taskFunctions = require("./task_functions.js");
+const signUpFunctions = require("./sign_up_functions.js");
 
 const express = require('express');
 const app = express();
@@ -77,67 +77,11 @@ app.post('/submitUser', async (req, res) => {
   var securityQuestion = req.body.securityQuestion;
   var securityAnswer = req.body.securityAnswer
 
-  const usernameSchema = Joi.string().max(20).required();
-  const emailSchema = Joi.string().max(40).required();
-  const passwordSchema = Joi.string().max(20).required();
-  const securityAnswerSchema = Joi.string().max(20).required();
-
-  // Username verification
-  const usernameValidationResult = usernameSchema.validate(username);
-  if (usernameValidationResult.error != null) {
-    res.render("invalid_sign_up.ejs", { type: "username" })
-    return;
-  }
-
-  // Check if username is taken
-  if (await userCollection.findOne({ username: usernameValidationResult.value }) != null) {
-    res.render("invalid_sign_up.ejs", { type: "username (username is taken)" })
-    return;
-  }
-
-  // Email verification
-  const emailValidationResult = emailSchema.validate(email);
-  if (emailValidationResult.error != null) {
-    res.render("invalid_sign_up.ejs", { type: "email" })
-    return;
-  }
-
-  // Password verification
-  const passwordValidationResult = passwordSchema.validate(password);
-  if (passwordValidationResult.error != null) {
-    res.render("invalid_sign_up.ejs", { type: "password" })
-    return;
-  }
-
-  // Security question answer verification
-  const securityAnswerValidationResult = securityAnswerSchema.validate(securityAnswer);
-  if (securityAnswerValidationResult.error != null) {
-    res.render("invalid_sign_up.ejs", { type: "security answer" })
-    return;
-  }
-
-  // Hash password
-  var hashedPassword = await bcrypt.hash(password, saltRounds);
-
-  // Hash security question answer
-  var hashedSecurityAnswer = await bcrypt.hash(securityAnswer, saltRounds);
-
-  // Insert user into collection
-  await userCollection.insertOne({
-    username: username,
-    email: email,
-    password: hashedPassword,
-    in_game_name: null,
-    securityQuestion: securityQuestion,
-    securityAnswer: hashedSecurityAnswer,
-    gameTasks: [],
-    fitnessTasks: [],
-    dietTasks: []
-  });
-
-  req.session.authenticated = true;
-  req.session.username = username;
-  res.redirect('/');
+  await signUpFunctions.submitUser(
+    req, res,
+    username, userCollection,
+    email, password,
+    securityQuestion, securityAnswer);
 });
 
 // Log in page -------------------------------
@@ -207,14 +151,15 @@ app.post('/security_question', async (req, res) => {
   }
 
   user = await userCollection.findOne(
-    {username: username}, 
-    {projection: {securityQuestion: 1}});
+    { username: username },
+    { projection: { securityQuestion: 1 } });
   securityQuestion = user.securityQuestion;
 
   // Render security question
   res.render("security_question.ejs", {
     username: username,
-    securityQuestion: securityQuestion})
+    securityQuestion: securityQuestion
+  })
 })
 
 app.post('/password_reset', async (req, res) => {
@@ -224,8 +169,8 @@ app.post('/password_reset', async (req, res) => {
   username = req.body.username;
 
   user = await userCollection.findOne(
-    {username: username}, 
-    {projection: {securityAnswer: 1}});
+    { username: username },
+    { projection: { securityAnswer: 1 } });
 
   const newPasswordSchema = Joi.string().max(20).required();
   const newPasswordValidationResult = newPasswordSchema.validate(newPassword);
@@ -247,9 +192,9 @@ app.post('/password_reset', async (req, res) => {
     // Change password
     hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
     await userCollection.updateOne(
-      {username: username}, 
-      {$set: {password: hashedNewPassword}});
-      
+      { username: username },
+      { $set: { password: hashedNewPassword } });
+
     res.render("successful_password_recovery.ejs");
     return;
   } else {
@@ -269,7 +214,7 @@ app.get('/logout', async (req, res) => {
 // Game page
 app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
-    tasks = await getTasksByCategory("game", req.session.username, userCollection);
+    tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
     res.render("game.ejs", { tasks: tasks });
     return;
   }
@@ -278,7 +223,7 @@ app.get('/game', async (req, res) => {
 // Fitness page
 app.get('/fitness', async (req, res) => {
   if (req.session.authenticated) {
-    tasks = await getTasksByCategory("fitness", req.session.username, userCollection);
+    tasks = await taskFunctions.getTasksByCategory("fitness", req.session.username, userCollection);
     res.render("fitness.ejs", { tasks: tasks });
     return;
   }
@@ -287,7 +232,7 @@ app.get('/fitness', async (req, res) => {
 // Diet page
 app.get('/diet', async (req, res) => {
   if (req.session.authenticated) {
-    tasks = await getTasksByCategory("diet", req.session.username, userCollection);
+    tasks = await taskFunctions.getTasksByCategory("diet", req.session.username, userCollection);
     res.render("diet.ejs", { tasks: tasks });
     return;
   }
@@ -316,7 +261,7 @@ app.post('/add_task', async (req, res) => {
   category = req.body.category;
   username = req.session.username;
 
-  addTask(title, description, category, username, userCollection);
+  taskFunctions.addTask(title, description, category, username, userCollection);
 
   res.redirect(req.get('referer'));
 })
