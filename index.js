@@ -127,7 +127,9 @@ app.post('/submitUser', async (req, res) => {
     in_game_name: null,
     securityQuestion: securityQuestion,
     securityAnswer: hashedSecurityAnswer,
-    tasks: []
+    gameTasks: [],
+    fitnessTasks: [],
+    dietTasks: []
   });
 
   req.session.authenticated = true;
@@ -266,24 +268,30 @@ app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
     user = await userCollection.findOne(
       {username: req.session.username}, 
-      {projection: {tasks: 1}});
-    res.render("game.ejs", {tasks: user.tasks});
+      {projection: {gameTasks: 1}});
+    res.render("game.ejs", {tasks: user.gameTasks});
     return;
   }
   res.redirect("/");
 })
 // Fitness page
-app.get('/fitness', (req, res) => {
+app.get('/fitness', async (req, res) => {
   if (req.session.authenticated) {
-    res.render("fitness.ejs");
+    user = await userCollection.findOne(
+      {username: req.session.username}, 
+      {projection: {fitnessTasks: 1}});
+    res.render("fitness.ejs", {tasks: user.fitnessTasks});
     return;
   }
   res.redirect("/");
 })
 // Diet page
-app.get('/diet', (req, res) => {
+app.get('/diet', async (req, res) => {
   if (req.session.authenticated) {
-    res.render("diet.ejs");
+    user = await userCollection.findOne(
+      {username: req.session.username}, 
+      {projection: {dietTasks: 1}});
+    res.render("diet.ejs", {tasks: user.dietTasks});
     return;
   }
   res.redirect("/");
@@ -312,10 +320,30 @@ app.post('/add_task', async (req, res) => {
     category: req.body.category
   }
 
-  await userCollection.updateOne(
-    { username: req.session.username },
-    { $push: { tasks: newTask } }
-  );
+  switch(req.body.category) {
+    case 'game':
+      await userCollection.updateOne(
+        { username: req.session.username },
+        { $push: { gameTasks: newTask } }
+      );
+      break;
+    case 'fitness':
+      await userCollection.updateOne(
+        { username: req.session.username },
+        { $push: { fitnessTasks: newTask } }
+      );
+      break;
+  case 'diet':
+      await userCollection.updateOne(
+        { username: req.session.username },
+        { $push: { dietTasks: newTask } }
+      );
+      break;
+  default:
+    console.log("Unknown category to add task to");
+
+  }
+
   // Redirect to the previous page
   res.redirect(req.get('referer'));
 })
