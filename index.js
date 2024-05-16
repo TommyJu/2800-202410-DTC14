@@ -1,5 +1,6 @@
 require("./utils.js");
 require('dotenv').config();
+var { addTask } = include('add_task');
 
 const express = require('express');
 const app = express();
@@ -51,6 +52,7 @@ app.use(session({
 ));
 
 app.use(express.static(__dirname + "/public"));
+
 
 // Home page ---------------------------
 app.get('/', (req, res) => {
@@ -314,37 +316,13 @@ app.get('/profile', (req, res) => {
 })
 
 app.post('/add_task', async (req, res) => {
-  newTask = {
-    title: req.body.title,
-    description: req.body.description,
-    category: req.body.category
-  }
+  title = req.body.title;
+  description = req.body.description;
+  category = req.body.category;
+  username = req.session.username;
 
-  switch(req.body.category) {
-    case 'game':
-      await userCollection.updateOne(
-        { username: req.session.username },
-        { $push: { gameTasks: newTask } }
-      );
-      break;
-    case 'fitness':
-      await userCollection.updateOne(
-        { username: req.session.username },
-        { $push: { fitnessTasks: newTask } }
-      );
-      break;
-  case 'diet':
-      await userCollection.updateOne(
-        { username: req.session.username },
-        { $push: { dietTasks: newTask } }
-      );
-      break;
-  default:
-    console.log("Unknown category to add task to");
+  addTask(title, description, category, username, userCollection);
 
-  }
-
-  // Redirect to the previous page
   res.redirect(req.get('referer'));
 })
 
