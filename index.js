@@ -262,9 +262,12 @@ app.get('/logout', async (req, res) => {
 });
 
 // Game page
-app.get('/game', (req, res) => {
+app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
-    res.render("game.ejs");
+    user = await userCollection.findOne(
+      {username: req.session.username}, 
+      {projection: {tasks: 1}});
+    res.render("game.ejs", {tasks: user.tasks});
     return;
   }
   res.redirect("/");
