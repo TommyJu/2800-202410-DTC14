@@ -100,24 +100,6 @@ app.post('/security_question', async (req, res) => {
   username = req.body.username;
   await authenticationFunctions.renderSecurityQuestion(req, res, username, userCollection);
 
-  // const usernameSchema = Joi.string().max(20).required();
-  // const usernameValidationResult = usernameSchema.validate(username);
-
-  // if (usernameValidationResult.error != null) {
-  //   res.render("invalid_password_recovery.ejs", { type: "username" });
-  //   return;
-  // }
-
-  // user = await userCollection.findOne(
-  //   { username: username },
-  //   { projection: { securityQuestion: 1 } });
-  // securityQuestion = user.securityQuestion;
-
-  // // Render security question
-  // res.render("security_question.ejs", {
-  //   username: username,
-  //   securityQuestion: securityQuestion
-  // })
 })
 
 app.post('/password_reset', async (req, res) => {
