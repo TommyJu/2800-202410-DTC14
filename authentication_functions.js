@@ -3,7 +3,7 @@ const Joi = require('joi');
 const saltRounds = 12;
 const expireTime = 1 * 60 * 60 * 1000; // one hour expiry time
 
-module.exports = { submitUser, logInUser, resetPassword};
+module.exports = { submitUser, logInUser, resetPassword, renderSecurityQuestion};
 
 async function submitUser(
   req, res,
@@ -149,4 +149,25 @@ async function resetPassword(req, res, username, securityAnswer, newPassword, us
     res.render("invalid_password_recovery.ejs", { type: "security answer" });
     return;
   }
+}
+
+async function renderSecurityQuestion(req, res, username, userCollection) {
+  const usernameSchema = Joi.string().max(20).required();
+  const usernameValidationResult = usernameSchema.validate(username);
+
+  if (usernameValidationResult.error != null) {
+    res.render("invalid_password_recovery.ejs", { type: "username" });
+    return;
+  }
+
+  user = await userCollection.findOne(
+    { username: username },
+    { projection: { securityQuestion: 1 } });
+  securityQuestion = user.securityQuestion;
+
+  // Render security question
+  res.render("security_question.ejs", {
+    username: username,
+    securityQuestion: securityQuestion
+  })
 }

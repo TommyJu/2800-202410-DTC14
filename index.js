@@ -10,15 +10,10 @@ const favicon = require('serve-favicon');
 
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const bcrypt = require('bcrypt');
-const Joi = require('joi');
 const ejs = require('ejs');
 app.set('view engine', 'ejs');
 
 const port = process.env.PORT || 3000;
-
-const saltRounds = 12;
-const expireTime = 1 * 60 * 60 * 1000; // one hour expiry time
 
 // Env variables
 const mongodb_host = process.env.MONGODB_HOST;
@@ -95,46 +90,6 @@ app.post('/loggingin', async (req, res) => {
   var password = req.body.password;
 
   await authenticationFunctions.logInUser(req, res, username, password, userCollection);
-
-  // const usernameSchema = Joi.string().max(20).required();
-  // const passwordSchema = Joi.string().max(20).required();
-
-  // // username verification
-  // const usernameValidationResult = usernameSchema.validate(username);
-  // if (usernameValidationResult.error != null) {
-  //   res.render("invalid_log_in.ejs", { type: "username" });
-  //   return;
-  // }
-
-  // // Password verification
-  // const passwordValidationResult = passwordSchema.validate(password);
-  // if (passwordValidationResult.error != null) {
-  //   res.render("invalid_log_in.ejs", { type: "password" });
-  //   return;
-  // }
-
-  // // Secure database access (user name not input field)
-  // const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, in_game_name: 1, _id: 1 }).toArray();
-
-  // // User not found
-  // console.log(result);
-  // if (result.length != 1) {
-  //   res.render("invalid_log_in.ejs", { type: "username (user not found)" });
-  //   return;
-  // }
-  // // Correct password
-  // if (await bcrypt.compare(password, result[0].password)) {
-  //   req.session.authenticated = true;
-  //   req.session.username = result[0].username;
-  //   req.session.cookie.maxAge = expireTime;
-
-  //   res.redirect('/');
-  //   return;
-  // }
-  // else {
-  //   res.render("invalid_log_in.ejs", { type: "password" });
-  //   return;
-  // }
 });
 
 app.get('/password_recovery', (req, res) => {
@@ -142,26 +97,27 @@ app.get('/password_recovery', (req, res) => {
 })
 
 app.post('/security_question', async (req, res) => {
-  // Validate username input
   username = req.body.username;
-  const usernameSchema = Joi.string().max(20).required();
-  const usernameValidationResult = usernameSchema.validate(username);
+  await authenticationFunctions.renderSecurityQuestion(req, res, username, userCollection);
 
-  if (usernameValidationResult.error != null) {
-    res.render("invalid_password_recovery.ejs", { type: "username" });
-    return;
-  }
+  // const usernameSchema = Joi.string().max(20).required();
+  // const usernameValidationResult = usernameSchema.validate(username);
 
-  user = await userCollection.findOne(
-    { username: username },
-    { projection: { securityQuestion: 1 } });
-  securityQuestion = user.securityQuestion;
+  // if (usernameValidationResult.error != null) {
+  //   res.render("invalid_password_recovery.ejs", { type: "username" });
+  //   return;
+  // }
 
-  // Render security question
-  res.render("security_question.ejs", {
-    username: username,
-    securityQuestion: securityQuestion
-  })
+  // user = await userCollection.findOne(
+  //   { username: username },
+  //   { projection: { securityQuestion: 1 } });
+  // securityQuestion = user.securityQuestion;
+
+  // // Render security question
+  // res.render("security_question.ejs", {
+  //   username: username,
+  //   securityQuestion: securityQuestion
+  // })
 })
 
 app.post('/password_reset', async (req, res) => {
@@ -171,40 +127,6 @@ app.post('/password_reset', async (req, res) => {
   newPassword = req.body.newPassword;
 
   await authenticationFunctions.resetPassword(req, res, username, securityAnswer, newPassword, userCollection);
-
-  // user = await userCollection.findOne(
-  //   { username: username },
-  //   { projection: { securityAnswer: 1 } });
-
-  // const newPasswordSchema = Joi.string().max(20).required();
-  // const newPasswordValidationResult = newPasswordSchema.validate(newPassword);
-  // const securityAnswerSchema = Joi.string().max(20).required();
-  // const securityAnswerValidationResult = securityAnswerSchema.validate(securityAnswer);
-
-  // if (newPasswordValidationResult.error != null) {
-  //   res.render("invalid_password_recovery.ejs", { type: "new password" });
-  //   return;
-  // }
-
-  // if (securityAnswerValidationResult.error != null) {
-  //   res.render("invalid_password_recovery.ejs", { type: "security answer" });
-  //   return;
-  // }
-
-  // // Check if security answer matches
-  // if (await bcrypt.compare(securityAnswer, user.securityAnswer)) {
-  //   // Change password
-  //   hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
-  //   await userCollection.updateOne(
-  //     { username: username },
-  //     { $set: { password: hashedNewPassword } });
-
-  //   res.render("successful_password_recovery.ejs");
-  //   return;
-  // } else {
-  //   res.render("invalid_password_recovery.ejs", { type: "security answer" });
-  //   return;
-  // }
 })
 
 // Log out
