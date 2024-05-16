@@ -50,9 +50,6 @@ app.use(session({
 }
 ));
 
-// Importing the API logic functions to link back end data to front end display.
-const lolAPI = require('./riotLeagueAPI.js');
-
 app.use(express.static(__dirname + "/public"));
 
 // Home page ---------------------------
@@ -267,25 +264,6 @@ app.get('/logout', async (req, res) => {
 app.get("/does_not_exist", (req, res) => {
   res.status(404);
   res.render(`404_not_found.ejs`);
-})
-
-app.get("/tempGame", async (req, res) => {
-  const PUUID = await lolAPI.getRiotPUUID();
-  const summonerDetails = await lolAPI.getSummonerLevelAndID(PUUID);
-  const summonerLevel = summonerDetails[1];
-  const encryptedSummonerId = summonerDetails[0];
-  const summonerRank = await lolAPI.getSummonerRank(encryptedSummonerId);
-  if (summonerRank === null) {
-    var rank = "Unranked";
-  } else {
-    var rank = summonerRank[0] + " " + summonerRank[1];
-  }
-  const match_ids = await lolAPI.getMatchHistory(PUUID);
-  const winrateAndKD = await lolAPI.calculateWinLoss(match_ids, PUUID);
-  console.log(winrateAndKD);
-  const winrate = winrateAndKD[0];
-  const kd = winrateAndKD[1];
-  res.render("tempGame.ejs", { level: summonerLevel, rank: rank, winrate: winrate, kd: kd});
 })
 
 app.get("*", (req, res) => {
