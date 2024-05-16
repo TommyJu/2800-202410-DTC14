@@ -271,8 +271,21 @@ app.get("/does_not_exist", (req, res) => {
 
 app.get("/tempGame", async (req, res) => {
   const PUUID = await lolAPI.getRiotPUUID();
-  req.session.PUUID = PUUID;
-  res.render("tempGame.ejs", { PUUID: PUUID });
+  const summonerDetails = await lolAPI.getSummonerLevelAndID(PUUID);
+  const summonerLevel = summonerDetails[1];
+  const encryptedSummonerId = summonerDetails[0];
+  const summonerRank = await lolAPI.getSummonerRank(encryptedSummonerId);
+  if (summonerRank === null) {
+    var rank = "Unranked";
+  } else {
+    var rank = summonerRank[0] + " " + summonerRank[1];
+  }
+  const match_ids = await lolAPI.getMatchHistory(PUUID);
+  const winrateAndKD = await lolAPI.calculateWinLoss(match_ids, PUUID);
+  console.log(winrateAndKD);
+  const winrate = winrateAndKD[0];
+  const kd = winrateAndKD[1];
+  res.render("tempGame.ejs", { level: summonerLevel, rank: rank, winrate: winrate, kd: kd});
 })
 
 app.get("*", (req, res) => {
