@@ -63,6 +63,15 @@ app.get('/', (req, res) => {
   res.render("home_logged_out.ejs");
 })
 
+//Stats page ---------------------------
+app.get('/stats', async (req, res) => {
+  username = req.session.username;
+  const result = await userCollection.find({ username: username }).toArray();
+  levelGame = result[0].levels.game
+  levelFitness = result[0].levels.fitness
+  levelDiet = result[0].levels.diet
+  res.render("stat_summary.ejs", { levelGame: levelGame, levelFitness: levelFitness, levelDiet: levelDiet });
+})
 // Sign up ----------------------------
 app.get('/signup', (req, res) => {
   res.render("sign_up.ejs");
