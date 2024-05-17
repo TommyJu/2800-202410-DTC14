@@ -1,7 +1,126 @@
-<%- include("templates/header_with_profile.ejs") %>
-diet
+<!DOCTYPE html>
+<html lang="en">
 
-<!-- Parameter determines default selected dropdown category for modal -->
-<%- include("templates/task_modal.ejs", {category: 'diet'}) %>
-<%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<%- include("templates/header_with_profile.ejs") %>
+
+<body class="bg-gray-50">
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="flex items-center justify-center">
+        <div class="bg-gray-200 rounded-3xl shadow-lg p-5 md:p-20 mx-5 w-5/6">
+            <button id="edit-allergies" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full">Edit
+                Allergies</button>
+
+            <div id="allergy-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div class="bg-white p-5 rounded-lg shadow-md w-11/12 max-w-md">
+                    <label for="allergies" class="block text-gray-700">Enter your allergies:</label>
+                    <input type="text" id="allergies" class="mt-2 p-2 border rounded-lg w-full"
+                        placeholder="e.g., peanuts, shellfish">
+                    <div class="flex justify-between mt-3">
+                        <button id="save-allergies"
+                            class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full mr-1">Save</button>
+                        <button id="close-modal"
+                            class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full mr-1">Close</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="chat-box" class="my-5 h-96 overflow-auto border p-3 rounded-lg text-sm text-gray-600 bg-white"></div>
+            <div id="typing" class="text-gray-500 text-sm italic hidden">GUD Chatbot is typing...</div>
+            <button id="generate-recipe" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full">Generate
+                Recipe</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editAllergiesButton = document.getElementById('edit-allergies');
+            const allergyModal = document.getElementById('allergy-modal');
+            const saveAllergiesButton = document.getElementById('save-allergies');
+            const generateRecipeButton = document.getElementById('generate-recipe');
+            const allergiesInput = document.getElementById('allergies');
+            const chatBox = document.getElementById('chat-box');
+            const closeModalButton = document.getElementById('close-modal');
+            const typingIndicator = document.getElementById('typing');
+
+            editAllergiesButton.addEventListener('click', function () {
+                allergyModal.classList.remove('hidden'); // Show modal
+            });
+
+            closeModalButton.addEventListener('click', function () {
+                allergyModal.classList.add('hidden'); // Hide modal
+            });
+
+            saveAllergiesButton.addEventListener('click', function () {
+                const allergies = allergiesInput.value;
+                fetch('/allergies', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ allergies: allergies }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Allergies saved:', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+
+            generateRecipeButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                fetch('/get_allergies', {
+                    method: 'GET',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const allergies = data.allergies;
+                    let message = "generate a healthy recipe";
+                    if (allergies) {
+                        message = `generate a healthy recipe without ${allergies}`;
+                    }
+                    typingIndicator.classList.remove('hidden');
+                    fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: message }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        typingIndicator.classList.add('hidden');
+                        const reply = data.reply;
+                        const messages = reply.split('\n'); 
+                        let formattedReply = '';
+                        messages.forEach(msg => {
+                            formattedReply += `<p>${msg}</p>`; 
+                        });
+                        chatBox.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+                        chatBox.innerHTML += `<div><strong>GUD Chatbot:</strong>${formattedReply}</div>`; 
+                        chatBox.scrollTop = chatBox.scrollHeight; 
+                    })
+                    .catch((error) => {
+                        typingIndicator.classList.add('hidden');
+                        console.error('Error:', error);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+</body>
 <%- include("templates/footer.ejs") %>
+</html>

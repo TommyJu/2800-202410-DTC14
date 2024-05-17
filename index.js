@@ -4,10 +4,12 @@ weather = require('./weather.js')
 const taskFunctions = require("./task_functions.js");
 const authenticationFunctions = require("./authentication_functions.js");
 
-const cors = require('cors');
 const { ObjectId } = require('mongodb');
 const express = require('express');
 const app = express();
+const axios = require('axios');
+const readline = require('readline');
+const mongoose = require('mongoose');
 const path = require('path');
 const favicon = require('serve-favicon');
 
@@ -28,6 +30,7 @@ const mongodb_password = process.env.MONGODB_PASSWORD;
 const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const weatherKey = process.env.OPEN_WEATHER_API_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 
@@ -42,6 +45,26 @@ var mongoStore = MongoStore.create({
   }
 })
 
+const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
+
+// Connect to MongoDB
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('Error connecting to MongoDB:', err));
+
+const userSchema = new mongoose.Schema({
+  allergies: String
+});
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+console.log('Welcome to ChatGPT!');
+
+app.use(express.json());
+
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 app.use(express.urlencoded({ extended: false }));
@@ -55,7 +78,6 @@ app.use(session({
 ));
 
 app.use(express.static(__dirname + "/public"));
-
 
 // Home page ---------------------------
 app.get('/', (req, res) => {
@@ -75,6 +97,7 @@ app.get('/stats', async (req, res) => {
   levelDiet = result[0].levels.diet
   res.render("stat_summary.ejs", { levelGame: levelGame, levelFitness: levelFitness, levelDiet: levelDiet });
 })
+
 // Sign up ----------------------------
 app.get('/signup', (req, res) => {
   res.render("sign_up.ejs");
@@ -130,8 +153,7 @@ app.post('/password_reset', async (req, res) => {
   await authenticationFunctions.resetPassword(req, res, username, securityAnswer, newPassword, userCollection);
 })
 
-// Weather page -------------------------
-// app.use(cors());
+// Weather page
 app.get('/weather', async (req, res) => {
   username = req.session.username
   const result = await userCollection.find({ username: username }).toArray();
@@ -143,6 +165,7 @@ app.get('/weather', async (req, res) => {
   }
   weather.getWeather(url, res)
 });
+
 // Log out
 app.get('/logout', async (req, res) => {
   const userCollection = database.db(mongodb_database).collection('users')
@@ -191,6 +214,7 @@ app.get('/fitness', async (req, res) => {
   }
   res.redirect("/");
 })
+
 // Diet page
 app.get('/diet', async (req, res) => {
   if (req.session.authenticated) {
@@ -200,6 +224,71 @@ app.get('/diet', async (req, res) => {
   }
   res.redirect("/");
 })
+
+app.post('/chat', async (req, res) => {
+  const message = req.body.message;
+  try {
+      const reply = await sendMessage(message);
+      res.json({ reply }); 
+  } catch (error) {
+      console.error('Error communicating with OpenAI API:', error.message);
+      res.status(500).json({ error: 'Failed to communicate with OpenAI API' });
+  }
+});
+
+app.post('/allergies', async (req, res) => {
+  const allergies = req.body.allergies;
+  const username = req.session.username;
+  try {
+      await userCollection.findOneAndUpdate(
+          { username: username },
+          { $set: { allergies: allergies } },
+          { upsert: true } 
+      );
+      res.json({ success: true, message: 'Allergies saved successfully' });
+  } catch (error) {
+      console.error('Error saving allergies:', error.message);
+      res.status(500).json({ error: 'Failed to save allergies' });
+  }
+});
+
+app.get('/get_allergies', async (req, res) => {
+  const username = req.session.username;
+  try {
+      const user = await userCollection.findOne({ username: username });
+      if (user) {
+          res.json({ allergies: user.allergies });
+      } else {
+          res.status(404).json({ error: 'User not found' });
+      }
+  } catch (error) {
+      console.error('Error retrieving user allergies:', error.message);
+      res.status(500).json({ error: 'Failed to retrieve user allergies' });
+  }
+});
+
+async function sendMessage(message) {
+  try {
+      const response = await axios.post(
+          'https://api.openai.com/v1/chat/completions',
+          {
+              model: 'gpt-3.5-turbo',
+              messages: [{ role: 'user', content: message }],
+          },
+          {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${OPENAI_API_KEY}`,
+              },
+          }
+      );
+      return response.data.choices[0].message.content;
+  } catch (error) {
+      console.error(error.response.data);
+      throw new Error('Failed to communicate with OpenAI API');
+  }
+}
+
 // Friends page
 app.get('/friends', (req, res) => {
   if (req.session.authenticated) {
@@ -208,6 +297,7 @@ app.get('/friends', (req, res) => {
   }
   res.redirect("/");
 })
+
 // Profile page
 app.get('/profile', async (req, res) => {
   if (req.session.authenticated) {
@@ -222,6 +312,7 @@ app.get('/profile', async (req, res) => {
   }
   res.redirect("/");
 })
+
 // Add task from modal form
 app.post('/add_task', async (req, res) => {
   title = req.body.title;
