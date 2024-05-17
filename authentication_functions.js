@@ -108,7 +108,7 @@ async function logInUser(req, res, username, password, userCollection) {
   }
 
   // Secure database access (user name not input field)
-  const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, in_game_name: 1, _id: 1 }).toArray();
+  const result = await userCollection.find({ username: username }).project({ username: 1, email: 1, password: 1, in_game_name: 1, _id: 1, RiotID: 1 }).toArray();
 
   // User not found
   console.log(result);
@@ -121,6 +121,14 @@ async function logInUser(req, res, username, password, userCollection) {
     req.session.authenticated = true;
     req.session.username = result[0].username;
     req.session.cookie.maxAge = expireTime;
+    if (!(result[0].in_game_name == null)) {
+      req.session.RiotUsername = result[0].in_game_name;
+      console.log(req.session.RiotUsername);
+    }
+    if (!(result[0].RiotID == null)) {
+      req.session.RiotID= result[0].RiotID;
+      console.log(req.session.RiotID);
+    }  
 
     res.redirect('/');
     return;
