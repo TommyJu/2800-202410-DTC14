@@ -93,10 +93,6 @@ module.exports = {
   calculateWinLoss,
 };
 
-//Put this code as part of the logging in process.
-// req.session.RiotUsername = "yehsu";
-// req.session.RiotID= "na1";
-
 
 // Importing the API logic functions to link back end data to front end display.
 // const lolAPI = require('./riotLeagueAPI.js');

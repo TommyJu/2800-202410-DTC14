@@ -53,13 +53,13 @@ async function submitUser(
   }
 
   const RiotUsernameValidationResult = securityAnswerSchema.validate(RiotUsername);
-  if (securityAnswerValidationResult.error != null) {
+  if (RiotUsernameValidationResult.error != null) {
     res.render("invalid_sign_up.ejs", { type: "Riot username" })
     return;
   }
 
   const RiotIDValidationResult = securityAnswerSchema.validate(RiotID);
-  if (securityAnswerValidationResult.error != null) {
+  if (RiotIDValidationResult.error != null) {
     res.render("invalid_sign_up.ejs", { type: "Riot ID" })
     return;
   }
