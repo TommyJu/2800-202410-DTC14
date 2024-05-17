@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="comp2800 static template" content="My 2800 App" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GUD</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!--Tailwind CSS Library-->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Icons (Material Design) -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <!--Other Libraries-->
+
+    <!-- Web-based Scripts-->
+</head>
+
+<body>
+    <!------------------------------>
+    <!-- Your HTML Layout go here -->
+    <!------------------------------>
+    <div class="container">
+        <nav id="navbarTemplate" class="navbar nav-header sticky top-0">
+            <%- include("templates/header_logo_only.ejs") %>
+        </nav>
+        <form action="/weather" method="get">
+            <label for="cities">Choose a City:</label>
+            <select name="selectCity" id="cities">
+                <option selected disabled>Choose here</option>
+                <option value="Vancouver">Vancouver</option>
+                <option value="Richmond">Richmond</option>
+                <option value="Burnaby">Burnaby</option>
+                <option value="Calgary">Calgary</option>
+                <option value="Toronto">Toronto</option>
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+        <br><br>
+        <h1>City: <%= cityName %>
+        </h1>
+        <div>Condition: <%= weatherToday %>
+        </div>
+        <div>Temperature: <%=weatherTemp%> °C</div>
+        <div> <img src="https://openweathermap.org/img/wn/<%= weatherIcon %>@2x.png"> </div>
+
+        <footer id="footerTemplate" class="navbar nav-footer sticky bottom-0">
+            <%- include("templates/nav_footer.ejs") %>
+        </footer>
+    </div>
+</body>
+<!---------------------------------------------->
+<!-- Your own JavaScript functions go here    -->
+<!---------------------------------------------->
+
+<!-- Link to scripts of your own -->
+
+</html>

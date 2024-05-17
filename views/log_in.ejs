@@ -1,0 +1,9 @@
+<%- include("templates/header_logo_only.ejs") %>
+
+    <h1>Log in to an existing account</h1>
+    <form action="/loggingin" method="post">
+    <input type="text" name="username" placeholder="username"/>
+    <input type="password" name="password" placeholder='password'/>
+    <input type="submit"/>
+    </form>
+    <a href="/password_recovery">I forgot my password</a>
