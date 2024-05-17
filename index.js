@@ -61,6 +61,15 @@ app.get('/', (req, res) => {
   res.render("home_logged_out.ejs");
 })
 
+//Stats page ---------------------------
+app.get('/stats', async (req, res) => {
+  username = req.session.username;
+  const result = await userCollection.find({ username: username }).toArray();
+  levelGame = result[0].levels.game
+  levelFitness = result[0].levels.fitness
+  levelDiet = result[0].levels.diet
+  res.render("stat_summary.ejs", { levelGame: levelGame, levelFitness: levelFitness, levelDiet: levelDiet });
+})
 // Sign up ----------------------------
 app.get('/signup', (req, res) => {
   res.render("sign_up.ejs");
@@ -202,14 +211,15 @@ app.post('/security_question', async (req, res) => {
   }
 
   user = await userCollection.findOne(
-    {username: username}, 
-    {projection: {securityQuestion: 1}});
+    { username: username },
+    { projection: { securityQuestion: 1 } });
   securityQuestion = user.securityQuestion;
 
   // Render security question
   res.render("security_question.ejs", {
     username: username,
-    securityQuestion: securityQuestion})
+    securityQuestion: securityQuestion
+  })
 })
 
 app.post('/password_reset', async (req, res) => {
@@ -219,8 +229,8 @@ app.post('/password_reset', async (req, res) => {
   username = req.body.username;
 
   user = await userCollection.findOne(
-    {username: username}, 
-    {projection: {securityAnswer: 1}});
+    { username: username },
+    { projection: { securityAnswer: 1 } });
 
   const newPasswordSchema = Joi.string().max(20).required();
   const newPasswordValidationResult = newPasswordSchema.validate(newPassword);
@@ -242,9 +252,9 @@ app.post('/password_reset', async (req, res) => {
     // Change password
     hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
     await userCollection.updateOne(
-      {username: username}, 
-      {$set: {password: hashedNewPassword}});
-      
+      { username: username },
+      { $set: { password: hashedNewPassword } });
+
     res.render("successful_password_recovery.ejs");
     return;
   } else {

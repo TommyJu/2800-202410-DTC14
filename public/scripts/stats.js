@@ -1,6 +1,6 @@
 const getChartOptions = () => {
   return {
-    series: [5, 7, 10],
+    series: [levelGame, levelFitness, levelDiet],
     colors: ["#1C64F2", "#FDBA8C", "#E74694"],
     chart: {
       width: "100%",
@@ -85,7 +85,11 @@ const getChartOptions = () => {
     },
   }
 }
+levelGame = parseInt(document.getElementById("levelGame").innerHTML);
+levelFitness = parseInt(document.getElementById("levelFitness").innerHTML);
+levelDiet = parseInt(document.getElementById("levelDiet").innerHTML);
 if (document.getElementById("donut-chart") && typeof ApexCharts !== 'undefined') {
   const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions());
   chart.render();
 }
+

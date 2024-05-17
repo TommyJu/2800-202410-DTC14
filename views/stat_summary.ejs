@@ -27,13 +27,22 @@
         <nav id="navbarTemplate" class="navbar nav-header sticky top-0">
             <%- include("templates/header_with_profile.ejs") %>
         </nav>
-        <div class="mx-auto max-w-sm bg-white p-4 md:p-6 h-full">          
+        <div class="mx-auto max-w-sm bg-white p-4 md:p-6 h-full">
             <!-- Donut Chart -->
             <div class="py-6" id="donut-chart"></div>
         </div>
         <footer id="footerTemplate" class="navbar nav-footer sticky bottom-0">
             <%- include("templates/footer.ejs") %>
-        </footer> 
+        </footer>
+    </div>
+    <div class="hidden" id="levelGame">
+        <%=levelGame%>
+    </div>
+    <div class="hidden" id="levelFitness">
+        <%=levelFitness%>
+    </div>
+    <div class="hidden" id="levelDiet">
+        <%=levelDiet%>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <script src="scripts/stats.js"></script>
