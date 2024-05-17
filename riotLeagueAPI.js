@@ -1,7 +1,5 @@
 //this stuff goes into env
-const user_name = 'yehsu';
-const user_tag = 'na1';
-const daily_api_key = 'RGAPI-435df765-6b62-418a-ad22-7019d807a66e';
+const daily_api_key = process.env.DAILY_RIOT_API_KEY;
 
 async function calculateWinLoss(match_ids, PUUID) {
   const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -53,9 +51,7 @@ async function getSummonerRank(encryptedSummonerId) {
       console.log("Currrent rank: unranked");
       return null;
     } else {
-      const tier = dataJson[0].tier;
-      const rank = dataJson[0].rank;
-      return [tier, rank];
+      return dataJson;
     };
   } catch (error) {
     console.error('There has been a problem with your fetch operation:', error);
@@ -76,7 +72,7 @@ async function getSummonerLevelAndID(PUUID) {
   }
 }
 
-async function getRiotPUUID() {
+async function getRiotPUUID(user_name, user_tag) {
   try {
     const data = await fetch(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${user_name}/${user_tag}?api_key=${daily_api_key}`)
     const dataJson = await data.json();
@@ -97,11 +93,17 @@ module.exports = {
   calculateWinLoss,
 };
 
+//Put this code as part of the logging in process.
+// req.session.RiotUsername = "yehsu";
+// req.session.RiotID= "na1";
+
+
 // Importing the API logic functions to link back end data to front end display.
 // const lolAPI = require('./riotLeagueAPI.js');
 
+
 // app.get("/tempGame", async (req, res) => {
-//   const PUUID = await lolAPI.getRiotPUUID();
+//   const PUUID = await lolAPI.getRiotPUUID(user_name, user_tag);
 //   const summonerDetails = await lolAPI.getSummonerLevelAndID(PUUID);
 //   const summonerLevel = summonerDetails[1];
 //   const encryptedSummonerId = summonerDetails[0];
