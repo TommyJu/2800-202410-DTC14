@@ -35,9 +35,10 @@
                 <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
                 <!-- <input type="description" name="description" id="description" placeholder="Bring a beachtowel, a good book, and some drinks." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required /> -->
                 <select name="category" id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                    <option value="fitness">Fitness</option>
-                    <option value="diet">Diet</option>
-                    <option value="game">Game</option>
+                  <!-- This embedded JS will determine which dropbox option is selected by default -->
+                    <option value="fitness" <%= category === 'fitness' ? 'selected' : '' %> >Fitness</option>
+                    <option value="diet" <%= category === 'diet' ? 'selected' : '' %> >Diet</option>
+                    <option value="game" <%= category === 'game' ? 'selected' : '' %> >Game</option>
                 </select>
               </div>
             <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
