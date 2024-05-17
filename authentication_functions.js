@@ -52,13 +52,13 @@ async function submitUser(
     return;
   }
 
-  const RiotUsernameValidationResult = securityAnswerSchema.validate(RiotUsername);
+  const RiotUsernameValidationResult = RiotUsernameSchema.validate(RiotUsername);
   if (RiotUsernameValidationResult.error != null) {
     res.render("invalid_sign_up.ejs", { type: "Riot username" })
     return;
   }
 
-  const RiotIDValidationResult = securityAnswerSchema.validate(RiotID);
+  const RiotIDValidationResult = RiotIDSchema.validate(RiotID);
   if (RiotIDValidationResult.error != null) {
     res.render("invalid_sign_up.ejs", { type: "Riot ID" })
     return;
