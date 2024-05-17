@@ -1,4 +1,7 @@
 <%- include("templates/header_with_profile.ejs") %>
 diet
+
+<!-- Parameter determines default selected dropdown category for modal -->
+<%- include("templates/task_modal.ejs", {category: 'diet'}) %>
 <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
 <%- include("templates/footer.ejs") %>

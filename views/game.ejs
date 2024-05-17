@@ -1,6 +1,8 @@
 <%- include("templates/header_with_profile.ejs") %>
 game
-<%- include("templates/task_modal.ejs") %>
+
+<!-- Parameter determines default selected dropdown category for modal -->
+<%- include("templates/task_modal.ejs", {category: 'game'}) %>
 
 <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
 
