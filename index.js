@@ -209,9 +209,15 @@ app.get('/friends', (req, res) => {
   res.redirect("/");
 })
 // Profile page
-app.get('/profile', (req, res) => {
+app.get('/profile', async (req, res) => {
   if (req.session.authenticated) {
-    res.render("profile.ejs");
+    username = req.session.username;
+    const result = await userCollection.find({ username}).toArray();
+    console.log(result);
+    email = result[0].email;
+    gameID = result[0].riotID;
+    allergies = result[0].allergies;
+    res.render("profile.ejs", { username: username, email: email, gameID: gameID, allergies: allergies });
     return;
   }
   res.redirect("/");
