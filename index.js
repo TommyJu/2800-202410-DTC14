@@ -182,7 +182,7 @@ app.get('/game', async (req, res) => {
     user_tag = req.session.RiotID;
     if (user_name === undefined || user_tag === undefined) {
       console.log("user_name or user_tag is undefined");
-      res.render("game.ejs", { tasks: tasks, Error: "No Riot account linked to this account."});
+      res.render("game.ejs", { tasks: tasks, gameError: "No Riot account linked to this account."});
       return;
     }
     const PUUID = await lolAPI.getRiotPUUID(user_name, user_tag);
@@ -199,7 +199,7 @@ app.get('/game', async (req, res) => {
     const winrateAndKD = await lolAPI.calculateWinLoss(match_ids, PUUID);
     const winrate = winrateAndKD[0];
     const kd = winrateAndKD[1];
-    res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd});
+    res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd, gameError: "" });
     return;
   }
   res.redirect("/");

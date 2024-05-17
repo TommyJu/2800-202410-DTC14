@@ -86,6 +86,10 @@ async function submitUser(
 
   req.session.authenticated = true;
   req.session.username = username;
+  if (user_name & user_tag) {
+    req.session.RiotUsername = RiotUsername;
+    req.session.RiotID = RiotID;
+  }
   res.redirect('/');
 }
 
@@ -127,7 +131,6 @@ async function logInUser(req, res, username, password, userCollection) {
     if (!(result[0].RiotID == null)) {
         req.session.RiotID= result[0].RiotID;
       }  
-
     res.redirect('/');
     return;
   }

@@ -1,7 +1,7 @@
-<% if (Error) { %>
+<% if (gameError) { %>
   
   <%- include("templates/header_with_profile.ejs") %>
-  <%= Error %>
+  <%=  gameError %>
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
   

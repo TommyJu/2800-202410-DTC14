@@ -6,7 +6,6 @@ async function calculateWinLoss(match_ids, PUUID) {
   var wins = 0;
   var kills = 0;
   var deaths = 0;
-  console.log("match_ids: " + match_ids);
   if (match_ids.length === 0) {
     console.log("No matches found in match history, returning 0% winrate and 0 KD");
     return ["Not enough games have been played on this account to display winrate.", 
@@ -58,7 +57,9 @@ async function getSummonerRank(encryptedSummonerId) {
       console.log("Currrent rank: unranked");
       return null;
     } else {
-      return dataJson;
+      var tier = dataJson[0].tier;
+      var rank = dataJson[0].rank;
+      return [tier, rank];
     };
   } catch (error) {
     console.error('There has been a problem with your fetch operation:', error);
