@@ -1,5 +1,6 @@
 require("./utils.js");
 require('dotenv').config();
+weather = require('./weather.js')
 
 const express = require('express');
 const app = express();
@@ -24,6 +25,7 @@ const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
 const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
+const weatherKey = process.env.OPEN_WEATHER_API_KEY;
 
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 
@@ -36,6 +38,10 @@ var mongoStore = MongoStore.create({
   crypto: {
     secret: mongodb_session_secret
   }
+  mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
+  crypto: {
+    secret: mongodb_session_secret
+  }
 })
 
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
@@ -43,6 +49,10 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 app.use(express.urlencoded({ extended: false }));
 
 app.use(session({
+  secret: node_session_secret,
+  store: mongoStore,
+  saveUninitialized: false,
+  resave: true
   secret: node_session_secret,
   store: mongoStore,
   saveUninitialized: false,
@@ -60,8 +70,16 @@ app.get('/', (req, res) => {
   }
   res.render("home_logged_out.ejs");
 })
+  if (req.session.authenticated) {
+    res.render("home_logged_in.ejs", { username: req.session.username });
+    return;
+  }
+  res.render("home_logged_out.ejs");
+})
 
 // Sign up ----------------------------
+app.get('/signup', (req, res) => {
+  res.render("sign_up.ejs");
 app.get('/signup', (req, res) => {
   res.render("sign_up.ejs");
 });
@@ -240,19 +258,20 @@ app.post('/password_reset', async (req, res) => {
   // Check if security answer matches
   if (await bcrypt.compare(securityAnswer, user.securityAnswer)) {
     // Change password
-    hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
-    await userCollection.updateOne(
-      {username: username}, 
-      {$set: {password: hashedNewPassword}});
-      
-    res.render("successful_password_recovery.ejs");
-    return;
-  } else {
-    res.render("invalid_password_recovery.ejs", { type: "security answer" });
-    return;
-  }
-})
 
+// Weather page -------------------------
+app.use(cors());
+app.get('/weather', async (req, res) => {
+  username = req.session.username
+  const result = await userCollection.find({ username: username }).toArray();
+  defaultCity = result[0].city
+  if (!req.query.selectCity) {
+    url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity},CA&appid=${weatherKey}&units=metric`
+  } else {
+    url = `https://api.openweathermap.org/data/2.5/weather?q=${req.query.selectCity},CA&appid=${weatherKey}&units=metric`
+  }
+  weather.getWeather(url, res)
+});
 // Log out
 app.get('/logout', async (req, res) => {
   const userCollection = database.db(mongodb_database).collection('users')
