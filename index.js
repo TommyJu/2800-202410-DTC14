@@ -305,7 +305,7 @@ app.get('/profile', async (req, res) => {
     const result = await userCollection.find({ username}).toArray();
     console.log(result);
     email = result[0].email;
-    gameID = result[0].riotID;
+    gameID = result[0].in_game_name;
     allergies = result[0].allergies;
     res.render("profile.ejs", { username: username, email: email, gameID: gameID, allergies: allergies });
     return;
