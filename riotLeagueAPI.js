@@ -80,10 +80,6 @@ async function getSummonerLevelAndID(PUUID) {
 }
 
 async function getRiotPUUID(user_name, user_tag) {
-  if (user_name === undefined || user_tag === undefined) {
-    console.log("user_name or user_tag is undefined");
-    return null;
-  }
   try {
     const data = await fetch(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${user_name}/${user_tag}?api_key=${daily_api_key}`)
     const dataJson = await data.json();

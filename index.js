@@ -154,9 +154,14 @@ app.get('/logout', async (req, res) => {
 // Game page
 app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
+    tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
     user_name = req.session.RiotUsername;
     user_tag = req.session.RiotID;
-    tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
+    if (user_name === undefined || user_tag === undefined) {
+      console.log("user_name or user_tag is undefined");
+      res.render("game.ejs", { tasks: tasks, Error: "No Riot account linked to this account."});
+      return;
+    }
     const PUUID = await lolAPI.getRiotPUUID(user_name, user_tag);
     const summonerDetails = await lolAPI.getSummonerLevelAndID(PUUID);
     const summonerLevel = summonerDetails[1];

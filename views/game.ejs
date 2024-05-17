@@ -1,15 +1,30 @@
-<%- include("templates/header_with_profile.ejs") %>
-<br>
-Summoner Level: <%= level %>
-<br>
-Current rank: <%= rank %>
-<br>
-Winrate (past 20 games): <%= winrate %> %
-<br>
-KD Ratio: <%= kd %>
-<!-- Parameter determines default selected dropdown category for modal -->
-<%- include("templates/task_modal.ejs", {category: 'game'}) %>
+<% if (Error) { %>
+  
+  <%- include("templates/header_with_profile.ejs") %>
+  <%= Error %>
+  <!-- Parameter determines default selected dropdown category for modal -->
+  <%- include("templates/task_modal.ejs", {category: 'game'}) %>
+  
+  <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+  
+  <%- include("templates/footer.ejs") %>
 
-<%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+<% } else { %>
+  
+  <%- include("templates/header_with_profile.ejs") %>
+  <br>
+  Summoner Level: <%= level %>
+  <br>
+  Current rank: <%= rank %>
+  <br>
+  Winrate (past 20 games): <%= winrate %> %
+  <br>
+  KD Ratio: <%= kd %>
+  <!-- Parameter determines default selected dropdown category for modal -->
+  <%- include("templates/task_modal.ejs", {category: 'game'}) %>
 
-<%- include("templates/footer.ejs") %>
+  <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+
+  <%- include("templates/footer.ejs") %>
+
+<% } %>
