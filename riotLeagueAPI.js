@@ -6,30 +6,37 @@ async function calculateWinLoss(match_ids, PUUID) {
   var wins = 0;
   var kills = 0;
   var deaths = 0;
-  for (let match_id of match_ids) {
-    try {
-      const data = await fetch(`https://americas.api.riotgames.com/lol/match/v5/matches/${match_id}?api_key=${daily_api_key}`);
-      const dataJson = await data.json();
-      for (let participant of dataJson.info.participants) {
-        if (participant.puuid === PUUID) {
-          kills += participant.kills;
-          deaths += participant.deaths;
-          if (participant.win === true) {
-            wins++;
+  console.log("match_ids: " + match_ids);
+  if (match_ids.length === 0) {
+    console.log("No matches found in match history, returning 0% winrate and 0 KD");
+    return ["Not enough games have been played on this account to display winrate.", 
+            "Not enough games have been played on this account to display KD ratio."];
+  } else {
+    for (let match_id of match_ids) {
+      try {
+        const data = await fetch(`https://americas.api.riotgames.com/lol/match/v5/matches/${match_id}?api_key=${daily_api_key}`);
+        const dataJson = await data.json();
+        for (let participant of dataJson.info.participants) {
+          if (participant.puuid === PUUID) {
+            kills += participant.kills;
+            deaths += participant.deaths;
+            if (participant.win === true) {
+              wins++;
+            }
           }
         }
+      } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
       }
-    } catch (error) {
-      console.error('There has been a problem with your fetch operation:', error);
-    }
-    await delay(500);
-  };
-  let decimal_places = 2;
-  let winrate = (wins/match_ids.length * 100).toFixed(decimal_places);
-  let kd = (kills/deaths).toFixed(decimal_places);
-  console.log("winrate: " + winrate + "%");
-  console.log("KD:" + kd)
-  return [winrate, kd];
+      await delay(500);
+    };
+    let decimal_places = 2;
+    let winrate = (wins/match_ids.length * 100).toFixed(decimal_places);
+    let kd = (kills/deaths).toFixed(decimal_places);
+    console.log("winrate: " + winrate + "%");
+    console.log("KD:" + kd)
+    return [winrate, kd];
+  }
 }
 
 async function getMatchHistory(PUUID) {
@@ -73,6 +80,10 @@ async function getSummonerLevelAndID(PUUID) {
 }
 
 async function getRiotPUUID(user_name, user_tag) {
+  if (user_name === undefined || user_tag === undefined) {
+    console.log("user_name or user_tag is undefined");
+    return null;
+  }
   try {
     const data = await fetch(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${user_name}/${user_tag}?api_key=${daily_api_key}`)
     const dataJson = await data.json();

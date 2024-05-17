@@ -155,7 +155,9 @@ app.get('/logout', async (req, res) => {
 app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
     user_name = req.session.RiotUsername;
+    console.log(user_name);
     user_tag = req.session.RiotID;
+    console.log(user_tag);
     tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
     const PUUID = await lolAPI.getRiotPUUID(user_name, user_tag);
     const summonerDetails = await lolAPI.getSummonerLevelAndID(PUUID);

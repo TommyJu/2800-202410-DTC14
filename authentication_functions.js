@@ -126,9 +126,9 @@ async function logInUser(req, res, username, password, userCollection) {
       console.log(req.session.RiotUsername);
     }
     if (!(result[0].RiotID == null)) {
-      req.session.RiotID= result[0].RiotID;
-      console.log(req.session.RiotID);
-    }  
+        req.session.RiotID= result[0].RiotID;
+        console.log(req.session.RiotID);
+      }  
 
     res.redirect('/');
     return;
