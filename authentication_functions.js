@@ -86,7 +86,7 @@ async function submitUser(
 
   req.session.authenticated = true;
   req.session.username = username;
-  if (user_name & user_tag) {
+  if ((RiotUsername) && (RiotID)) {
     req.session.RiotUsername = RiotUsername;
     req.session.RiotID = RiotID;
   }
