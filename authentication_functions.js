@@ -9,11 +9,14 @@ async function submitUser(
   req, res,
   username, userCollection,
   email, password,
-  securityQuestion, securityAnswer) {
+  securityQuestion, securityAnswer,
+  RiotUsername, RiotID) {
   const usernameSchema = Joi.string().max(20).required();
   const emailSchema = Joi.string().max(40).required();
   const passwordSchema = Joi.string().max(20).required();
   const securityAnswerSchema = Joi.string().max(20).required();
+  const RiotUsernameSchema = Joi.string().max(20);
+  const RiotIDSchema = Joi.string().max(20);
 
   // Username verification
   const usernameValidationResult = usernameSchema.validate(username);
@@ -49,6 +52,18 @@ async function submitUser(
     return;
   }
 
+  const RiotUsernameValidationResult = securityAnswerSchema.validate(RiotUsername);
+  if (securityAnswerValidationResult.error != null) {
+    res.render("invalid_sign_up.ejs", { type: "Riot username" })
+    return;
+  }
+
+  const RiotIDValidationResult = securityAnswerSchema.validate(RiotID);
+  if (securityAnswerValidationResult.error != null) {
+    res.render("invalid_sign_up.ejs", { type: "Riot ID" })
+    return;
+  }
+
   // Hash password
   var hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -60,7 +75,8 @@ async function submitUser(
     username: username,
     email: email,
     password: hashedPassword,
-    in_game_name: null,
+    in_game_name: RiotUsername,
+    RiotID: RiotID,
     securityQuestion: securityQuestion,
     securityAnswer: hashedSecurityAnswer,
     gameTasks: [],

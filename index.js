@@ -84,12 +84,15 @@ app.post('/submitUser', async (req, res) => {
   var password = req.body.password;
   var securityQuestion = req.body.securityQuestion;
   var securityAnswer = req.body.securityAnswer
+  var RiotUsername = req.body.RiotUsername;
+  var RiotID = req.body.RiotID;
 
   await authenticationFunctions.submitUser(
     req, res,
     username, userCollection,
     email, password,
-    securityQuestion, securityAnswer);
+    securityQuestion, securityAnswer,
+    RiotUsername, RiotID);
 });
 
 // Log in page -------------------------------
