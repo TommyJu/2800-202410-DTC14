@@ -11,6 +11,9 @@ const app = express();
 const path = require('path');
 const favicon = require('serve-favicon');
 
+// Importing the API logic functions to link back end data to front end display.
+const lolAPI = require('./riotLeagueAPI.js');
+
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const ejs = require('ejs');
@@ -151,12 +154,30 @@ app.get('/logout', async (req, res) => {
 // Game page
 app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
+    user_name = req.session.RiotUsername;
+    user_tag = req.session.RiotID;
     tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
-    res.render("game.ejs", { tasks: tasks });
+    const PUUID = await lolAPI.getRiotPUUID(user_name, user_tag);
+    const summonerDetails = await lolAPI.getSummonerLevelAndID(PUUID);
+    const summonerLevel = summonerDetails[1];
+    const encryptedSummonerId = summonerDetails[0];
+    const summonerRank = await lolAPI.getSummonerRank(encryptedSummonerId);
+    if (summonerRank === null) {
+      var rank = "Unranked";
+    } else {
+      var rank = summonerRank[0] + " " + summonerRank[1];
+    }
+    const match_ids = await lolAPI.getMatchHistory(PUUID);
+    const winrateAndKD = await lolAPI.calculateWinLoss(match_ids, PUUID);
+    console.log(winrateAndKD);
+    const winrate = winrateAndKD[0];
+    const kd = winrateAndKD[1];
+    res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd});
     return;
   }
   res.redirect("/");
 })
+
 // Fitness page
 app.get('/fitness', async (req, res) => {
   if (req.session.authenticated) {
