@@ -4,7 +4,6 @@ weather = require('./weather.js')
 const taskFunctions = require("./task_functions.js");
 const authenticationFunctions = require("./authentication_functions.js");
 
-const cors = require('cors');
 const { ObjectId } = require('mongodb');
 const express = require('express');
 const app = express();
@@ -80,7 +79,6 @@ app.use(session({
 
 app.use(express.static(__dirname + "/public"));
 
-
 // Home page ---------------------------
 app.get('/', (req, res) => {
   if (req.session.authenticated) {
@@ -99,6 +97,7 @@ app.get('/stats', async (req, res) => {
   levelDiet = result[0].levels.diet
   res.render("stat_summary.ejs", { levelGame: levelGame, levelFitness: levelFitness, levelDiet: levelDiet });
 })
+
 // Sign up ----------------------------
 app.get('/signup', (req, res) => {
   res.render("sign_up.ejs");
@@ -154,8 +153,7 @@ app.post('/password_reset', async (req, res) => {
   await authenticationFunctions.resetPassword(req, res, username, securityAnswer, newPassword, userCollection);
 })
 
-// Weather page -------------------------
-// app.use(cors());
+// Weather page
 app.get('/weather', async (req, res) => {
   username = req.session.username
   const result = await userCollection.find({ username: username }).toArray();
@@ -167,6 +165,7 @@ app.get('/weather', async (req, res) => {
   }
   weather.getWeather(url, res)
 });
+
 // Log out
 app.get('/logout', async (req, res) => {
   const userCollection = database.db(mongodb_database).collection('users')
@@ -215,6 +214,7 @@ app.get('/fitness', async (req, res) => {
   }
   res.redirect("/");
 })
+
 // Diet page
 app.get('/diet', async (req, res) => {
   if (req.session.authenticated) {
@@ -267,7 +267,6 @@ app.get('/get_allergies', async (req, res) => {
   }
 });
 
-
 async function sendMessage(message) {
   try {
       const response = await axios.post(
@@ -298,6 +297,7 @@ app.get('/friends', (req, res) => {
   }
   res.redirect("/");
 })
+
 // Profile page
 app.get('/profile', (req, res) => {
   if (req.session.authenticated) {
@@ -306,6 +306,7 @@ app.get('/profile', (req, res) => {
   }
   res.redirect("/");
 })
+
 // Add task from modal form
 app.post('/add_task', async (req, res) => {
   title = req.body.title;
