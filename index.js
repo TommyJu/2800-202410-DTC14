@@ -116,7 +116,7 @@ app.post('/password_reset', async (req, res) => {
 })
 
 // Weather page -------------------------
-app.use(cors());
+// app.use(cors());
 app.get('/weather', async (req, res) => {
   username = req.session.username
   const result = await userCollection.find({ username: username }).toArray();
