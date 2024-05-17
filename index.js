@@ -3,6 +3,7 @@ require('dotenv').config();
 const taskFunctions = require("./task_functions.js");
 const authenticationFunctions = require("./authentication_functions.js");
 
+const { ObjectId } = require('mongodb');
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -170,6 +171,24 @@ app.post('/add_task', async (req, res) => {
   username = req.session.username;
 
   taskFunctions.addTask(title, description, category, username, userCollection);
+
+  res.redirect(req.get('referer'));
+})
+
+app.post('/complete_task', async (req, res) => {
+  username = req.session.username;
+  taskCategory = req.body.category;
+  taskIdToDelete = req.body.taskId;
+  await taskFunctions.completeTask(username, userCollection, taskCategory, taskIdToDelete)
+
+  res.redirect(req.get('referer'));
+})
+
+app.get('/delete_task', async (req, res) => {
+  username = req.session.username;
+  taskCategory = req.body.category;
+  taskIdToDelete = req.body.taskId;
+  await taskFunctions.deleteTask(username, userCollection, taskCategory, taskIdToDelete)
 
   res.redirect(req.get('referer'));
 })

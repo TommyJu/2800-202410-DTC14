@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
     const toggleButtons = document.querySelectorAll('[data-modal-toggle]');
     const closeButtons = document.querySelectorAll('[data-modal-hide]');

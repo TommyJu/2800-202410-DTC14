@@ -35,6 +35,7 @@
                 <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
                 <!-- <input type="description" name="description" id="description" placeholder="Bring a beachtowel, a good book, and some drinks." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required /> -->
                 <select name="category" id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+                  <!-- This embedded JS will determine which dropbox option is selected by default -->
                     <option value="fitness" <%= category === 'fitness' ? 'selected' : '' %> >Fitness</option>
                     <option value="diet" <%= category === 'diet' ? 'selected' : '' %> >Diet</option>
                     <option value="game" <%= category === 'game' ? 'selected' : '' %> >Game</option>

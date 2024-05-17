@@ -1,10 +1,16 @@
+const { ObjectId } = require("mongodb");
+
 module.exports = {
     addTask,
-    getTasksByCategory
+    getTasksByCategory,
+    completeTask,
+    deleteTask
 }
 
 async function addTask(title, description, category, username, userCollection) {
+    newTaskId = new ObjectId();
     newTask = {
+        _id: newTaskId,
         title: title,
         description: description,
         category: category
@@ -56,5 +62,31 @@ async function getTasksByCategory(category, username, userCollection) {
           return user.dietTasks;
       default:
           console.err("Category to add task to not found")
+  }
+}
+
+async function completeTask(username, userCollection, taskCategory, taskIdToDelete) {
+  taskCategoryProperty = taskCategory + 'Tasks';
+  const taskObjectId = new ObjectId(taskIdToDelete);
+  
+  try {
+    await userCollection.updateOne(
+      {username: username },
+      {$pull: {[ taskCategoryProperty ]: {_id: taskObjectId}}})
+  } catch (error){
+    console.error("Failed to complete task");
+  }
+}
+
+async function deleteTask(username, userCollection, taskCategory, taskIdToDelete) {
+  taskCategoryProperty = taskCategory + 'Tasks';
+  const taskObjectId = new ObjectId(taskIdToDelete);
+  
+  try {
+    await userCollection.updateOne(
+      {username: username },
+      {$pull: {[ taskCategoryProperty ]: {_id: taskObjectId}}})
+  } catch (error){
+    console.error("Failed to delete task");
   }
 }

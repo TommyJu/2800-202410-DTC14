@@ -6,7 +6,18 @@
       </p>
     </div>
     <div class="px-6 pt-4 pb-2">
-      <span class="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Complete</span>
-      <span class="inline-block bg-red-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Delete</span>
+      <!-- The task-id attribute is used to delete a specific task -->
+      <form id="completeTaskForm" action="/complete_task" method="POST">
+        <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
+        <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
+        <button type="submit" class="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Complete</button>
+      </form>
+      <form id="deleteTaskForm" action="/delete_task" method="POST">
+        <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
+        <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
+        <button type="submit" class="inline-block bg-red-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Delete</button>
+      </form>
     </div>
   </div>
+
+  
