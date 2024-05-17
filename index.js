@@ -155,9 +155,7 @@ app.get('/logout', async (req, res) => {
 app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
     user_name = req.session.RiotUsername;
-    console.log(user_name);
     user_tag = req.session.RiotID;
-    console.log(user_tag);
     tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
     const PUUID = await lolAPI.getRiotPUUID(user_name, user_tag);
     const summonerDetails = await lolAPI.getSummonerLevelAndID(PUUID);
@@ -171,7 +169,6 @@ app.get('/game', async (req, res) => {
     }
     const match_ids = await lolAPI.getMatchHistory(PUUID);
     const winrateAndKD = await lolAPI.calculateWinLoss(match_ids, PUUID);
-    console.log(winrateAndKD);
     const winrate = winrateAndKD[0];
     const kd = winrateAndKD[1];
     res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd});

@@ -123,11 +123,9 @@ async function logInUser(req, res, username, password, userCollection) {
     req.session.cookie.maxAge = expireTime;
     if (!(result[0].in_game_name == null)) {
       req.session.RiotUsername = result[0].in_game_name;
-      console.log(req.session.RiotUsername);
     }
     if (!(result[0].RiotID == null)) {
         req.session.RiotID= result[0].RiotID;
-        console.log(req.session.RiotID);
       }  
 
     res.redirect('/');
