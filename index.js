@@ -184,7 +184,7 @@ app.post('/complete_task', async (req, res) => {
   res.redirect(req.get('referer'));
 })
 
-app.get('/delete_task', async (req, res) => {
+app.post('/delete_task', async (req, res) => {
   username = req.session.username;
   taskCategory = req.body.category;
   taskIdToDelete = req.body.taskId;
