@@ -27,14 +27,19 @@
         <nav id="navbarTemplate" class="navbar nav-header sticky top-0">
             <%- include("templates/header_with_profile.ejs") %>
         </nav>
+
+        <h1>Hello, <%= username %></h1>
+
         <div class="mx-auto max-w-sm bg-white p-4 md:p-6 h-full">
             <!-- Donut Chart -->
             <div class="py-6" id="donut-chart"></div>
         </div>
+
         <footer id="footerTemplate" class="navbar nav-footer sticky bottom-0">
             <%- include("templates/footer.ejs") %>
         </footer>
     </div>
+    
     <div class="hidden" id="levelGame">
         <%=levelGame%>
     </div>

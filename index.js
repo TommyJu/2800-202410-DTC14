@@ -49,8 +49,8 @@ const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MON
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Error connecting to MongoDB:', err));
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Error connecting to MongoDB:', err));
 
 const userSchema = new mongoose.Schema({
   allergies: String
@@ -80,23 +80,24 @@ app.use(session({
 app.use(express.static(__dirname + "/public"));
 
 // Home page ---------------------------
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   if (req.session.authenticated) {
-    res.render("home_logged_in.ejs", { username: req.session.username });
+    username = req.session.username;
+    const result = await userCollection.findOne({ username: username }, { projection: { levels: 1 } });
+    levelGame = result.levels.game.level;
+    levelFitness = result.levels.fitness.level;
+    levelDiet = result.levels.diet.level;
+    res.render("stat_summary.ejs", { username: username, levelGame: levelGame, levelFitness: levelFitness, levelDiet: levelDiet });
+    // res.render("home_logged_in.ejs", { username: req.session.username });
     return;
   }
   res.render("home_logged_out.ejs");
 })
 
 //Stats page ---------------------------
-app.get('/stats', async (req, res) => {
-  username = req.session.username;
-  const result = await userCollection.findOne({ username: username }, { projection: {levels: 1}});
-  levelGame = result.levels.game.level;
-  levelFitness = result.levels.fitness.level;
-  levelDiet = result.levels.diet.level;
-  res.render("stat_summary.ejs", { levelGame: levelGame, levelFitness: levelFitness, levelDiet: levelDiet });
-})
+// app.get('/stats', async (req, res) => {
+
+// })
 
 // Sign up ----------------------------
 app.get('/signup', (req, res) => {
@@ -182,7 +183,7 @@ app.get('/game', async (req, res) => {
     user_tag = req.session.RiotID;
     if (user_name === undefined || user_tag === undefined) {
       console.log("user_name or user_tag is undefined");
-      res.render("game.ejs", { tasks: tasks, gameError: "No Riot account linked to this account."});
+      res.render("game.ejs", { tasks: tasks, gameError: "No Riot account linked to this account." });
       return;
     }
     const PUUID = await lolAPI.getRiotPUUID(user_name, user_tag);
@@ -228,11 +229,11 @@ app.get('/diet', async (req, res) => {
 app.post('/chat', async (req, res) => {
   const message = req.body.message;
   try {
-      const reply = await sendMessage(message);
-      res.json({ reply }); 
+    const reply = await sendMessage(message);
+    res.json({ reply });
   } catch (error) {
-      console.error('Error communicating with OpenAI API:', error.message);
-      res.status(500).json({ error: 'Failed to communicate with OpenAI API' });
+    console.error('Error communicating with OpenAI API:', error.message);
+    res.status(500).json({ error: 'Failed to communicate with OpenAI API' });
   }
 });
 
@@ -240,52 +241,52 @@ app.post('/allergies', async (req, res) => {
   const allergies = req.body.allergies;
   const username = req.session.username;
   try {
-      await userCollection.findOneAndUpdate(
-          { username: username },
-          { $set: { allergies: allergies } },
-          { upsert: true } 
-      );
-      res.json({ success: true, message: 'Allergies saved successfully' });
+    await userCollection.findOneAndUpdate(
+      { username: username },
+      { $set: { allergies: allergies } },
+      { upsert: true }
+    );
+    res.json({ success: true, message: 'Allergies saved successfully' });
   } catch (error) {
-      console.error('Error saving allergies:', error.message);
-      res.status(500).json({ error: 'Failed to save allergies' });
+    console.error('Error saving allergies:', error.message);
+    res.status(500).json({ error: 'Failed to save allergies' });
   }
 });
 
 app.get('/get_allergies', async (req, res) => {
   const username = req.session.username;
   try {
-      const user = await userCollection.findOne({ username: username });
-      if (user) {
-          res.json({ allergies: user.allergies });
-      } else {
-          res.status(404).json({ error: 'User not found' });
-      }
+    const user = await userCollection.findOne({ username: username });
+    if (user) {
+      res.json({ allergies: user.allergies });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
   } catch (error) {
-      console.error('Error retrieving user allergies:', error.message);
-      res.status(500).json({ error: 'Failed to retrieve user allergies' });
+    console.error('Error retrieving user allergies:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve user allergies' });
   }
 });
 
 async function sendMessage(message) {
   try {
-      const response = await axios.post(
-          'https://api.openai.com/v1/chat/completions',
-          {
-              model: 'gpt-3.5-turbo',
-              messages: [{ role: 'user', content: message }],
-          },
-          {
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${OPENAI_API_KEY}`,
-              },
-          }
-      );
-      return response.data.choices[0].message.content;
+    const response = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: message }],
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        },
+      }
+    );
+    return response.data.choices[0].message.content;
   } catch (error) {
-      console.error(error.response.data);
-      throw new Error('Failed to communicate with OpenAI API');
+    console.error(error.response.data);
+    throw new Error('Failed to communicate with OpenAI API');
   }
 }
 
@@ -302,7 +303,7 @@ app.get('/friends', (req, res) => {
 app.get('/profile', async (req, res) => {
   if (req.session.authenticated) {
     username = req.session.username;
-    const result = await userCollection.find({ username}).toArray();
+    const result = await userCollection.find({ username }).toArray();
     console.log(result);
     email = result[0].email;
     gameID = result[0].in_game_name;
