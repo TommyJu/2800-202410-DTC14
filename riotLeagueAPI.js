@@ -1,4 +1,4 @@
-//this stuff goes into env
+const Joi = require('joi');
 const daily_api_key = process.env.DAILY_RIOT_API_KEY;
 
 async function calculateWinLoss(match_ids, PUUID) {
@@ -111,17 +111,33 @@ function validateSummonerCredentials(summonerUsername, summonerID) {
   return true;
 };
 
-function riotCredentialsExist (res) {
-  //Determine username and tag based on sessions variables.
-  riotUsername = req.session.RiotUsername;
-  riotID = req.session.RiotID;
-  
-  if (riotUsername === undefined || riotID === undefined) {
-    console.log("riotUsername or user_tag is undefined");
-    res.render("game.ejs", { tasks: tasks, gameError: "No Riot account linked to this account."});
+function riotCredentialsExist (RiotUsername, RiotID, res) {
+  if (RiotUsername === undefined || RiotID === undefined) {
+    console.log("RiotUsername or RiotID is undefined.");
+    res.render("game.ejs", { tasks: tasks, gameError: "No Riot credentials linked to this account."});
     return;
   }
 }
+
+async function displayUserStats (res, RiotUsername, RiotID, tasks) {
+  const PUUID = await getRiotPUUID(RiotUsername, RiotID);
+  const summonerDetails = await getSummonerLevelAndID(PUUID);
+  const summonerLevel = summonerDetails[1];
+  const encryptedSummonerId = summonerDetails[0];
+  const summonerRank = await getSummonerRank(encryptedSummonerId);
+  if (summonerRank === null) {
+    var rank = "Unranked";
+  } else {
+    var rank = summonerRank[0] + " " + summonerRank[1];
+  }
+  const match_ids = await getMatchHistory(PUUID);
+  const winrateAndKD = await calculateWinLoss(match_ids, PUUID);
+  const winrate = winrateAndKD[0];
+  const kd = winrateAndKD[1];
+  console.log("hello");
+  res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd, gameError: "" });
+  return;
+};
 
 //Exporting my API logic functions so they may be used in the index.js file.
 module.exports = {
@@ -132,4 +148,6 @@ module.exports = {
   calculateWinLoss,
   validateSummonerCredentials,
   riotCredentialsExist,
+  displayUserStats,
+  // displaySummonerStats,
 };
