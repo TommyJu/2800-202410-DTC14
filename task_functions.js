@@ -68,11 +68,14 @@ async function getTasksByCategory(category, username, userCollection) {
 async function completeTask(username, userCollection, taskCategory, taskIdToDelete) {
   taskCategoryProperty = taskCategory + 'Tasks';
   const taskObjectId = new ObjectId(taskIdToDelete);
-  
+  // Delete task and increment exp
   try {
     await userCollection.updateOne(
       {username: username },
-      {$pull: {[ taskCategoryProperty ]: {_id: taskObjectId}}})
+      {
+        $pull: {[ taskCategoryProperty ]: {_id: taskObjectId}},
+        $inc: {[`levels.${taskCategory}.exp`]: 10}
+      });
   } catch (error){
     console.error("Failed to complete task");
   }
