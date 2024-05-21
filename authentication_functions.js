@@ -15,8 +15,8 @@ async function submitUser(
   const emailSchema = Joi.string().max(40).required();
   const passwordSchema = Joi.string().max(20).required();
   const securityAnswerSchema = Joi.string().max(20).required();
-  const RiotUsernameSchema = Joi.string().max(20);
-  const RiotIDSchema = Joi.string().max(20);
+  const RiotUsernameSchema = Joi.string().min(3).max(16).alphanum().allow("").optional();
+  const RiotIDSchema = Joi.string().min(3).max(5).alphanum().allow("").optional();
 
   // Username verification
   const usernameValidationResult = usernameSchema.validate(username);
