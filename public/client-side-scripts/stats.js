@@ -26,11 +26,8 @@ const getChartOptions = () => {
               label: "Combined Level",
               fontSize: "10px",
               fontFamily: "Inter, sans-serif",
-              formatter: function (w) {
-                const sum = w.globals.seriesTotals.reduce((a, b) => {
-                  return a + b
-                }, 0)
-                return (sum / 3).toFixed(0)
+              formatter: function () {
+                return levelDiet + levelFitness + levelGame;
               },
             },
             value: {
