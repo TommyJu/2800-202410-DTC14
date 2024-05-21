@@ -91,10 +91,10 @@ app.get('/', (req, res) => {
 //Stats page ---------------------------
 app.get('/stats', async (req, res) => {
   username = req.session.username;
-  const result = await userCollection.find({ username: username }).toArray();
-  levelGame = result[0].levels.game
-  levelFitness = result[0].levels.fitness
-  levelDiet = result[0].levels.diet
+  const result = await userCollection.findOne({ username: username }, { projection: {levels: 1}});
+  levelGame = result.levels.game.level;
+  levelFitness = result.levels.fitness.level;
+  levelDiet = result.levels.diet.level;
   res.render("stat_summary.ejs", { levelGame: levelGame, levelFitness: levelFitness, levelDiet: levelDiet });
 })
 
