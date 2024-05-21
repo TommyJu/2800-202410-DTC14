@@ -17,9 +17,18 @@
   <br>
   Current rank: <%= rank %>
   <br>
-  Winrate (past 20 games): <%= winrate %> %
+  Winrate: <%= winrate %> %
   <br>
   KD Ratio: <%= kd %>
+  <br>
+  <div id="test" class="py-10">
+    <h1>Look up a summoner!</h1>
+    <form action='/searchSummoner' method='post'>
+      <input name='summonerUsername' type='text' placeholder='summonerUsername' value="">
+      <input name='summonerID' type='text' placeholder='summonerID' value="">
+      <button type="submit" class="rounded border-solid border-2 border-sky-500">Look Up Summoner Button</button>
+    </form>
+  </div>
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
 
