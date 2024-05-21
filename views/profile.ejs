@@ -1,11 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .circle {
+            background-image: url('https://w7.pngwing.com/pngs/490/231/png-transparent-round-red-and-brown-logo-circle-design-product-seal-badge-red-badges-and-labels-maroon-oval.png');
+            background-size: cover;
+            background-position: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .progress-bar {
+            width: 150px;
+            height: 8px;
+            background-color: #e5e7eb;
+            position: relative;
+            margin-left: 10px;
+            border-radius: 4px;
+        }
+
+        .progress-bar::after {
+            content: '';
+            width: 50%;
+            height: 100%;
+            background-color: #3b82f6;
+            display: block;
+            border-radius: 4px;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+        }
+
+        .range {
+            position: relative;
+            background-color: #333;
+            width: 250px;
+            height: 20px;
+            transform: skew(0deg);
+            font-family: 'Orbitron', monospace;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .range::before {
+            --width: calc(var(--p) * 1%);
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background-color: red;
+            z-index: 0;
+            animation: load .5s forwards linear, glitch 2s infinite linear;
+            border-radius: 12px;
+        }
+
+        .range::after {
+            counter-reset: progress var(--p);
+            content: counter(progress) '%';
+            color: white;
+            position: absolute;
+            left: 5%;
+            top: 50%;
+            transform: translateY(-50%) skewX(0deg);
+            z-index: 1;
+        }
+
+        .range__label {
+            transform: skew(-30deg) translateY(-100%);
+            line-height: 1.5;
+        }
+
+        @keyframes load {
+            to {
+                width: var(--width);
+            }
+        }
+
+        @keyframes glitch {
+            0%,
+            5% {
+                transform: translate(0, 0);
+            }
+
+            1% {
+                transform: translate(-5%, -10%);
+            }
+
+            2% {
+                transform: translate(10%, 30%);
+            }
+
+            3% {
+                transform: translate(-43%, 10%);
+            }
+
+            4% {
+                transform: translate(2%, -23%);
+            }
+        }
+
+        .level-container {
+            border: 2px solid #e5e7eb;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            background-color: #1f2937;
+        }
+
+        .achievement {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #1f2937;
+        }
+
+        .achievements-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #1f2937;
+        }
+
+        .achievements-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #e5e7eb;
+        }
+
+        body {
+            color: #e5e7eb;
+            background-color: black;
+        }
+
+        a {
+            color: #3b82f6;
+        }
+    </style>
+</head>
 <%- include("templates/header_with_profile.ejs") %>
-<div>
-Username: <%= username %>
-<br>
-Email: <%= email %>
-<br>
-RiotID: <%= gameID %>
-<br>
-Allergies: <%= allergies %>
-</div>
+<body>
+    <div class="m-5">
+        <div class="flex justify-center mt-5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-circle" width="120"
+                height="120" viewBox="0 0 24 24" stroke-width="1.5" stroke="#e5e7eb" fill="none" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24H0z" fill="none" />
+                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
+            </svg>
+        </div>
+        <div class="text-3xl text-center">
+            <%= username %>
+        </div>
+        <div class="text-center text-xl mb-5 text-gray-400">
+            <%= gameID %>
+        </div>
+
+        <div class="flex justify-between border rounded-lg p-2 bg-gray-800">
+            <p class="text-lg">Achievements</p>
+            <a href="#">See all</a>
+        </div>
+        <div class="achievements-container">
+            <img class="achievement mr-1"
+                src="https://earthbornegames.com/wp-content/uploads/EBR_Achievement_Badges-No_Stone_Unturned.png">
+            <img class="achievement mr-1"
+                src="https://earthbornegames.com/wp-content/uploads/EBR_Achievement_Badges-Unplanned_Reunion.png">
+            <img class="achievement"
+                src="https://earthbornegames.com/wp-content/uploads/EBR_Achievement_Badges-The_Pentaverate.png">
+        </div>
+
+        <div class="level-container mt-5">
+            <div class="flex items-center">
+                <div class="circle flex items-center justify-center mr-3">
+                    <%= levelDiet %>
+                </div>
+                <div class="ml-2 flex flex-col">
+                    <p class="text-base mb-2">Diet</p>
+                    <div class="range" style="--p:40"></div>
+                </div>
+            </div>
+        </div>
+        <div class="level-container">
+            <div class="flex items-center">
+                <div class="circle flex items-center justify-center mr-3">
+                    <%= levelFitness %>
+                </div>
+                <div class="ml-2 flex flex-col">
+                    <p class="text-base mb-2">Fitness</p>
+                    <div class="range" style="--p:80"></div>
+                </div>
+            </div>
+        </div>
+        <div class="level-container">
+            <div class="flex items-center">
+                <div class="circle flex items-center justify-center mr-3">
+                    <%= levelGame %>
+                </div>
+                <div class="ml-2 flex flex-col">
+                    <p class="text-base mb-2">Game</p>
+                    <div class="range" style="--p:60"></div>
+                </div>
+            </div>
+        </div>
+        <div class="bordered-section text-xl mt-14 space-y-4">
+            <p class="border rounded-lg p-2 bg-gray-800">Email: <%= email %></p>
+            <p class="border rounded-lg p-2 bg-gray-800">Allergies: <%= allergies %></p>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+</body>
 <%- include("templates/footer.ejs") %>
+</html>
