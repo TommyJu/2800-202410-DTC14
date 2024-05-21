@@ -1,23 +1,37 @@
-<div class="max-w-sm rounded overflow-hidden shadow-lg">
-    <div class="px-6 py-4">
-      <div class="font-bold text-xl mb-2"><%= title %></div>
-      <p class="text-gray-700 text-base">
-        <%= description %>
-      </p>
+<div class="max-w-sm rounded overflow-hidden shadow-lg flex">
+  <div class="px-6 py-4">
+    <div class="font-bold text-l mb-2">
+      <%= title %>
     </div>
-    <div class="px-6 pt-4 pb-2">
-      <!-- The task-id attribute is used to delete a specific task -->
-      <form id="completeTaskForm" action="/complete_task" method="POST">
-        <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
-        <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
-        <button type="submit" class="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Complete</button>
-      </form>
-      <form id="deleteTaskForm" action="/delete_task" method="POST">
-        <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
-        <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
-        <button type="submit" class="inline-block bg-red-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Delete</button>
-      </form>
-    </div>
+    <p class="text-gray-700 text-base">
+      <%= description %>
+    </p>
   </div>
-
-  
+  <div class="px-6 pt-4 pb-2">
+    <!-- The task-id attribute is used to delete a specific task -->
+    <form id="completeTaskForm" action="/complete_task" method="POST">
+      <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
+      <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
+      <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check"
+          width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#00b341" fill="none"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+          <path d="M9 12l2 2l4 -4" />
+        </svg></button>
+    </form>
+    <form id="deleteTaskForm" action="/delete_task" method="POST">
+      <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
+      <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
+      <button type="submit">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-x" width="44" height="44"
+          viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff2825" fill="none" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+          <path d="M10 10l4 4m0 -4l-4 4" />
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
