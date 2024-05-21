@@ -188,7 +188,7 @@ app.get('/game', async (req, res) => {
       return;
     }
 
-    await lolAPI.displayUserStats(res, RiotUsername, RiotID, tasks);    
+    await lolAPI.displayStats(res, RiotUsername, RiotID, tasks);    
     return;
   }
   res.redirect("/");
@@ -197,6 +197,7 @@ app.get('/game', async (req, res) => {
 app.post('/searchSummoner', async (req, res) => {
   var summonerUsername = req.body.summonerUsername;
   var summonerID = req.body.summonerID;
+  
   if (lolAPI.validateSummonerCredentials(summonerUsername, summonerID)) {
     res.redirect('/game');
   } else {

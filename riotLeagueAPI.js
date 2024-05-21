@@ -119,7 +119,11 @@ function riotCredentialsExist (RiotUsername, RiotID, res) {
   }
 }
 
-async function displayUserStats (res, RiotUsername, RiotID, tasks) {
+function test() {
+  document.getElementById("test").innerHTML = "Hello World";
+}
+
+async function displayStats (res, RiotUsername, RiotID, tasks) {
   const PUUID = await getRiotPUUID(RiotUsername, RiotID);
   const summonerDetails = await getSummonerLevelAndID(PUUID);
   const summonerLevel = summonerDetails[1];
@@ -135,7 +139,7 @@ async function displayUserStats (res, RiotUsername, RiotID, tasks) {
   const winrate = winrateAndKD[0];
   const kd = winrateAndKD[1];
   console.log("hello");
-  res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd, gameError: "" });
+  res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd, gameError: "", additionalSummoner: ""});
   return;
 };
 
@@ -148,6 +152,6 @@ module.exports = {
   calculateWinLoss,
   validateSummonerCredentials,
   riotCredentialsExist,
-  displayUserStats,
+  displayStats,
   // displaySummonerStats,
 };
