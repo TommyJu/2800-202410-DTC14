@@ -2,6 +2,8 @@
 const daily_api_key = process.env.DAILY_RIOT_API_KEY;
 
 async function calculateWinLoss(match_ids, PUUID) {
+  const numberOfMatches = 1
+  const slicedMatch_ids = match_ids.slice(0, numberOfMatches);
   const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
   var wins = 0;
   var kills = 0;
@@ -11,7 +13,7 @@ async function calculateWinLoss(match_ids, PUUID) {
     return ["Not enough games have been played on this account to display winrate.", 
             "Not enough games have been played on this account to display KD ratio."];
   } else {
-    for (let match_id of match_ids) {
+    for (let match_id of slicedMatch_ids) {
       try {
         const data = await fetch(`https://americas.api.riotgames.com/lol/match/v5/matches/${match_id}?api_key=${daily_api_key}`);
         const dataJson = await data.json();
@@ -30,7 +32,7 @@ async function calculateWinLoss(match_ids, PUUID) {
       await delay(500);
     };
     let decimal_places = 2;
-    let winrate = (wins/match_ids.length * 100).toFixed(decimal_places);
+    let winrate = (wins/numberOfMatches * 100).toFixed(decimal_places);
     let kd = (kills/deaths).toFixed(decimal_places);
     console.log("winrate: " + winrate + "%");
     console.log("KD:" + kd)
