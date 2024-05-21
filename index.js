@@ -178,32 +178,32 @@ app.get('/logout', async (req, res) => {
 app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
     tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
-    user_name = req.session.RiotUsername;
-    user_tag = req.session.RiotID;
-    if (user_name === undefined || user_tag === undefined) {
-      console.log("user_name or user_tag is undefined");
+    //Determine username and tag based on sessions variables.
+    RiotUsername = req.session.RiotUsername;
+    RiotID = req.session.RiotID;
+    
+    if (RiotUsername === undefined || RiotID === undefined) {
+      console.log("riotUsername or user_tag is undefined");
       res.render("game.ejs", { tasks: tasks, gameError: "No Riot account linked to this account."});
       return;
     }
-    const PUUID = await lolAPI.getRiotPUUID(user_name, user_tag);
-    const summonerDetails = await lolAPI.getSummonerLevelAndID(PUUID);
-    const summonerLevel = summonerDetails[1];
-    const encryptedSummonerId = summonerDetails[0];
-    const summonerRank = await lolAPI.getSummonerRank(encryptedSummonerId);
-    if (summonerRank === null) {
-      var rank = "Unranked";
-    } else {
-      var rank = summonerRank[0] + " " + summonerRank[1];
-    }
-    const match_ids = await lolAPI.getMatchHistory(PUUID);
-    const winrateAndKD = await lolAPI.calculateWinLoss(match_ids, PUUID);
-    const winrate = winrateAndKD[0];
-    const kd = winrateAndKD[1];
-    res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd, gameError: "" });
+
+    await lolAPI.displayUserStats(res, RiotUsername, RiotID, tasks);    
     return;
   }
   res.redirect("/");
 })
+
+app.post('/searchSummoner', async (req, res) => {
+  var summonerUsername = req.body.summonerUsername;
+  var summonerID = req.body.summonerID;
+  if (lolAPI.validateSummonerCredentials(summonerUsername, summonerID)) {
+    res.redirect('/game');
+  } else {
+    console.log("Invalid summoner credentials");
+    res.redirect('/game');
+  };
+});
 
 // Fitness page
 app.get('/fitness', async (req, res) => {
