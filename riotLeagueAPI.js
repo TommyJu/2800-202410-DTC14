@@ -94,6 +94,35 @@ async function getRiotPUUID(user_name, user_tag) {
   }
 }
 
+function validateSummonerCredentials(summonerUsername, summonerID) {
+  const summonerUsernameSchema = Joi.string().min(3).max(16).alphanum().required();
+  const summonerIDSchema = Joi.string().min(3).max(5).alphanum().required();
+
+  const summonerUsernameValidationResult = summonerUsernameSchema.validate(summonerUsername);
+  if (summonerUsernameValidationResult.error != null) {
+    return false;
+  }
+
+  const summonerIDValidationResult = summonerIDSchema.validate(summonerID);
+  if (summonerIDValidationResult.error != null) {
+    return false;
+  }
+
+  return true;
+};
+
+function riotCredentialsExist (res) {
+  //Determine username and tag based on sessions variables.
+  riotUsername = req.session.RiotUsername;
+  riotID = req.session.RiotID;
+  
+  if (riotUsername === undefined || riotID === undefined) {
+    console.log("riotUsername or user_tag is undefined");
+    res.render("game.ejs", { tasks: tasks, gameError: "No Riot account linked to this account."});
+    return;
+  }
+}
+
 //Exporting my API logic functions so they may be used in the index.js file.
 module.exports = {
   getRiotPUUID,
@@ -101,4 +130,6 @@ module.exports = {
   getSummonerRank,
   getMatchHistory,
   calculateWinLoss,
+  validateSummonerCredentials,
+  riotCredentialsExist,
 };

@@ -3,7 +3,7 @@ const Joi = require('joi');
 const saltRounds = 12;
 const expireTime = 1 * 60 * 60 * 1000; // one hour expiry time
 
-module.exports = { submitUser, logInUser, resetPassword, renderSecurityQuestion, validateSummonerCredentials};
+module.exports = { submitUser, logInUser, resetPassword, renderSecurityQuestion};
 
 async function submitUser(
   req, res,
@@ -196,20 +196,3 @@ async function renderSecurityQuestion(req, res, username, userCollection) {
     securityQuestion: securityQuestion
   })
 }
-
-function validateSummonerCredentials(summonerUsername, summonerID) {
-  const summonerUsernameSchema = Joi.string().min(3).max(16).alphanum().required();
-  const summonerIDSchema = Joi.string().min(3).max(5).alphanum().required();
-
-  const summonerUsernameValidationResult = summonerUsernameSchema.validate(summonerUsername);
-  if (summonerUsernameValidationResult.error != null) {
-    return false;
-  }
-
-  const summonerIDValidationResult = summonerIDSchema.validate(summonerID);
-  if (summonerIDValidationResult.error != null) {
-    return false;
-  }
-
-  return true;
-};
