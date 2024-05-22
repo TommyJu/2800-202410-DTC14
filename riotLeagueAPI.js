@@ -121,12 +121,40 @@ function riotCredentialsExist (RiotUsername, RiotID) {
 
 async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID) {
   
-  if (!riotCredentialsExist(RiotUsername, RiotID)) {
-    res.render("game.ejs", { tasks: tasks, gameError: "No Riot credentials linked to this account."});
+  if (!(riotCredentialsExist(RiotUsername, RiotID)) && (riotCredentialsExist(otherRiotUsername, otherRiotID))) {
+    const otherPUUID = await getRiotPUUID(otherRiotUsername, otherRiotID);
+    const otherSummonerDetails = await getSummonerLevelAndID(otherPUUID);
+    const otherSummonerLevel = otherSummonerDetails[1];
+    const otherEncryptedSummonerId = otherSummonerDetails[0];
+    const otherSummonerRank = await getSummonerRank(otherEncryptedSummonerId);
+    if (otherSummonerRank === null) {
+      var otherRank = "Unranked";
+    } else {
+      var otherRank = otherSummonerRank[0] + " " + otherSummonerRank[1];
+    }
+    const otherMatch_ids = await getMatchHistory(otherPUUID);
+    const otherWinrateAndKD = await calculateWinLoss(otherMatch_ids, otherPUUID);
+    const otherWinrate = otherWinrateAndKD[0];
+    const otherkd = otherWinrateAndKD[1];
+    
+    res.render("game.ejs", { 
+      tasks: tasks, 
+      gameError: "No Riot credentials linked to this account. Cannot display your stats.", 
+      additionalSummoner: "yes", 
+      otherSummonerLevel: otherSummonerLevel,
+      otherRank: otherRank,
+      otherWinrate: otherWinrate,
+      otherkd: otherkd
+    });
     return;
   };
 
-  if (!(otherRiotUsername === undefined) || !(otherRiotID === undefined)) {
+  if (!riotCredentialsExist(RiotUsername, RiotID)) {
+    res.render("game.ejs", { tasks: tasks, gameError: "No Riot credentials linked to this account. Cannot display your stats."});
+    return;
+  };
+  
+  if (riotCredentialsExist(RiotUsername, RiotID) && (!(otherRiotUsername === undefined) || !(otherRiotID === undefined))) {
     const PUUID = await getRiotPUUID(RiotUsername, RiotID);
     const summonerDetails = await getSummonerLevelAndID(PUUID);
     const summonerLevel = summonerDetails[1];
@@ -141,7 +169,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     const winrateAndKD = await calculateWinLoss(match_ids, PUUID);
     const winrate = winrateAndKD[0];
     const kd = winrateAndKD[1];
-
+    
     const otherPUUID = await getRiotPUUID(otherRiotUsername, otherRiotID);
     const otherSummonerDetails = await getSummonerLevelAndID(otherPUUID);
     const otherSummonerLevel = otherSummonerDetails[1];
