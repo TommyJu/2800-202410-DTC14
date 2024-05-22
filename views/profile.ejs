@@ -15,7 +15,7 @@
             <%= username %>
         </div>
         <div class="text-center text-xl mb-5 text-gray-400">
-            <%= gameID %>
+            <%= gameName %>
         </div>
 
         <div class="flex justify-between border rounded-lg p-2 bg-gray-800">
@@ -36,8 +36,8 @@
                     <%= levelDiet %>
                 </div>
                 <div class="ml-2 flex flex-col">
-                    <p class="text-base mb-2">Diet</p>
-                    <div class="range-profile" style="--p:40"></div>
+                    <p class="text-base mb-2">Diet Completion</p>
+                    <div class="range-profile" style="--level:<%= levelDiet %>; --max-level:<%= levelMax %>;"></div>
                 </div>
             </div>
         </div>
@@ -47,8 +47,8 @@
                     <%= levelFitness %>
                 </div>
                 <div class="ml-2 flex flex-col">
-                    <p class="text-base mb-2">Fitness</p>
-                    <div class="range-profile" style="--p:80"></div>
+                    <p class="text-base mb-2">Fitness Completion</p>
+                    <div class="range-profile" style="--level:<%= levelFitness %>; --max-level:<%= levelMax %>;"></div>
                 </div>
             </div>
         </div>
@@ -58,8 +58,8 @@
                     <%= levelGame %>
                 </div>
                 <div class="ml-2 flex flex-col">
-                    <p class="text-base mb-2">Game</p>
-                    <div class="range-profile" style="--p:60"></div>
+                    <p class="text-base mb-2">Game Completion</p>
+                    <div class="range-profile" style="--level:<%= levelGame %>; --max-level:<%= levelMax %>;"></div>
                 </div>
             </div>
         </div>

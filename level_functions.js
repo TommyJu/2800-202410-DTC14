@@ -10,7 +10,8 @@ module.exports = {
     checkForLevelUp, 
     checkForEXPGain, 
     checkForRankUp,
-    EXP_PER_LEVEL
+    EXP_PER_LEVEL,
+    MAX_LEVEL
 };
 
 async function incrementEXP(username, userCollection, taskCategory) {

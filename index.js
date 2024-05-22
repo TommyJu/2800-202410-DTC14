@@ -319,14 +319,17 @@ app.get('/profile', async (req, res) => {
   if (req.session.authenticated) {
     username = req.session.username;
     const result = await userCollection.find({ username }).toArray();
-    console.log(result);
-    email = result[0].email;
-    gameID = result[0].RiotID;
-    allergies = result[0].allergies;
-    levelGame = result[0].levels.game
-    levelFitness = result[0].levels.fitness
-    levelDiet = result[0].levels.diet
-    res.render("profile.ejs", { username: username, email: email, gameID: gameID, allergies: allergies });
+    
+    res.render("profile.ejs", { 
+      username: username, 
+      email: result[0].email, 
+      gameName: result[0].in_game_name, 
+      allergies: result[0].allergies,
+      levelGame: result[0].levels.game.level,
+      levelDiet: result[0].levels.diet.level,
+      levelFitness: result[0].levels.fitness.level,
+      levelMax: levelFunctions.MAX_LEVEL
+    });
     return;
   }
   res.redirect("/");

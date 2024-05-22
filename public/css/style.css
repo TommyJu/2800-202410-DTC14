@@ -96,7 +96,8 @@ input {
 
 /* progress bars for profile page */
 .range-profile::before {
-    --width: calc(var(--p) * 1%);
+    /* --width: calc(var(--completion-rate) * 1%); */
+    --width: calc((var(--level) / var(--max-level)) * 100%);
     content: '';
     position: absolute;
     top: 0;
@@ -110,8 +111,8 @@ input {
 }
 
 .range-profile::after {
-    counter-reset: progress var(--p);
-    content: counter(progress) '%';
+    counter-reset: progress var(--level);
+    content: "LEVEL " counter(progress);
     color: white;
     position: absolute;
     left: 5%;
