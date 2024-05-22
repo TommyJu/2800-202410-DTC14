@@ -183,9 +183,11 @@ app.get('/game', async (req, res) => {
     //Determine username and tag based on sessions variables.
     RiotUsername = req.session.RiotUsername;
     RiotID = req.session.RiotID;
+    otherRiotUsername = req.session.otherRiotUsername;
+    otherRiotID = req.session.otherRiotID;
     
     //Use helper function to display stats.
-    lolAPI.displayStats(res, RiotUsername, RiotID, tasks);
+    lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID);
     return;
   } 
   res.redirect("/");
@@ -200,7 +202,6 @@ app.post('/searchSummoner', async (req, res) => {
     req.session.otherRiotID = summonerID;
     res.redirect('/game');
   } else {
-    console.log("Invalid summoner credentials");
     res.redirect('/game');
   };
 });

@@ -114,6 +114,8 @@ function validateSummonerCredentials(summonerUsername, summonerID) {
 function riotCredentialsExist (RiotUsername, RiotID) {
   if (!RiotUsername|| !RiotID) {
     return false;
+  } else {
+    return true;
   }
 }
 
@@ -125,7 +127,47 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
   };
 
   if (!(otherRiotUsername === undefined) || !(otherRiotID === undefined)) {
-    console.log("Other summoner credentials detected");
+    const PUUID = await getRiotPUUID(RiotUsername, RiotID);
+    const summonerDetails = await getSummonerLevelAndID(PUUID);
+    const summonerLevel = summonerDetails[1];
+    const encryptedSummonerId = summonerDetails[0];
+    const summonerRank = await getSummonerRank(encryptedSummonerId);
+    if (summonerRank === null) {
+      var rank = "Unranked";
+    } else {
+      var rank = summonerRank[0] + " " + summonerRank[1];
+    }
+    const match_ids = await getMatchHistory(PUUID);
+    const winrateAndKD = await calculateWinLoss(match_ids, PUUID);
+    const winrate = winrateAndKD[0];
+    const kd = winrateAndKD[1];
+
+    const otherPUUID = await getRiotPUUID(otherRiotUsername, otherRiotID);
+    const otherSummonerDetails = await getSummonerLevelAndID(otherPUUID);
+    const otherSummonerLevel = otherSummonerDetails[1];
+    const otherEncryptedSummonerId = otherSummonerDetails[0];
+    const otherSummonerRank = await getSummonerRank(otherEncryptedSummonerId);
+    if (otherSummonerRank === null) {
+      var otherRank = "Unranked";
+    } else {
+      var otherRank = otherSummonerRank[0] + " " + otherSummonerRank[1];
+    }
+    const otherMatch_ids = await getMatchHistory(PUUID);
+    const otherWinrateAndKD = await calculateWinLoss(match_ids, PUUID);
+    const otherWinrate = winrateAndKD[0];
+    const otherkd = winrateAndKD[1];
+    res.render("game.ejs", { 
+      tasks: tasks, 
+      level: summonerLevel, 
+      rank: rank, 
+      winrate: winrate, 
+      kd: kd, 
+      gameError: "", 
+      additionalSummoner: "yes", 
+      
+    
+    });
+    return;
   };
 
   const PUUID = await getRiotPUUID(RiotUsername, RiotID);
