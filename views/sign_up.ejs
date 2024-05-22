@@ -10,12 +10,14 @@
 </head>
 
 <body class="m-0 p-0 font-sans bg-cover bg-center h-screen">
-    <div class="login-box max-w-sm w-11/12 sm:w-64 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white broken-border p-6 bg-black bg-opacity-50 rounded-lg">
+    <div
+        class="login-box max-w-sm w-11/12 sm:w-64 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white broken-border p-6 bg-black bg-opacity-50 rounded-lg">
         <span></span>
         <h1 class="mb-12 py-3 text-4xl text-center"><span class="border-b-4 border-gray-500">Sign Up</span></h1>
         <form method="post" action="/submitUser">
             <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
-                <img src="user.png" alt="User Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
+                <img src="user.png" alt="User Icon"
+                    class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
                 <label for="username" class="sr-only">Username:</label>
                 <input type="text" id="username" name="username" placeholder="Username"
                     class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
@@ -34,7 +36,40 @@
                 <input type="password" id="password" name="password" placeholder="Password"
                     class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
             </div>
-            <input class="btn w-full bg-transparent border-2 border-gray-500 text-white py-1 text-lg cursor-pointer my-3" type="submit" value="Sign Up">
+            <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
+                <img src="security.png" alt="Security Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
+                <label for="securityQuestion" class="sr-only">Security Question:</label>
+                <select id="securityQuestion" name="securityQuestion" class="border-none outline-none bg-transparent text-gray-400 text-lg pl-10 w-full">
+                    <option value="In what city were you born?">In what city were you born?</option>
+                    <option value="What is the name of your favourite pet?">What is the name of your favourite pet?</option>
+                    <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+                    <option value="What was the name of your first childhood friend?">What was the name of your first childhood friend?</option>
+                </select>
+            </div>
+            <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
+                <img src="answer.png" alt="Answer Icon"
+                    class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
+                <label for="securityAnswer" class="sr-only">Security Answer:</label>
+                <input type="text" id="securityAnswer" name="securityAnswer" placeholder="Security Answer"
+                    class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
+            </div>
+            <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
+                <img src="riot.png" alt="Riot Icon"
+                    class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
+                <label for="RiotUsername" class="sr-only">Riot Username:</label>
+                <input type="text" id="RiotUsername" name="RiotUsername" placeholder="Riot Username"
+                    class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
+            </div>
+            <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
+                <img src="riot.png" alt="ID Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
+                <label for="RiotID" class="sr-only">Riot ID:</label>
+                <input type="text" id="RiotID" name="RiotID" placeholder="Riot ID"
+                    class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
+            </div>
+
+            <input
+                class="btn w-full bg-transparent border-2 border-gray-500 text-white py-1 text-lg cursor-pointer my-3"
+                type="submit" value="Sign Up">
         </form>
     </div>
 </body>
