@@ -23,8 +23,8 @@ body {
     min-height: 100%;
     /* Adjustment for fixed footer */
     padding-bottom: 100px;
-    color: #e5e7eb;
-    background-color: black;
+    color: white;
+    background-color: var(--black);
 }
 
 a {
@@ -78,7 +78,7 @@ input {
     box-sizing: border-box;
 }
 
-.range {
+.range-summary, .range-profile {
     position: relative;
     background-color: #333;
     width: 250px;
@@ -89,7 +89,13 @@ input {
     overflow: hidden;
 }
 
-.range::before {
+.range__label {
+    transform: skew(-30deg) translateY(-100%);
+    line-height: 1.5;
+}
+
+/* progress bars for profile page */
+.range-profile::before {
     --width: calc(var(--p) * 1%);
     content: '';
     position: absolute;
@@ -103,7 +109,7 @@ input {
     border-radius: 12px;
 }
 
-.range::after {
+.range-profile::after {
     counter-reset: progress var(--p);
     content: counter(progress) '%';
     color: white;
@@ -114,9 +120,30 @@ input {
     z-index: 1;
 }
 
-.range__label {
-    transform: skew(-30deg) translateY(-100%);
-    line-height: 1.5;
+/* Progress bars for summary page */
+.range-summary::before {
+    --width: calc((var(--level-progress) / var(--max-exp)) * 100%);
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: red;
+    z-index: 0;
+    animation: load .5s forwards linear, glitch 2s infinite linear;
+    border-radius: 12px;
+}
+
+.range-summary::after {
+    counter-reset: progress var(--level-progress);
+    content: counter(progress) '/70 EXP';
+    color: white;
+    position: absolute;
+    left: 5%;
+    top: 50%;
+    transform: translateY(-50%) skewX(0deg);
+    z-index: 1;
 }
 
 @keyframes load {

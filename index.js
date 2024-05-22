@@ -3,6 +3,7 @@ require('dotenv').config();
 weather = require('./weather.js')
 const taskFunctions = require("./task_functions.js");
 const authenticationFunctions = require("./authentication_functions.js");
+const levelFunctions = require("./level_functions.js");
 
 const { ObjectId } = require('mongodb');
 const express = require('express');
@@ -87,12 +88,20 @@ app.get('/', async (req, res) => {
     levelGame = result.levels.game.level;
     levelFitness = result.levels.fitness.level;
     levelDiet = result.levels.diet.level;
+    expGame = result.levels.game.exp;
+    expFitness = result.levels.fitness.exp;
+    expDiet = result.levels.diet.exp;
+
     rank = result.rank;
     res.render("stat_summary.ejs", { 
       username: username, 
       levelGame: levelGame, 
       levelFitness: levelFitness, 
-      levelDiet: levelDiet, 
+      levelDiet: levelDiet,
+      expGame: expGame,
+      expFitness: expFitness,
+      expDiet: expDiet,
+      expMax: levelFunctions.EXP_PER_LEVEL, 
       rank: rank });
     // res.render("home_logged_in.ejs", { username: req.session.username });
     return;

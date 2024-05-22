@@ -1,6 +1,4 @@
 
-module.exports = {checkForLevelUp, checkForEXPGain, checkForRankUp};
-
 const MAX_LEVEL = 15;
 const EXP_PER_LEVEL = 70;
 const EXP_PER_TASK = 10;
@@ -8,6 +6,12 @@ const BRONZE_RANK_OVERALL_LEVEL = 15;
 const SILVER_RANK_OVERALL_LEVEL = 30;
 const GOLD_RANK_OVERALL_LEVEL = 45;
 
+module.exports = {
+    checkForLevelUp, 
+    checkForEXPGain, 
+    checkForRankUp,
+    EXP_PER_LEVEL
+};
 
 async function incrementEXP(username, userCollection, taskCategory) {
     try {

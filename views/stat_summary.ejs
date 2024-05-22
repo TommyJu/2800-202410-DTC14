@@ -37,6 +37,40 @@
         <div class="mx-auto max-w-sm bg-white p-4 md:p-6 h-full">
             <div class="py-6" id="donut-chart"></div>
         </div>
+        <!-- EXP -->
+        <div class="level-container mt-5">
+            <div class="flex items-center">
+                <div class="circle flex items-center justify-center mr-3">
+                    <%= levelDiet %>
+                </div>
+                <div class="ml-2 flex flex-col">
+                    <p class="text-base mb-2">Diet</p>
+                    <div class="range-summary" style="--level-progress:<%= expDiet %>; --max-exp:<%= expMax %>"></div>
+                </div>
+            </div>
+        </div>
+        <div class="level-container">
+            <div class="flex items-center">
+                <div class="circle flex items-center justify-center mr-3">
+                    <%= levelFitness %>
+                </div>
+                <div class="ml-2 flex flex-col">
+                    <p class="text-base mb-2">Fitness</p>
+                    <div class="range-summary" style="--level-progress:<%= expFitness %>; --max-exp:<%= expMax %>"></div>
+                </div>
+            </div>
+        </div>
+        <div class="level-container">
+            <div class="flex items-center">
+                <div class="circle flex items-center justify-center mr-3">
+                    <%= levelGame %>
+                </div>
+                <div class="ml-2 flex flex-col">
+                    <p class="text-base mb-2">Game</p>
+                    <div class="range-summary" style="--level-progress:<%= expGame %>; --max-exp:<%= expMax %>"></div>
+                </div>
+            </div>
+        </div>
         <!-- Achievements -->
         <div class="flex justify-between border rounded-lg p-2 bg-gray-800">
             <p class="text-lg">Achievements</p>
