@@ -1,0 +1,12 @@
+<div class="card-container flex flex-col gap-1">
+    <!-- tasks is passed into the ejs template -->
+    <% for(let i = 0; i < achievements.length; i++) {%>
+        
+        <%- include("achievement.ejs", {
+            image: achievements[i].image, 
+            title: achievements[i].title, 
+            description: achievements[i].description
+        }) %>
+
+    <% } %>
+</div>
