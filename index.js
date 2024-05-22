@@ -376,6 +376,9 @@ app.post('/complete_task', async (req, res) => {
 })
 
 app.get('/level_up', async (req, res) => {
+
+  // can check for and add new achievements here, but first let's create the achievement ejs
+
   let taskCategory = req.query.category;
   // Fetch the user
   try {
