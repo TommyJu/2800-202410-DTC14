@@ -66,11 +66,15 @@ async function getTasksByCategory(category, username, userCollection) {
   }
 }
 
+// Returns true if the task has caused the user to level up
+// Used to redirect to the level up page
 async function completeTask(username, userCollection, taskCategory, taskIdToDelete) {
   deleteTask(username, userCollection, taskCategory, taskIdToDelete);
-  await levelFunctions.checkForEXPGain(username, userCollection, taskCategory);
-  await levelFunctions.checkForLevelUp(username, userCollection, taskCategory);
-  await levelFunctions.checkForRankUp(username, userCollection);
+  await levelFunctions.isEXPGained(username, userCollection, taskCategory);
+  let isLeveledUp = await levelFunctions.isLeveledUp(username, userCollection, taskCategory);
+  await levelFunctions.isRankedUp(username, userCollection);
+
+  return isLeveledUp;
 }
 
 async function deleteTask(username, userCollection, taskCategory, taskIdToDelete) {

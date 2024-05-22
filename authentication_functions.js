@@ -96,7 +96,8 @@ async function submitUser(
         exp: 0
       }
     },
-    rank: "unranked"
+    rank: "unranked",
+    achievements: []
   });
 
   req.session.authenticated = true;

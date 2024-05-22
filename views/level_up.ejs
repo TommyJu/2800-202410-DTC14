@@ -1,0 +1,11 @@
+<%- include("templates/header_with_profile.ejs") %>
+<h1><%= taskCategory %> Level Up</h1>
+<h2><%= level %></h2>
+<img src="./images/level-up/<%= taskCategory %>.gif" alt="<%= taskCategory %> gif">
+<h3><%= username %></h3>
+<img src="./images/ranks/<%= rank %>.webp" alt="User rank (<%= rank %>)">
+<form id="confirmLevelUp" action="/level_up_confirmation" method="POST">
+    <input type="hidden" name="taskCategory" value="<%= taskCategory %>">
+    <button type="submit" class="inline-block bg-blue-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">OK</button>
+  </form>
+<%- include("templates/footer.ejs") %>

@@ -7,9 +7,9 @@ const SILVER_RANK_OVERALL_LEVEL = 30;
 const GOLD_RANK_OVERALL_LEVEL = 45;
 
 module.exports = {
-    checkForLevelUp, 
-    checkForEXPGain, 
-    checkForRankUp,
+    isLeveledUp, 
+    isEXPGained, 
+    isRankedUp,
     EXP_PER_LEVEL,
     MAX_LEVEL
 };
@@ -61,7 +61,7 @@ async function setRank(username, userCollection, newRank) {
 }
 
 // level up if exp is equal to or exceeds the max exp per level cap, and the user is not at max level
-async function checkForLevelUp(username, userCollection, taskCategory) {
+async function isLeveledUp(username, userCollection, taskCategory) {
     try {
         user = await userCollection.findOne(
             { username: username },
@@ -77,14 +77,15 @@ async function checkForLevelUp(username, userCollection, taskCategory) {
         user.levels[taskCategory].exp >= EXP_PER_LEVEL &&
         user.levels[taskCategory].level < MAX_LEVEL
     ) {
-        incrementLevel(username, userCollection, taskCategory);
-        resetEXP(username, userCollection, taskCategory);
+        await incrementLevel(username, userCollection, taskCategory);
+        await resetEXP(username, userCollection, taskCategory);
+        return true;
     }
-
+    return false;
 }
 
 // Add exp if the exp is below the exp per level cap
-async function checkForEXPGain(username, userCollection, taskCategory) {
+async function isEXPGained(username, userCollection, taskCategory) {
     try {
         user = await userCollection.findOne(
             { username: username },
@@ -98,10 +99,12 @@ async function checkForEXPGain(username, userCollection, taskCategory) {
 
     if(user.levels[taskCategory].exp < EXP_PER_LEVEL) {
         incrementEXP(username, userCollection, taskCategory);
-    }    
+        return true;
+    }
+    return false;
 }
 
-async function checkForRankUp(username, userCollection) {
+async function isRankedUp(username, userCollection) {
     try {
         user = await userCollection.findOne(
             { username: username },
@@ -122,13 +125,17 @@ async function checkForRankUp(username, userCollection) {
     // Rank up to bronze
     if(currentRank == "unranked" && totalLevel >= BRONZE_RANK_OVERALL_LEVEL) {
         setRank(username, userCollection, "bronze");
+        return true;
 
     // Rank up to silver
     } else if (currentRank == "bronze" && totalLevel >= SILVER_RANK_OVERALL_LEVEL) {
         setRank(username, userCollection, "silver");
+        return true;
 
     // Rank up to gold
     } else if (currentRank == "silver" && totalLevel >= GOLD_RANK_OVERALL_LEVEL) {
         setRank(username, userCollection, "gold");
+        return true;
     }
+    return false;
 }

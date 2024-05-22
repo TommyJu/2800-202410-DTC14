@@ -80,6 +80,13 @@ app.use(session({
 
 app.use(express.static(__dirname + "/public"));
 
+// Middleware to store previous page URL in session
+app.use((req, res, next) => {
+  // Store the previous page URL in the session
+  req.session.previousPage = req.headers.referer;
+  next();
+});
+
 // Home page ---------------------------
 app.get('/', async (req, res) => {
   if (req.session.authenticated) {
@@ -337,10 +344,10 @@ app.get('/profile', async (req, res) => {
 
 // Add task from modal form
 app.post('/add_task', async (req, res) => {
-  title = req.body.title;
-  description = req.body.description;
-  category = req.body.category;
-  username = req.session.username;
+  let title = req.body.title;
+  let description = req.body.description;
+  let category = req.body.category;
+  let username = req.session.username;
 
   taskFunctions.addTask(title, description, category, username, userCollection);
 
@@ -348,21 +355,52 @@ app.post('/add_task', async (req, res) => {
 })
 
 app.post('/complete_task', async (req, res) => {
-  username = req.session.username;
-  taskCategory = req.body.category;
-  taskIdToDelete = req.body.taskId;
-  await taskFunctions.completeTask(username, userCollection, taskCategory, taskIdToDelete)
+  let username = req.session.username;
+  let taskCategory = req.body.category;
+  let taskIdToDelete = req.body.taskId;
+  let isLeveledUp = await taskFunctions.completeTask(username, userCollection, taskCategory, taskIdToDelete);
+  if(isLeveledUp) {
+    res.redirect(`/level_up?category=${taskCategory}`);
+  } else {
+    res.redirect(req.get('referer'));
+  }
+})
+
+app.post('/delete_task', async (req, res) => {
+  let username = req.session.username;
+  let taskCategory = req.body.category;
+  let taskIdToDelete = req.body.taskId;
+  await taskFunctions.deleteTask(username, userCollection, taskCategory, taskIdToDelete)
 
   res.redirect(req.get('referer'));
 })
 
-app.post('/delete_task', async (req, res) => {
-  username = req.session.username;
-  taskCategory = req.body.category;
-  taskIdToDelete = req.body.taskId;
-  await taskFunctions.deleteTask(username, userCollection, taskCategory, taskIdToDelete)
+app.get('/level_up', async (req, res) => {
+  let taskCategory = req.query.category;
+  // Fetch the user
+  try {
+    user = await userCollection.findOne(
+        { username: req.session.username },
+        { projection: {
+            [`levels.${taskCategory}`]: 1,
+            rank: 1
+        }});
+} catch (error) {
+    console.error("Failed to fetch user on level up");
+}
+  // Render level up page
+  res.render("level_up.ejs", {
+    username: req.session.username,
+    taskCategory: taskCategory,
+    level: user.levels[taskCategory].level,
+    rank: user.rank
+  })
+})
 
-  res.redirect(req.get('referer'));
+// Redirect to the previous page when user confirms level up
+app.post('/level_up_confirmation', (req, res) => {
+  // res.redirect(req.session.previousPage || '/');
+  res.redirect(`/${req.body.taskCategory}` || '/');
 })
 
 // 404 not found page ------------------
