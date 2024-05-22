@@ -202,6 +202,7 @@ app.post('/searchSummoner', async (req, res) => {
     req.session.otherRiotID = summonerID;
     res.redirect('/game');
   } else {
+    console.log("Invalid summoner credentials");
     res.redirect('/game');
   };
 });

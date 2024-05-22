@@ -147,13 +147,17 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
       otherkd: otherkd
     });
     return;
-  };
+  } else {
+    if (!(riotCredentialsExist(otherRiotUsername, otherRiotID))) {
+      res.render("game.ejs", { 
+        tasks: tasks, 
+        gameError: "No Riot credentials linked to this account. Cannot display your stats.", 
+        additionalSummoner: "", 
+      });
+      return;
+    };
+  }
 
-  if (!riotCredentialsExist(RiotUsername, RiotID)) {
-    res.render("game.ejs", { tasks: tasks, gameError: "No Riot credentials linked to this account. Cannot display your stats."});
-    return;
-  };
-  
   if (riotCredentialsExist(RiotUsername, RiotID) && (!(otherRiotUsername === undefined) || !(otherRiotID === undefined))) {
     const PUUID = await getRiotPUUID(RiotUsername, RiotID);
     const summonerDetails = await getSummonerLevelAndID(PUUID);
@@ -237,5 +241,4 @@ module.exports = {
   validateSummonerCredentials,
   riotCredentialsExist,
   displayStats,
-  // displaySummonerStats,
 };
