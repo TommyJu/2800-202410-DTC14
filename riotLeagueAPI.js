@@ -111,19 +111,23 @@ function validateSummonerCredentials(summonerUsername, summonerID) {
   return true;
 };
 
-function riotCredentialsExist (RiotUsername, RiotID, res) {
-  if (RiotUsername === undefined || RiotID === undefined) {
-    console.log("RiotUsername or RiotID is undefined.");
-    res.render("game.ejs", { tasks: tasks, gameError: "No Riot credentials linked to this account."});
-    return;
+function riotCredentialsExist (RiotUsername, RiotID) {
+  if (!RiotUsername|| !RiotID) {
+    return false;
   }
 }
 
-function test() {
-  document.getElementById("test").innerHTML = "Hello World";
-}
+async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID) {
+  
+  if (!riotCredentialsExist(RiotUsername, RiotID)) {
+    res.render("game.ejs", { tasks: tasks, gameError: "No Riot credentials linked to this account."});
+    return;
+  };
 
-async function displayStats (res, RiotUsername, RiotID, tasks) {
+  if (!(otherRiotUsername === undefined) || !(otherRiotID === undefined)) {
+    console.log("Other summoner credentials detected");
+  };
+
   const PUUID = await getRiotPUUID(RiotUsername, RiotID);
   const summonerDetails = await getSummonerLevelAndID(PUUID);
   const summonerLevel = summonerDetails[1];
@@ -138,7 +142,6 @@ async function displayStats (res, RiotUsername, RiotID, tasks) {
   const winrateAndKD = await calculateWinLoss(match_ids, PUUID);
   const winrate = winrateAndKD[0];
   const kd = winrateAndKD[1];
-  console.log("hello");
   res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd, gameError: "", additionalSummoner: ""});
   return;
 };
