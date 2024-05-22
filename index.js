@@ -83,11 +83,17 @@ app.use(express.static(__dirname + "/public"));
 app.get('/', async (req, res) => {
   if (req.session.authenticated) {
     username = req.session.username;
-    const result = await userCollection.findOne({ username: username }, { projection: { levels: 1 } });
+    const result = await userCollection.findOne({ username: username }, { projection: { levels: 1, rank: 1 } });
     levelGame = result.levels.game.level;
     levelFitness = result.levels.fitness.level;
     levelDiet = result.levels.diet.level;
-    res.render("stat_summary.ejs", { username: username, levelGame: levelGame, levelFitness: levelFitness, levelDiet: levelDiet });
+    rank = result.rank;
+    res.render("stat_summary.ejs", { 
+      username: username, 
+      levelGame: levelGame, 
+      levelFitness: levelFitness, 
+      levelDiet: levelDiet, 
+      rank: rank });
     // res.render("home_logged_in.ejs", { username: req.session.username });
     return;
   }

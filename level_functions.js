@@ -109,8 +109,8 @@ async function checkForRankUp(username, userCollection) {
     }
     let totalLevel = 
     user.levels.game.level
-    + user.levels.game.level 
-    + user.levels.game.level;
+    + user.levels.fitness.level 
+    + user.levels.diet.level;
 
     let currentRank = user.rank;
 
