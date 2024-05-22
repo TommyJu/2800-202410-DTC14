@@ -1,9 +1,12 @@
 
-module.exports = {checkForLevelUp, checkForEXPGain};
+module.exports = {checkForLevelUp, checkForEXPGain, checkForRankUp};
 
 const MAX_LEVEL = 15;
 const EXP_PER_LEVEL = 70;
 const EXP_PER_TASK = 10;
+const BRONZE_RANK_OVERALL_LEVEL = 15;
+const SILVER_RANK_OVERALL_LEVEL = 30;
+const GOLD_RANK_OVERALL_LEVEL = 45;
 
 
 async function incrementEXP(username, userCollection, taskCategory) {
@@ -39,6 +42,16 @@ async function resetEXP(username, userCollection, taskCategory) {
             });
     } catch (error) {
         console.error("Failed to reset exp");
+    }
+}
+
+async function setRank(username, userCollection, newRank) {
+    try {
+        await userCollection.updateOne(
+            { username: username },
+            { $set: { rank: newRank } });
+    } catch (error) {
+        console.error("Failed to set player rank");
     }
 }
 
@@ -81,4 +94,36 @@ async function checkForEXPGain(username, userCollection, taskCategory) {
     if(user.levels[taskCategory].exp < EXP_PER_LEVEL) {
         incrementEXP(username, userCollection, taskCategory);
     }    
+}
+
+async function checkForRankUp(username, userCollection) {
+    try {
+        user = await userCollection.findOne(
+            { username: username },
+            { projection: {
+                levels: 1,
+                rank: 1
+            }});
+    } catch (error) {
+        console.error("Failed to rank up");
+    }
+    let totalLevel = 
+    user.levels.game.level
+    + user.levels.game.level 
+    + user.levels.game.level;
+
+    let currentRank = user.rank;
+
+    // Rank up to bronze
+    if(currentRank == "unranked" && totalLevel >= BRONZE_RANK_OVERALL_LEVEL) {
+        setRank(username, userCollection, "bronze");
+
+    // Rank up to silver
+    } else if (currentRank == "bronze" && totalLevel >= SILVER_RANK_OVERALL_LEVEL) {
+        setRank(username, userCollection, "silver");
+
+    // Rank up to gold
+    } else if (currentRank == "silver" && totalLevel >= GOLD_RANK_OVERALL_LEVEL) {
+        setRank(username, userCollection, "gold");
+    }
 }

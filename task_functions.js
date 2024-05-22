@@ -69,20 +69,8 @@ async function getTasksByCategory(category, username, userCollection) {
 async function completeTask(username, userCollection, taskCategory, taskIdToDelete) {
   deleteTask(username, userCollection, taskCategory, taskIdToDelete);
   await levelFunctions.checkForEXPGain(username, userCollection, taskCategory);
-  levelFunctions.checkForLevelUp(username, userCollection, taskCategory);
-  // taskCategoryProperty = taskCategory + 'Tasks';
-  // const taskObjectId = new ObjectId(taskIdToDelete);
-  // // Delete task and increment exp
-  // try {
-  //   await userCollection.updateOne(
-  //     {username: username },
-  //     {
-  //       $pull: {[ taskCategoryProperty ]: {_id: taskObjectId}},
-  //       $inc: {[`levels.${taskCategory}.exp`]: 10}
-  //     });
-  // } catch (error){
-  //   console.error("Failed to complete task");
-  // }
+  await levelFunctions.checkForLevelUp(username, userCollection, taskCategory);
+  await levelFunctions.checkForRankUp(username, userCollection);
 }
 
 async function deleteTask(username, userCollection, taskCategory, taskIdToDelete) {
