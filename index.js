@@ -177,20 +177,17 @@ app.get('/logout', async (req, res) => {
 // Game page
 app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
+    //Get tasks from databse.
     tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
+    
     //Determine username and tag based on sessions variables.
     RiotUsername = req.session.RiotUsername;
     RiotID = req.session.RiotID;
     
-    if (RiotUsername === undefined || RiotID === undefined) {
-      console.log("riotUsername or user_tag is undefined");
-      res.render("game.ejs", { tasks: tasks, gameError: "No Riot account linked to this account."});
-      return;
-    }
-
-    await lolAPI.displayStats(res, RiotUsername, RiotID, tasks);    
+    //Use helper function to display stats.
+    lolAPI.displayStats(res, RiotUsername, RiotID, tasks);
     return;
-  }
+  } 
   res.redirect("/");
 })
 
@@ -199,6 +196,8 @@ app.post('/searchSummoner', async (req, res) => {
   var summonerID = req.body.summonerID;
   
   if (lolAPI.validateSummonerCredentials(summonerUsername, summonerID)) {
+    req.session.otherRiotUsername = summonerUsername;
+    req.session.otherRiotID = summonerID;
     res.redirect('/game');
   } else {
     console.log("Invalid summoner credentials");
