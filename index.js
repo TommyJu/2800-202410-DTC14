@@ -37,6 +37,7 @@ const node_session_secret = process.env.NODE_SESSION_SECRET;
 
 var { database } = include('databaseConnection');
 const userCollection = database.db(mongodb_database).collection('users');
+const achievementCollection = database.db(mongodb_database).collection('achievements');
 
 // Store sessions in db
 var mongoStore = MongoStore.create({

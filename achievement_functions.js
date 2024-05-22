@@ -1,16 +1,23 @@
 
 module.exports = {checkForAchievements, addAchievements};
 
-async function addAchievements(username, userCollection, achievements) {
+// Uses an array of achievement titles to find the achievement objects from the collection and add to user
+async function addAchievements(username, userCollection, achievementCollection, achievementTitles) {
     try {
-        for (const achievement of achievements) {
+        // Find the achievement using its title
+        for (const achievementTitle of achievementTitles) {
+            let achievementObject = await achievementCollection.findOne(
+                {title: achievementTitle}
+            );
+
+            // Add the achievement to the user
             await userCollection.updateOne(
                 { username: username },
-                { $push: { achievements: achievement } }
+                { $push: { achievements: achievementObject } }
             );
         }
     } catch (error) {
-        console.error("Failed to add achievements:", error);
+        console.error("Failed to add achievement objects to user", error);
     }
 }
 
