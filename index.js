@@ -354,6 +354,15 @@ app.post('/add_task', async (req, res) => {
   res.redirect(req.get('referer'));
 })
 
+app.post('/delete_task', async (req, res) => {
+  let username = req.session.username;
+  let taskCategory = req.body.category;
+  let taskIdToDelete = req.body.taskId;
+  await taskFunctions.deleteTask(username, userCollection, taskCategory, taskIdToDelete)
+
+  res.redirect(req.get('referer'));
+})
+
 app.post('/complete_task', async (req, res) => {
   let username = req.session.username;
   let taskCategory = req.body.category;
@@ -364,15 +373,6 @@ app.post('/complete_task', async (req, res) => {
   } else {
     res.redirect(req.get('referer'));
   }
-})
-
-app.post('/delete_task', async (req, res) => {
-  let username = req.session.username;
-  let taskCategory = req.body.category;
-  let taskIdToDelete = req.body.taskId;
-  await taskFunctions.deleteTask(username, userCollection, taskCategory, taskIdToDelete)
-
-  res.redirect(req.get('referer'));
 })
 
 app.get('/level_up', async (req, res) => {
@@ -399,7 +399,6 @@ app.get('/level_up', async (req, res) => {
 
 // Redirect to the previous page when user confirms level up
 app.post('/level_up_confirmation', (req, res) => {
-  // res.redirect(req.session.previousPage || '/');
   res.redirect(`/${req.body.taskCategory}` || '/');
 })
 
