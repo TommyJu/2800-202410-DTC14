@@ -32,19 +32,7 @@
   <br>
   KD Ratio: <%= kd %>
   <br>
-
-  <div id="otherSummoner">
-    <br>
-    Other Summoner Level: <%= level %>
-    <br>
-    Other Current rank: <%= rank %>
-    <br>
-    Other Winrate: <%= winrate %> %
-    <br>
-    Other KD Ratio: <%= kd %>
-    <br>
-  </div>
-
+  
   <div id="test" class="py-10">
     <h1>Look up a summoner!</h1>
     <form action='/searchSummoner' method='post'>
@@ -53,7 +41,19 @@
       <button type="submit" class="rounded border-solid border-2 border-sky-500">Look Up Summoner Button</button>
     </form>
   </div>
-
+  
+  <div id="otherSummoner">
+    <br>
+    Other Summoner Level: <%= otherSummonerLevel %>
+    <br>
+    Other Current rank: <%= otherRank %>
+    <br>
+    Other Winrate: <%= otherWinrate %> %
+    <br>
+    Other KD Ratio: <%= otherkd %>
+    <br>
+  </div>
+  
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
 

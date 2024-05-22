@@ -152,10 +152,11 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     } else {
       var otherRank = otherSummonerRank[0] + " " + otherSummonerRank[1];
     }
-    const otherMatch_ids = await getMatchHistory(PUUID);
-    const otherWinrateAndKD = await calculateWinLoss(match_ids, PUUID);
-    const otherWinrate = winrateAndKD[0];
-    const otherkd = winrateAndKD[1];
+    const otherMatch_ids = await getMatchHistory(otherPUUID);
+    const otherWinrateAndKD = await calculateWinLoss(otherMatch_ids, otherPUUID);
+    const otherWinrate = otherWinrateAndKD[0];
+    const otherkd = otherWinrateAndKD[1];
+    
     res.render("game.ejs", { 
       tasks: tasks, 
       level: summonerLevel, 
@@ -164,8 +165,10 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
       kd: kd, 
       gameError: "", 
       additionalSummoner: "yes", 
-      
-    
+      otherSummonerLevel: otherSummonerLevel,
+      otherRank: otherRank,
+      otherWinrate: otherWinrate,
+      otherkd: otherkd
     });
     return;
   };
@@ -184,7 +187,15 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
   const winrateAndKD = await calculateWinLoss(match_ids, PUUID);
   const winrate = winrateAndKD[0];
   const kd = winrateAndKD[1];
-  res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd, gameError: "", additionalSummoner: ""});
+  res.render("game.ejs", { 
+    tasks: tasks, 
+    level: summonerLevel, 
+    rank: rank, 
+    winrate: winrate, 
+    kd: kd, 
+    gameError: "", 
+    additionalSummoner: "", 
+  });
   return;
 };
 
