@@ -3,7 +3,7 @@
   
   <%- include('templates/game/helpfulMessage.ejs', {helpfulMessage: noRiot})  %>
   
-  <%- include('templates/game/searchSummonerButton.ejs') %>
+  <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
   
   <%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate, otherkd: otherkd}) %>
   
@@ -20,7 +20,7 @@
   
   <%- include('templates/game/helpfulMessage.ejs', {helpfulMessage: noRiot})  %>
   
-  <%- include('templates/game/searchSummonerButton.ejs') %>
+  <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
   
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
@@ -35,7 +35,7 @@
   
   <%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate, kd: kd}) %>
   
-  <%- include('templates/game/searchSummonerButton.ejs') %>
+  <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
   
   <%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate, otherkd: otherkd}) %>
 
@@ -52,7 +52,7 @@
 
   <%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate, kd: kd}) %>
 
-  <%- include('templates/game/searchSummonerButton.ejs') %>
+  <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
   
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>

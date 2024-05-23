@@ -140,6 +140,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     res.render("game.ejs", { 
       tasks: tasks, 
       noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
+      noSummoner: "",
       additionalSummoner: "yes", 
       otherSummonerLevel: otherSummonerLevel,
       otherRank: otherRank,
@@ -152,6 +153,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
       res.render("game.ejs", { 
         tasks: tasks, 
         noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
+        noSummoner: "No summoner credentials provided. Cannot display other summoner stats.",
         additionalSummoner: "", 
       });
       return;
@@ -196,6 +198,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
       winrate: winrate, 
       kd: kd, 
       noRiot: "", 
+      noSummoner: "",
       additionalSummoner: "yes", 
       otherSummonerLevel: otherSummonerLevel,
       otherRank: otherRank,
@@ -226,6 +229,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     winrate: winrate, 
     kd: kd, 
     noRiot: "", 
+    noSummoner: "",
     additionalSummoner: "", 
   });
   return;
