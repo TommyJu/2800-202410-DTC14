@@ -128,9 +128,9 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     const otherEncryptedSummonerId = otherSummonerDetails[0];
     const otherSummonerRank = await getSummonerRank(otherEncryptedSummonerId);
     if (otherSummonerRank === null) {
-      var otherRank = "UNRANKED";
+      var otherRank = ["UNRANKED"];
     } else {
-      var otherRank = otherSummonerRank[0] + " " + otherSummonerRank[1];
+      var otherRank = otherSummonerRank;
     }
     const otherMatch_ids = await getMatchHistory(otherPUUID);
     const otherWinrateAndKD = await calculateWinLoss(otherMatch_ids, otherPUUID);
@@ -165,9 +165,9 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     const encryptedSummonerId = summonerDetails[0];
     const summonerRank = await getSummonerRank(encryptedSummonerId);
     if (summonerRank === null) {
-      var rank = "Unranked";
+      var rank = ["UNRANKED"];
     } else {
-      var rank = summonerRank[0] + " " + summonerRank[1];
+      var rank = summonerRank;
     }
     const match_ids = await getMatchHistory(PUUID);
     const winrateAndKD = await calculateWinLoss(match_ids, PUUID);
@@ -180,9 +180,9 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     const otherEncryptedSummonerId = otherSummonerDetails[0];
     const otherSummonerRank = await getSummonerRank(otherEncryptedSummonerId);
     if (otherSummonerRank === null) {
-      var otherRank = "Unranked";
+      var otherRank = ["UNRANKED"];
     } else {
-      var otherRank = otherSummonerRank[0] + " " + otherSummonerRank[1];
+      var otherRank = otherSummonerRank;
     }
     const otherMatch_ids = await getMatchHistory(otherPUUID);
     const otherWinrateAndKD = await calculateWinLoss(otherMatch_ids, otherPUUID);
@@ -211,9 +211,9 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
   const encryptedSummonerId = summonerDetails[0];
   const summonerRank = await getSummonerRank(encryptedSummonerId);
   if (summonerRank === null) {
-    var rank = "Unranked";
+    var rank = ["UNRANKED"];
   } else {
-    var rank = summonerRank[0] + " " + summonerRank[1];
+    var rank = summonerRank;
   }
   const match_ids = await getMatchHistory(PUUID);
   const winrateAndKD = await calculateWinLoss(match_ids, PUUID);

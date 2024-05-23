@@ -19,10 +19,13 @@
     <br>
     Other Current rank: <%= otherRank %>
     <br>
-    Other Winrate: <%= otherWinrate %> %
+    Other Winrate: <%= otherWinrate[0] %> <%= otherWinrate[1] %>
     <br>
     Other KD Ratio: <%= otherkd %>
     <br>
+  
+    <img src="./images/lolRanks/<%=rank[0]%>.webp" alt="">
+
   </div>
   
   <!-- Parameter determines default selected dropdown category for modal -->
@@ -60,13 +63,15 @@
     <br>
     Summoner Level: <%= level %>
     <br>
-    Current rank: <%= rank %>
+    Current rank: <%= rank[0] %> <%= rank[1] %>
     <br>
     Winrate: <%= winrate %> %
     <br>
     KD Ratio: <%= kd %>
     <br>
-    
+
+    <img src="./images/lolRanks/<%=rank[0]%>.webp" alt="">
+ 
     <div id="test" class="py-10">
       <h1>Look up a summoner!</h1>
       <form action='/searchSummoner' method='post'>
@@ -82,10 +87,13 @@
       <br>
       Other Current rank: <%= otherRank %>
       <br>
-      Other Winrate: <%= otherWinrate %> %
+      Other Winrate: <%= otherWinrate[0] %> <%= otherWinrate[1] %>
       <br>
       Other KD Ratio: <%= otherkd %>
       <br>
+      
+      <img src="./images/lolRanks/<%=otherRank[0]%>.webp" alt="">
+ 
     </div>
     
     <!-- Parameter determines default selected dropdown category for modal -->
@@ -101,12 +109,15 @@
   <br>
   Summoner Level: <%= level %>
   <br>
-  Current rank: <%= rank %>
+  Current rank: <%= rank[0] %> <%= rank[1] %>
   <br>
   Winrate: <%= winrate %> %
   <br>
   KD Ratio: <%= kd %>
   <br>
+
+  <img src="./images/lolRanks/<%=rank[0]%>.webp" alt="">
+ 
   <div id="test" class="py-10">
     <h1>Look up a summoner!</h1>
     <form action='/searchSummoner' method='post'>
