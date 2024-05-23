@@ -1,20 +1,23 @@
 <%- include("templates/header_with_profile.ejs") %>
-<br>
-<h1 class="text-2xl font-bold bg-slate-500 text-white rounded-lg p-1 w-fit">Fitness Page</h1>
-<%- include("fitness_weather.ejs") %>
-<br>
-<div class="flex place-content-between">
-    <a href="/completed" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" value="completed">
-        Completed Tasks
-    </a>
-    <%- include("templates/task_modal.ejs", {category: 'fitness' }) %>
-</div>
-<br>
+    <br>
+    <h1 class="text-2xl font-bold bg-slate-500 text-white rounded-lg p-1 w-fit">Fitness Page</h1>
+    <%- include("fitness_weather.ejs") %>
+        <br>
+        <div class="flex place-content-between">
+            <a href="/completed"
+                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button" value="completed">
+                Completed Tasks
+            </a>
+            <%- include("templates/task_modal.ejs", {category: 'fitness' }) %>
+        </div>
+        <br>
 
-    <!-- Parameter determines default selected dropdown category for modal -->
-<h3 class="text-xl font-bold bg-red-500 text-white rounded-lg p-1 w-fit">Custom Tasks</h3>
-<%- include("templates/task_cards_container.ejs", {tasks: tasks, type:'custom'}) %>
-<br>
-<h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit" > Suggested Tasks</h3>
-<%- include("templates/task_cards_container.ejs", {tasks: tasks, type:'suggestion'}) %>
-<%- include("templates/footer.ejs") %>
+        <!-- Parameter determines default selected dropdown category for modal -->
+        <h3 class="text-xl font-bold bg-red-500 text-white rounded-lg p-1 w-fit">To Do List</h3>
+        <%- include("templates/task_cards_container.ejs", {tasks: tasks, activties: activities, type:'custom'}) %>
+            <br>
+            <h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit"> Suggested Tasks</h3>
+            <%- include("templates/task_cards_container.ejs", {tasks: activities, type:'suggestion', weatherToday:
+                weatherToday}) %>
+                <%- include("templates/footer.ejs") %>

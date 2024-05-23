@@ -212,10 +212,11 @@ app.get('/fitness', async (req, res) => {
     const result = await userCollection.find({ username: username }).toArray();
     defaultCity = result[0].city
     url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity},CA&appid=${weatherKey}&units=metric`
+    const physicalCollection = await database.db('physical_pillar').collection('activities').find().toArray();
     tasks = await taskFunctions.getTasksByCategory("fitness", req.session.username, userCollection);
     weatherData = await weather.getWeather(url)
     console.log(weatherData)
-    res.render("fitness.ejs", { tasks: tasks, cityName: weatherData[0], weatherToday: weatherData[1], weatherTemp: weatherData[2], weatherIcon: weatherData[3] });
+    res.render("fitness.ejs", { tasks: tasks, activities: physicalCollection, cityName: weatherData[0], weatherToday: weatherData[1], weatherTemp: weatherData[2], weatherIcon: weatherData[3] });
     return;
   }
   res.redirect("/");
