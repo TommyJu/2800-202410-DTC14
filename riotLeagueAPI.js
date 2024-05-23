@@ -112,7 +112,7 @@ function validateSummonerCredentials(summonerUsername, summonerID) {
 };
 
 function riotCredentialsExist (RiotUsername, RiotID) {
-  if (!RiotUsername|| !RiotID) {
+  if (!RiotUsername || !RiotID) {
     return false;
   } else {
     return true;
@@ -120,7 +120,7 @@ function riotCredentialsExist (RiotUsername, RiotID) {
 }
 
 async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID) {
-  
+
   if (!(riotCredentialsExist(RiotUsername, RiotID)) && (riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const otherPUUID = await getRiotPUUID(otherRiotUsername, otherRiotID);
     const otherSummonerDetails = await getSummonerLevelAndID(otherPUUID);
@@ -128,7 +128,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     const otherEncryptedSummonerId = otherSummonerDetails[0];
     const otherSummonerRank = await getSummonerRank(otherEncryptedSummonerId);
     if (otherSummonerRank === null) {
-      var otherRank = "Unranked";
+      var otherRank = "UNRANKED";
     } else {
       var otherRank = otherSummonerRank[0] + " " + otherSummonerRank[1];
     }
@@ -148,7 +148,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     });
     return;
   } else {
-    if (!(riotCredentialsExist(otherRiotUsername, otherRiotID))) {
+    if (!(riotCredentialsExist(RiotUsername, RiotID)) && !(riotCredentialsExist(otherRiotUsername, otherRiotID))) {
       res.render("game.ejs", { 
         tasks: tasks, 
         gameError: "No Riot credentials linked to this account. Cannot display your stats.", 
