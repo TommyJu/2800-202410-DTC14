@@ -5,9 +5,10 @@ module.exports = {checkForAchievements, addAchievements};
 async function addAchievements(username, userCollection, achievementCollection, achievementTitles) {
     try {
         // Find the achievement using its title
-        for (const achievementTitle of achievementTitles) {
+        for (let title of achievementTitles) {
+            console.log(title)
             let achievementObject = await achievementCollection.findOne(
-                {title: achievementTitle}
+                {title: title}
             );
 
             // Add the achievement to the user

@@ -38,7 +38,7 @@ const node_session_secret = process.env.NODE_SESSION_SECRET;
 
 var { database } = include('databaseConnection');
 const userCollection = database.db(mongodb_database).collection('users');
-const achievementCollection = database.db(mongodb_database).collection('achievements');
+const achievementCollection = database.db("achievements").collection('achievements');
 
 // Store sessions in db
 var mongoStore = MongoStore.create({
@@ -391,6 +391,8 @@ app.get('/level_up', async (req, res) => {
     console.error("Failed to fetch user on level up");
 }
 
+console.log("user levels", user.levels)
+
 // can check for and add new achievements here, but first let's create the achievement ejs
 let achievementTitles = achievementFunctions.checkForAchievements(
   user.levels.game.level,
@@ -398,11 +400,13 @@ let achievementTitles = achievementFunctions.checkForAchievements(
   user.levels.fitness.level,
 );
 
-achievementFunctions.addAchievements(
+console.log("A titles:", achievementTitles)
+
+await achievementFunctions.addAchievements(
   req.session.username,
   userCollection,
   achievementCollection,
-  achivementTitles
+  achievementTitles
 );
 
   // Render level up page using user info
