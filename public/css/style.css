@@ -23,8 +23,8 @@ body {
     min-height: 100%;
     /* Adjustment for fixed footer */
     padding-bottom: 100px;
-    color: white;
-    background-color: var(--black);
+    /* color: white;
+    background-color: var(--black); */
 }
 
 a {
@@ -33,153 +33,7 @@ a {
 }
 
 input {
-    color: white;
+    /* color: white;
     background-color: gray;
-    border: solid white 2px;
-}
-
-.circle {
-    background-image: url('https://w7.pngwing.com/pngs/490/231/png-transparent-round-red-and-brown-logo-circle-design-product-seal-badge-red-badges-and-labels-maroon-oval.png');
-    background-size: cover;
-    background-position: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-shadow: 1px 1px 2px black;
-}
-
-.progress-bar {
-    width: 150px;
-    height: 8px;
-    background-color: #e5e7eb;
-    position: relative;
-    margin-left: 10px;
-    border-radius: 4px;
-}
-
-.progress-bar::after {
-    content: '';
-    width: 50%;
-    height: 100%;
-    background-color: #3b82f6;
-    display: block;
-    border-radius: 4px;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-
-*,
-*:before,
-*:after {
-    box-sizing: border-box;
-}
-
-.range-summary, .range-profile {
-    position: relative;
-    background-color: #333;
-    width: 250px;
-    height: 20px;
-    transform: skew(0deg);
-    font-family: 'Orbitron', monospace;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.range__label {
-    transform: skew(-30deg) translateY(-100%);
-    line-height: 1.5;
-}
-
-/* progress bars for profile page */
-.range-profile::before {
-    /* --width: calc(var(--completion-rate) * 1%); */
-    --width: calc((var(--level) / var(--max-level)) * 100%);
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 100%;
-    background-color: red;
-    z-index: 0;
-    animation: load .5s forwards linear, glitch 2s infinite linear;
-    border-radius: 12px;
-}
-
-.range-profile::after {
-    counter-reset: progress var(--level);
-    content: "LEVEL " counter(progress);
-    color: white;
-    position: absolute;
-    left: 5%;
-    top: 50%;
-    transform: translateY(-50%) skewX(0deg);
-    z-index: 1;
-}
-
-/* Progress bars for summary page */
-.range-summary::before {
-    --width: calc((var(--level-progress) / var(--max-exp)) * 100%);
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 100%;
-    background-color: red;
-    z-index: 0;
-    animation: load .5s forwards linear, glitch 2s infinite linear;
-    border-radius: 12px;
-}
-
-.range-summary::after {
-    counter-reset: progress var(--level-progress);
-    content: counter(progress) '/70 EXP';
-    color: white;
-    position: absolute;
-    left: 5%;
-    top: 50%;
-    transform: translateY(-50%) skewX(0deg);
-    z-index: 1;
-}
-
-@keyframes load {
-    to {
-        width: var(--width);
-    }
-}
-
-@keyframes glitch {
-    0%,
-    5% {
-        transform: translate(0, 0);
-    }
-
-    1% {
-        transform: translate(-5%, -10%);
-    }
-
-    2% {
-        transform: translate(10%, 30%);
-    }
-
-    3% {
-        transform: translate(-43%, 10%);
-    }
-
-    4% {
-        transform: translate(2%, -23%);
-    }
-}
-
-.level-container {
-    border: 2px solid #e5e7eb;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    background-color: #1f2937;
+    border: solid white 2px; */
 }

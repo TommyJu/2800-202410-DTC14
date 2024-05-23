@@ -18,18 +18,6 @@
             <%= gameName %>
         </div>
 
-        <div class="flex justify-between border rounded-lg p-2 bg-gray-800">
-            <p class="text-lg">Achievements</p>
-            <a href="#">See all</a>
-        </div>
-        <div class="achievements-container">
-            <img class="achievement mr-1"
-                src="https://earthbornegames.com/wp-content/uploads/EBR_Achievement_Badges-No_Stone_Unturned.png">
-            <img class="achievement mr-1"
-                src="https://earthbornegames.com/wp-content/uploads/EBR_Achievement_Badges-Unplanned_Reunion.png">
-            <img class="achievement"
-                src="https://earthbornegames.com/wp-content/uploads/EBR_Achievement_Badges-The_Pentaverate.png">
-        </div>
         <div class="level-container mt-5">
             <div class="flex items-center">
                 <div class="circle flex items-center justify-center mr-3">
@@ -63,12 +51,12 @@
                 </div>
             </div>
         </div>
-        <div class="bordered-section text-xl mt-14 space-y-4">
-            <p class="border rounded-lg p-2 bg-gray-800">Email: <%= email %></p>
-            <p class="border rounded-lg p-2 bg-gray-800">Allergies: <%= allergies %></p>
+        <div class="bordered-section text-xl">
+            <p class="">Email: <%= email %></p>
+            <p class="">Allergies: <%= allergies %></p>
         </div>
-        <div class="bordered-section text-xl mt-14 space-y-4">
-            <a href="/logout" class="border rounded-lg p-2 bg-gray-800">Log out</a>
+        <div class="bordered-section text-xl">
+            <a href="/logout" class="">Log out</a>
         </div>
     </div>
 <%- include("templates/footer.ejs") %>
