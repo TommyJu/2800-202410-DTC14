@@ -14,38 +14,37 @@
             <%- include("templates/achievements_container.ejs", {achievements: achievements})%>
 
             <!-- EXP -->
-            <div class="level-container mt-5">
-                <div class="flex items-center">
+            
+                <div class="experience-container flex items-center">
                     <div class="circle flex items-center justify-center mr-3">
                         <%= levelDiet %>
                     </div>
-                    <div class="ml-2 flex flex-col">
+                    <div class="progress-bar-container ml-2 flex flex-col">
                         <p class="text-base mb-2">Diet Experience</p>
                         <div class="range-summary" style="--level-progress:<%= expDiet %>; --max-exp:<%= expMax %>"></div>
                     </div>
                 </div>
-            </div>
-            <div class="level-container">
-                <div class="flex items-center">
+            
+            
+                <div class="experience-container">
                     <div class="circle flex items-center justify-center mr-3">
                         <%= levelFitness %>
                     </div>
-                    <div class="ml-2 flex flex-col">
+                    <div class="progress-bar-container ml-2 flex flex-col">
                         <p class="text-base mb-2">Fitness Experience</p>
                         <div class="range-summary" style="--level-progress:<%= expFitness %>; --max-exp:<%= expMax %>"></div>
                     </div>
                 </div>
-            </div>
-            <div class="level-container">
-                <div class="flex items-center">
+            
+                <div class="experience-container flex items-center">
                     <div class="circle flex items-center justify-center mr-3">
                         <%= levelGame %>
                     </div>
-                    <div class="ml-2 flex flex-col">
+                    <div class="progress-bar-container ml-2 flex flex-col">
                         <p class="text-base mb-2">Game Experience</p>
                         <div class="range-summary" style="--level-progress:<%= expGame %>; --max-exp:<%= expMax %>"></div>
                     </div>
-                </div>
+                
             </div>
             <!-- Used for the donut chart -->
             <div class="hidden" id="levelGame">

@@ -1,5 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Modal stuff for tasks
     const toggleButtons = document.querySelectorAll('[data-modal-toggle]');
     const closeButtons = document.querySelectorAll('[data-modal-hide]');
 
@@ -20,4 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
             modal.classList.remove('flex');
         });
     });
+
+    // Achievement "see all"
+    
 });

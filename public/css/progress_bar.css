@@ -42,7 +42,8 @@
     position: relative;
     /*  Empty progres fill  */
     background-color: #333;
-    width: 250px;
+    /* width: 250px; */
+    /* width: 500px; */
     height: 20px;
     transform: skew(0deg);
     font-family: 'Orbitron', monospace;
@@ -138,10 +139,24 @@
     }
 }
 
-.level-container {
+.experience-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
     /* border: 2px solid #e5e7eb; */
     padding: 10px;
     border-radius: 8px;
     margin-bottom: 16px;
     /* background-color: #1f2937; */
 }
+
+.progress-bar-container {
+    width: 70%;
+}
+
+/* @media (max-width: 670px) {
+    .range-summary, .range-profile {
+        width: 300px;
+    }
+} */

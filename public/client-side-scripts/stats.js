@@ -1,5 +1,14 @@
 const getChartOptions = () => {
   return {
+    fill: {
+      type: 'pattern',
+      pattern: {
+        style: 'horizontalLines',
+        width: 6,
+        height: 6,
+        strokeWidth: 6,
+      }
+    },
     series: [levelGame, levelFitness, levelDiet],
     colors: ["#f5b700", "#f71735", "#62c370"],
     chart: {
@@ -8,7 +17,7 @@ const getChartOptions = () => {
       type: "donut",
     },
     stroke: {
-      colors: ["#f7e1d7"],
+      colors: ["#000000"],
       lineCap: "",
     },
     plotOptions: {
@@ -18,7 +27,7 @@ const getChartOptions = () => {
             show: true,
             name: {
               show: true,
-              fontFamily: "Roboto, sans-serif",
+              fontFamily: "Audiowide, sans-serif",
               offsetY: +30,
             },
             total: {
@@ -26,7 +35,7 @@ const getChartOptions = () => {
               show: true,
               label: "GUD Level",
               fontSize: "20px",
-              fontFamily: "Roboto, sans-serif",
+              fontFamily: "Audiowide, sans-serif",
               formatter: function () {
                 return levelDiet + levelFitness + levelGame;
               },
@@ -34,7 +43,7 @@ const getChartOptions = () => {
             value: {
               show: true,
               fontSize: "60px",
-              fontFamily: "Roboto, sans-serif",
+              fontFamily: "Audiowide, sans-serif",
               offsetY: -20,
               formatter: function (value) {
                 return value
@@ -56,7 +65,7 @@ const getChartOptions = () => {
     },
     legend: {
       position: "bottom",
-      fontFamily: "Roboto, sans-serif",
+      fontFamily: "Audiowide, sans-serif",
       background: {
         foreColor: "#ffffff"
       }

@@ -1,5 +1,8 @@
 #home-background {
+    width: 100%;
+    height: 100%;
     padding: 20px;
+    padding-bottom: 100px;
     background-color: var(--black);
     color: var(--yellow);
     display: flex;
@@ -18,7 +21,7 @@
 }
 
 #donut-chart {
-    width: 50%;
+    width: 40%;
 }
 
 #user-display {
@@ -31,4 +34,17 @@
 #user-display img {
     height: auto;
     width: 80px;
+}
+
+/* Responsive styling for donut chart */
+@media (max-width: 1500px) {
+    #donut-chart {
+        width: 70%;
+    }
+}
+
+@media (max-width: 700px) {
+    #donut-chart {
+        width: 100%;
+    }
 }
