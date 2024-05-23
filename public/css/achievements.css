@@ -1,6 +1,6 @@
 .achievement {
     white-space: nowrap;
-    border: 2px solid #e5e7eb;
+    /* border: 2px solid #e5e7eb; */
     border-radius: 8px;
     /* background-color: #1f2937; */
     display: flex;
@@ -16,7 +16,7 @@
 }
 
 .achievements-container {
-    width: 70%;
+    width: 90%;
     /* border: solid white 1px; */
     display: flex;
     flex-wrap: wrap;
@@ -28,13 +28,12 @@
     /* border: 2px solid #e5e7eb; */
     border-radius: 8px;
     /* background-color: #1f2937; */
-    margin-bottom: 60px;
 }
 
 .achievements-header {
     width: 70%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     /* color: #e5e7eb; */
 }
