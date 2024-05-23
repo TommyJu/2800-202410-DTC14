@@ -4,6 +4,7 @@ weather = require('./weather.js')
 const taskFunctions = require("./task_functions.js");
 const authenticationFunctions = require("./authentication_functions.js");
 const levelFunctions = require("./level_functions.js");
+const achievementFunctions = require("./achievement_functions.js");
 
 const { ObjectId } = require('mongodb');
 const express = require('express');
@@ -377,22 +378,34 @@ app.post('/complete_task', async (req, res) => {
 })
 
 app.get('/level_up', async (req, res) => {
-
-  // can check for and add new achievements here, but first let's create the achievement ejs
-
   let taskCategory = req.query.category;
-  // Fetch the user
+  // Fetch the user using the corresponding task category
   try {
     user = await userCollection.findOne(
         { username: req.session.username },
         { projection: {
-            [`levels.${taskCategory}`]: 1,
+            levels: 1,
             rank: 1
         }});
 } catch (error) {
     console.error("Failed to fetch user on level up");
 }
-  // Render level up page
+
+// can check for and add new achievements here, but first let's create the achievement ejs
+let achievementTitles = achievementFunctions.checkForAchievements(
+  user.levels.game.level,
+  user.levels.diet.level,
+  user.levels.fitness.level,
+);
+
+achievementFunctions.addAchievements(
+  req.session.username,
+  userCollection,
+  achievementCollection,
+  achivementTitles
+);
+
+  // Render level up page using user info
   res.render("level_up.ejs", {
     username: req.session.username,
     taskCategory: taskCategory,
