@@ -2,7 +2,7 @@
     <!-- tasks is passed into the ejs template -->
     <% if (type === 'suggestion') { %>   
         <% for (let i = 0; i < tasks.length; i++) { %>
-            <% if (tasks[i].weather.includes('Snow')) { %>
+            <% if (tasks[i].weather.includes(weatherToday)) { %>
                 <%- include("task_card.ejs", {
                     taskId: tasks[i]._id, 
                     title: tasks[i].title, 

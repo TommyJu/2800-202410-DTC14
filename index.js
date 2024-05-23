@@ -210,12 +210,16 @@ app.get('/fitness', async (req, res) => {
   if (req.session.authenticated) {
     username = req.session.username;
     const result = await userCollection.find({ username: username }).toArray();
-    defaultCity = result[0].city
+    if (result[0].city === undefined) {
+      defaultCity = `Vancouver`
+    } else {
+      defaultCity = result[0].city
+    }
     url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity},CA&appid=${weatherKey}&units=metric`
+    console.log(url)
     const physicalCollection = await database.db('physical_pillar').collection('activities').find().toArray();
     tasks = await taskFunctions.getTasksByCategory("fitness", req.session.username, userCollection);
     weatherData = await weather.getWeather(url)
-    console.log(weatherData)
     res.render("fitness.ejs", { tasks: tasks, activities: physicalCollection, cityName: weatherData[0], weatherToday: weatherData[1], weatherTemp: weatherData[2], weatherIcon: weatherData[3] });
     return;
   }
