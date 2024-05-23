@@ -6,7 +6,6 @@ async function addAchievements(username, userCollection, achievementCollection, 
     try {
         // Find the achievement using its title
         for (let title of achievementTitles) {
-            console.log(title)
             let achievementObject = await achievementCollection.findOne(
                 {title: title}
             );

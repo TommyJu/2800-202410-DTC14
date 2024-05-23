@@ -1,0 +1,28 @@
+<!-- Styling for these classes done in separate css file -->
+<div class="achievements-container">
+    <!-- tasks is passed into the ejs template -->
+    <% for(let i = 0; i < achievements.length; i++) {%>
+        
+        <%- include("achievement.ejs", {
+            image: achievements[i].image, 
+            title: achievements[i].title, 
+            description: achievements[i].description
+        }) %>
+
+    <% } %>
+</div>
+
+
+<!-- Achievements -->
+<!-- <div class="flex justify-between border rounded-lg p-2 bg-gray-800">
+    <p class="text-lg">Achievements</p>
+    <a href="#">See all</a>
+</div>
+<div class="achievements-container">
+    <img class="achievement mr-1"
+        src="https://earthbornegames.com/wp-content/uploads/EBR_Achievement_Badges-No_Stone_Unturned.png">
+    <img class="achievement mr-1"
+        src="https://earthbornegames.com/wp-content/uploads/EBR_Achievement_Badges-Unplanned_Reunion.png">
+    <img class="achievement"
+        src="https://earthbornegames.com/wp-content/uploads/EBR_Achievement_Badges-The_Pentaverate.png">
+</div> -->

@@ -92,28 +92,22 @@ app.use((req, res, next) => {
 // Home page ---------------------------
 app.get('/', async (req, res) => {
   if (req.session.authenticated) {
-    username = req.session.username;
-    const result = await userCollection.findOne({ username: username }, { projection: { levels: 1, rank: 1 } });
-    levelGame = result.levels.game.level;
-    levelFitness = result.levels.fitness.level;
-    levelDiet = result.levels.diet.level;
-    expGame = result.levels.game.exp;
-    expFitness = result.levels.fitness.exp;
-    expDiet = result.levels.diet.exp;
+    const result = await userCollection.findOne({ username: req.session.username }, { projection: { levels: 1, rank: 1, achievements: 1 } });
 
-    rank = result.rank;
     res.render("stat_summary.ejs", { 
-      username: username, 
-      levelGame: levelGame, 
-      levelFitness: levelFitness, 
-      levelDiet: levelDiet,
-      expGame: expGame,
-      expFitness: expFitness,
-      expDiet: expDiet,
+      username: req.session.username, 
+      levelGame: result.levels.game.level, 
+      levelFitness: result.levels.fitness.level, 
+      levelDiet: result.levels.diet.level,
+      expGame: result.levels.game.exp,
+      expFitness: result.levels.fitness.exp,
+      expDiet: result.levels.diet.exp,
       expMax: levelFunctions.EXP_PER_LEVEL, 
-      rank: rank });
-    // res.render("home_logged_in.ejs", { username: req.session.username });
-    return;
+      rank: result.rank,
+      achievements: result.achievements
+    });
+      
+      return;
   }
   res.render("home_logged_out.ejs");
 })
@@ -391,16 +385,12 @@ app.get('/level_up', async (req, res) => {
     console.error("Failed to fetch user on level up");
 }
 
-console.log("user levels", user.levels)
-
 // can check for and add new achievements here, but first let's create the achievement ejs
 let achievementTitles = achievementFunctions.checkForAchievements(
   user.levels.game.level,
   user.levels.diet.level,
   user.levels.fitness.level,
 );
-
-console.log("A titles:", achievementTitles)
 
 await achievementFunctions.addAchievements(
   req.session.username,
