@@ -194,6 +194,9 @@ app.get('/game', async (req, res) => {
 })
 
 app.post('/searchSummoner', async (req, res) => {
+  delete req.session.otherRiotUsername;
+  delete req.session.otherRiotID;
+
   var summonerUsername = req.body.summonerUsername;
   var summonerID = req.body.summonerID;
   
