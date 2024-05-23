@@ -229,7 +229,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     winrate: winrate, 
     kd: kd, 
     noRiot: "", 
-    noSummoner: "",
+    noSummoner: "No summoner credentials provided. Cannot display other summoner stats.",
     additionalSummoner: "", 
   });
   return;
