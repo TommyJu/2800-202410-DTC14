@@ -1,13 +1,14 @@
 const getChartOptions = () => {
   return {
     series: [levelGame, levelFitness, levelDiet],
-    colors: ["#1C64F2", "#FDBA8C", "#E74694"],
+    colors: ["#f5b700", "#f71735", "#62c370"],
     chart: {
+      foreColor: '#ffffff',
       width: "100%",
       type: "donut",
     },
     stroke: {
-      colors: ["transparent"],
+      colors: ["#f7e1d7"],
       lineCap: "",
     },
     plotOptions: {
@@ -17,30 +18,30 @@ const getChartOptions = () => {
             show: true,
             name: {
               show: true,
-              fontFamily: "Inter, sans-serif",
-              offsetY: +20,
+              fontFamily: "Roboto, sans-serif",
+              offsetY: +30,
             },
             total: {
               showAlways: true,
               show: true,
-              label: "Combined Level",
-              fontSize: "10px",
-              fontFamily: "Inter, sans-serif",
+              label: "GUD Level",
+              fontSize: "20px",
+              fontFamily: "Roboto, sans-serif",
               formatter: function () {
                 return levelDiet + levelFitness + levelGame;
               },
             },
             value: {
               show: true,
-              fontSize: "50px",
-              fontFamily: "Inter, sans-serif",
-              offsetY: -10,
+              fontSize: "60px",
+              fontFamily: "Roboto, sans-serif",
+              offsetY: -20,
               formatter: function (value) {
                 return value
               },
             },
           },
-          size: "80%",
+          size: "90%",
         },
       },
     },
@@ -55,9 +56,9 @@ const getChartOptions = () => {
     },
     legend: {
       position: "bottom",
-      fontFamily: "Inter, sans-serif",
+      fontFamily: "Roboto, sans-serif",
       background: {
-        foreColor: "#fff"
+        foreColor: "#ffffff"
       }
     },
     yaxis: {
