@@ -1,4 +1,5 @@
 .tooltip {
+    z-index: 3;
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted black;
@@ -7,14 +8,13 @@
   .tooltip .tooltiptext {
     visibility: hidden;
     background-color: black;
-    color: var(--green);
+    color: white;
     text-align: center;
     border-radius: 6px;
     padding: 8px;
     
     /* Position the tooltip */
     position: absolute;
-    z-index: 1;
     bottom: 100%;
     left: 50%;
     margin-left: -60px;

@@ -12,7 +12,7 @@ const getChartOptions = () => {
     series: [levelGame, levelFitness, levelDiet],
     colors: ["#f5b700", "#f71735", "#62c370"],
     chart: {
-      foreColor: '#ffffff',
+      foreColor: '#f5b700',
       width: "100%",
       type: "donut",
     },

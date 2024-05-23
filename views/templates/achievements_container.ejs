@@ -1,17 +1,19 @@
-<!-- Styling for these classes done in separate css file -->
-<div class="achievements-header">
-    <h3 id="achievements-title">Achievements</h3>
-    <button>See all</button>
-</div>
-<div class="achievements-container">
-    <!-- tasks is passed into the ejs template -->
-    <% for(let i = 0; i < achievements.length; i++) {%>
-        
-        <%- include("achievement.ejs", {
-            image: achievements[i].image, 
-            title: achievements[i].title, 
-            description: achievements[i].description
-        }) %>
-
-    <% } %>
+<div class="flex flex-col justify-center items-center w-full">
+    <!-- Styling for these classes done in separate css file -->
+    <div class="achievements-header">
+        <h3 id="achievements-title">Achievements</h3>
+        <button>See all</button>
+    </div>
+    <div class="achievements-container">
+        <!-- tasks is passed into the ejs template -->
+        <% for(let i = 0; i < achievements.length; i++) {%>
+    
+            <%- include("achievement.ejs", {
+                image: achievements[i].image,
+                title: achievements[i].title,
+                description: achievements[i].description
+            }) %>
+    
+        <% } %>
+    </div>
 </div>

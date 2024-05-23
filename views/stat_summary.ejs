@@ -1,20 +1,20 @@
-
 <%- include("templates/header_with_profile.ejs") %>
 
-        <div id="home-background">
-            <div id="user-display">
-                <h1><%= username %></h1>
-                <img src="./images/ranks/<%= rank %>.webp" class="h-auto w-80" alt="Player rank">
-            </div>
-            <!-- Donut Chart -->
-            <div id="donut-chart-container">
-                <div class="" id="donut-chart"></div>
-            </div>
-
-            <%- include("templates/achievements_container.ejs", {achievements: achievements})%>
+    <div id="home-background">
+        <div id="user-display">
+            <h1>
+                <%= username %>
+            </h1>
+            <img src="./images/ranks/<%= rank %>.webp" class="h-auto w-80" alt="Player rank">
+        </div>
+        <!-- Donut Chart -->
+        <div id="donut-chart-container">
+            <div class="" id="donut-chart"></div>
+        </div>
 
             <!-- EXP -->
-            
+
+            <div class="flex flex-col justify-center items-center w-full">
                 <div class="experience-container flex items-center">
                     <div class="circle flex items-center justify-center mr-3">
                         <%= levelDiet %>
@@ -24,18 +24,16 @@
                         <div class="range-summary" style="--level-progress:<%= expDiet %>; --max-exp:<%= expMax %>"></div>
                     </div>
                 </div>
-            
-            
                 <div class="experience-container">
                     <div class="circle flex items-center justify-center mr-3">
                         <%= levelFitness %>
                     </div>
                     <div class="progress-bar-container ml-2 flex flex-col">
                         <p class="text-base mb-2">Fitness Experience</p>
-                        <div class="range-summary" style="--level-progress:<%= expFitness %>; --max-exp:<%= expMax %>"></div>
+                        <div class="range-summary" style="--level-progress:<%= expFitness %>; --max-exp:<%= expMax %>">
+                        </div>
                     </div>
                 </div>
-            
                 <div class="experience-container flex items-center">
                     <div class="circle flex items-center justify-center mr-3">
                         <%= levelGame %>
@@ -44,8 +42,11 @@
                         <p class="text-base mb-2">Game Experience</p>
                         <div class="range-summary" style="--level-progress:<%= expGame %>; --max-exp:<%= expMax %>"></div>
                     </div>
-                
+                </div>
             </div>
+
+            <%- include("templates/achievements_container.ejs", {achievements: achievements})%>
+
             <!-- Used for the donut chart -->
             <div class="hidden" id="levelGame">
                 <%=levelGame%>
@@ -56,5 +57,5 @@
             <div class="hidden" id="levelDiet">
                 <%=levelDiet%>
             </div>
-        </div>
-        <%- include("templates/footer.ejs") %>
+    </div>
+    <%- include("templates/footer.ejs") %>
