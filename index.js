@@ -239,6 +239,61 @@ app.get('/get_allergies', async (req, res) => {
   }
 });
 
+app.post('/favouriteRecipe', async (req, res) => {
+  const recipe = req.body.recipe;
+  try {
+    await userCollection.findOneAndUpdate(
+      { username: req.session.username },
+      { $push: { favouriteRecipes: recipe } },
+      { upsert: true }
+    );
+    res.json({ success: true, message: 'Recipe added to favorites' });
+  } catch (error) {
+    console.error('Error saving recipe:', error.message);
+    res.status(500).json({ error: 'Failed to save recipe' });
+  }
+});
+
+
+
+const lineBreaks = (str) => str.replace(/\r\n/g, '\n').trim();
+
+app.get('/favouriteRecipes', async (req, res) => {
+  try {
+    const user = await userCollection.findOne(
+      { username: req.session.username },
+      { projection: { favouriteRecipes: 1, _id: 0 } }
+    );
+
+    if (user && user.favouriteRecipes) {
+      user.favouriteRecipes = user.favouriteRecipes.map(lineBreaks);
+      res.json({ success: true, favouriteRecipes: user.favouriteRecipes });
+    } else {
+      res.json({ success: false, message: 'No favorite recipes found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving favorite recipes:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve favorite recipes' });
+  }
+});
+
+app.post('/removeFavouriteRecipe', async (req, res) => {
+  const recipe = lineBreaks(req.body.recipe);
+  try {
+    const result = await userCollection.updateOne(
+      { username: req.session.username },
+      { $pull: { favouriteRecipes: recipe } }
+    );
+    if (result.modifiedCount === 0) {
+      throw new Error('Recipe not found or not removed');
+    }
+    res.json({ success: true, message: 'Recipe removed from favorites' });
+  } catch (error) {
+    console.error('Error removing recipe:', error.message);
+    res.status(500).json({ error: 'Failed to remove recipe' });
+  }
+});
+
 
 async function sendMessage(message) {
   try {
