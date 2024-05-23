@@ -12,9 +12,9 @@
     <form id="completeTaskForm" action="/complete_task" method="POST">
       <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
       <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
-      <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check"
-          width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#00b341" fill="none"
-          stroke-linecap="round" stroke-linejoin="round">
+      <button type="submit" class="completeButton"><svg xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-circle-check" width="44" height="44" viewBox="0 0 24 24"
+          stroke-width="1.5" stroke="#00b341" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
           <path d="M9 12l2 2l4 -4" />
@@ -23,7 +23,7 @@
     <form id="deleteTaskForm" action="/delete_task" method="POST">
       <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
       <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
-      <button type="submit">
+      <button type="submit" class="deleteButton">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-x" width="44" height="44"
           viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff2825" fill="none" stroke-linecap="round"
           stroke-linejoin="round">
@@ -35,3 +35,12 @@
     </form>
   </div>
 </div>
+<script>
+  if (document.URL.includes("completed")) {
+    buttons = document.getElementsByTagName("button")
+    for (let i = 0; i < buttons.length; i++) {
+      console.log(buttons);
+      buttons[i].classList.add("hidden");
+    }
+  }
+</script>

@@ -349,6 +349,12 @@ app.post('/delete_task', async (req, res) => {
   res.redirect(req.get('referer'));
 })
 
+// Completed task page
+app.get('/completed', async (req, res) => {
+  username = req.session.username;
+  res.render("completed.ejs", { username: username });
+});
+
 // 404 not found page ------------------
 app.get("/does_not_exist", (req, res) => {
   res.status(404);
