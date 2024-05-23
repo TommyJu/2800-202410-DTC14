@@ -1,10 +1,32 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="login_signup_style.css">
+    <title>Get GUD</title>
+</head>
 <%- include("templates/header_logo_only.ejs") %>
-    <h1>Password recovery for <%= username %></h1>
-    <form action="/password_reset" method="post">
-    <input type="hidden" name="username" value="<%= username %>">
-    <label for="securityAnswer"><%= securityQuestion %></label>
-    <input type="password" name="securityAnswer" placeholder="security answer"/>
-    <input type="password" name="newPassword" placeholder='new password'/>
-    <input type="submit"/>
-    </form>
+
+<body class="m-0 p-0 font-sans bg-cover bg-center h-screen">
+    <div class="login-box max-w-sm w-11/12 sm:w-64 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white broken-border p-6 bg-black bg-opacity-50 rounded-lg">
+        <span></span>
+        <h1 class="mb-3 py-3 text-2xl text-center"><span class="border-b-4 border-gray-500">Password recovery for <%= username %></span></h1>
+        <form method="post" action="/password_reset">
+            <input type="hidden" name="username" value="<%= username %>">
+            <label for="securityAnswer"><%= securityQuestion %></label>
+            <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
+                <img src="answer.png" alt="Password Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
+                <input type="password" id="securityAnswer" name="securityAnswer" placeholder="Security answer" class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
+            </div>
+            <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
+                <img src="password.png" alt="Password Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
+                <label for="newPassword" class="sr-only">New Password:</label>
+                <input type="password" id="newPassword" name="newPassword" placeholder="New password" class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
+            </div>
+            <input class="btn w-full bg-transparent border-2 border-gray-500 text-white py-1 text-lg cursor-pointer my-3" type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>
