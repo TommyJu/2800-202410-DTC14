@@ -1,27 +1,44 @@
 <% if (noRiot && additionalSummoner) { %>
   <%- include("templates/header_with_profile.ejs") %>
   
-  <div id="helpfulMessage" class="font-bold">
-    <%=  noRiot %>
-  </div>
+  <%- include('templates/game/helpfulMessage.ejs', {helpfulMessage: noRiot})  %>
   
-  <%- include('templates/searchSummonerButton.ejs') %>
+  <%- include('templates/game/searchSummonerButton.ejs') %>
   
-  <div id="otherSummoner">
-    <br>
-    Other Summoner Level: <%= otherSummonerLevel %>
-    <br>
-    Other Current rank: <%= otherRank %>
-    <br>
-    Other Winrate: <%= otherWinrate[0] %> <%= otherWinrate[1] %>
-    <br>
-    Other KD Ratio: <%= otherkd %>
-    <br>
+  <%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate, otherkd: otherkd}) %>
   
-    <img  class="w-35 h-35" src="./images/lolRanks/<%=rank[0]%>.webp" alt="">
+  <!-- Parameter determines default selected dropdown category for modal -->
+  <%- include("templates/task_modal.ejs", {category: 'game'}) %>
+  
+  <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+  
+  <%- include("templates/footer.ejs") %>
+  
+  <% } else if (noRiot){ %>
+  
+  <%- include("templates/header_with_profile.ejs") %>
+  
+  <%- include('templates/game/helpfulMessage.ejs', {helpfulMessage: noRiot})  %>
+  
+  <%- include('templates/game/searchSummonerButton.ejs') %>
+  
+  <!-- Parameter determines default selected dropdown category for modal -->
+  <%- include("templates/task_modal.ejs", {category: 'game'}) %>
+  
+  <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+  
+  <%- include("templates/footer.ejs") %>
+  
+  <% } else if (additionalSummoner){ %>
+  
+  <%- include("templates/header_with_profile.ejs") %>
+  
+  <%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate, kd: kd}) %>
+  
+  <%- include('templates/game/searchSummonerButton.ejs') %>
+  
+  <%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate, otherkd: otherkd}) %>
 
-  </div>
-  
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
 
@@ -29,77 +46,13 @@
 
   <%- include("templates/footer.ejs") %>
 
-<% } else if (noRiot){ %>
-    <%- include("templates/header_with_profile.ejs") %>
-
-    <div id="helpfulMessage" class="font-bold">
-      <%=  noRiot %>
-    </div>
-
-    <%- include('templates/searchSummonerButton.ejs') %>
-
-    <!-- Parameter determines default selected dropdown category for modal -->
-    <%- include("templates/task_modal.ejs", {category: 'game'}) %>
-    
-    <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
-    
-    <%- include("templates/footer.ejs") %>
-
-<% } else if (additionalSummoner){ %>
-    <%- include("templates/header_with_profile.ejs") %>
-    
-    <br>
-    Summoner Level: <%= level %>
-    <br>
-    Current rank: <%= rank[0] %> <%= rank[1] %>
-    <br>
-    Winrate: <%= winrate %> %
-    <br>
-    KD Ratio: <%= kd %>
-    <br>
-
-    <img class="w-35 h-35"  src="./images/lolRanks/<%=rank[0]%>.webp" alt="">
- 
-    <%- include('templates/searchSummonerButton.ejs') %>
-    
-    <div id="otherSummoner">
-      <br>
-      Other Summoner Level: <%= otherSummonerLevel %>
-      <br>
-      Other Current rank: <%= otherRank %>
-      <br>
-      Other Winrate: <%= otherWinrate[0] %> <%= otherWinrate[1] %>
-      <br>
-      Other KD Ratio: <%= otherkd %>
-      <br>
-      
-      <img  class="w-35 h-35" src="./images/lolRanks/<%=otherRank[0]%>.webp" alt="">
- 
-    </div>
-    
-    <!-- Parameter determines default selected dropdown category for modal -->
-    <%- include("templates/task_modal.ejs", {category: 'game'}) %>
-  
-    <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
-  
-    <%- include("templates/footer.ejs") %>
-
 <% } else { %>
   
   <%- include("templates/header_with_profile.ejs") %>
-  <br>
-  Summoner Level: <%= level %>
-  <br>
-  Current rank: <%= rank[0] %> <%= rank[1] %>
-  <br>
-  Winrate: <%= winrate %> %
-  <br>
-  KD Ratio: <%= kd %>
-  <br>
 
-  <img  class="w-35 h-35" src="./images/lolRanks/<%=rank[0]%>.webp" alt="">
+  <%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate, kd: kd}) %>
 
-  <%- include('templates/searchSummonerButton.ejs') %>
+  <%- include('templates/game/searchSummonerButton.ejs') %>
   
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
