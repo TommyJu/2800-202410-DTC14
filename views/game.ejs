@@ -1,8 +1,9 @@
-<% if (gameError && additionalSummoner) { %>
-  <br>
+<% if (noRiot && additionalSummoner) { %>
   <%- include("templates/header_with_profile.ejs") %>
-  <%=  gameError %>
-  <br>
+  
+  <div id="helpfulMessage" class="font-bold">
+    <%=  noRiot %>
+  </div>
   
   <%- include('templates/searchSummonerButton.ejs') %>
   
@@ -28,11 +29,12 @@
 
   <%- include("templates/footer.ejs") %>
 
-<% } else if (gameError){ %>
-    <br>
+<% } else if (noRiot){ %>
     <%- include("templates/header_with_profile.ejs") %>
-    <%=  gameError %>
-    <br>
+
+    <div id="helpfulMessage" class="font-bold">
+      <%=  noRiot %>
+    </div>
 
     <%- include('templates/searchSummonerButton.ejs') %>
 
@@ -44,8 +46,8 @@
     <%- include("templates/footer.ejs") %>
 
 <% } else if (additionalSummoner){ %>
-
     <%- include("templates/header_with_profile.ejs") %>
+    
     <br>
     Summoner Level: <%= level %>
     <br>

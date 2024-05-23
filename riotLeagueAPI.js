@@ -139,7 +139,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     
     res.render("game.ejs", { 
       tasks: tasks, 
-      gameError: "No Riot credentials linked to this account. Cannot display your stats.", 
+      noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
       additionalSummoner: "yes", 
       otherSummonerLevel: otherSummonerLevel,
       otherRank: otherRank,
@@ -151,7 +151,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     if (!(riotCredentialsExist(RiotUsername, RiotID)) && !(riotCredentialsExist(otherRiotUsername, otherRiotID))) {
       res.render("game.ejs", { 
         tasks: tasks, 
-        gameError: "No Riot credentials linked to this account. Cannot display your stats.", 
+        noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
         additionalSummoner: "", 
       });
       return;
@@ -195,7 +195,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
       rank: rank, 
       winrate: winrate, 
       kd: kd, 
-      gameError: "", 
+      noRiot: "", 
       additionalSummoner: "yes", 
       otherSummonerLevel: otherSummonerLevel,
       otherRank: otherRank,
@@ -225,7 +225,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     rank: rank, 
     winrate: winrate, 
     kd: kd, 
-    gameError: "", 
+    noRiot: "", 
     additionalSummoner: "", 
   });
   return;
