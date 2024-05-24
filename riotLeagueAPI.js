@@ -141,6 +141,16 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     const otherSummonerLevel = otherSummonerDetails[1];
     const otherEncryptedSummonerId = otherSummonerDetails[0];
     const otherSummonerRank = await getSummonerRank(otherEncryptedSummonerId);
+    if ((otherEncryptedSummonerId || otherSummonerRank) === undefined) {
+      res.render("game.ejs", { 
+        tasks: tasks, 
+        gamingSuggestions: gamingSuggestions,
+        noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
+        noSummoner: "Summoner credentials provided are invalid. Cannot display other summoner stats.",
+        additionalSummoner: "", 
+      });
+      return;
+    };
     if (otherSummonerRank === null) {
       var otherRank = ["UNRANKED"];
     } else {
@@ -197,6 +207,20 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     const otherSummonerLevel = otherSummonerDetails[1];
     const otherEncryptedSummonerId = otherSummonerDetails[0];
     const otherSummonerRank = await getSummonerRank(otherEncryptedSummonerId);
+    if ((otherEncryptedSummonerId || otherSummonerRank) === undefined) {
+      res.render("game.ejs", { 
+        tasks: tasks, 
+        gamingSuggestions: gamingSuggestions,
+        level: summonerLevel, 
+        rank: rank, 
+        winrate: winrate, 
+        kd: kd, 
+        noRiot: "", 
+        noSummoner: "Summoner credentials provided are invalid. Cannot display other summoner stats.",
+        additionalSummoner: "", 
+      });
+      return;
+    };
     if (otherSummonerRank === null) {
       var otherRank = ["UNRANKED"];
     } else {
