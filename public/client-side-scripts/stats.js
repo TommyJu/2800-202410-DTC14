@@ -6,7 +6,7 @@ const getChartOptions = () => {
         style: 'horizontalLines',
         width: 6,
         height: 6,
-        strokeWidth: 6,
+        strokeWidth: 8,
       }
     },
     series: [levelGame, levelFitness, levelDiet],
@@ -50,7 +50,7 @@ const getChartOptions = () => {
               },
             },
           },
-          size: "90%",
+          size: "70%",
         },
       },
     },
