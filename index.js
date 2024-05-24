@@ -487,14 +487,9 @@ app.get('/level_up', async (req, res) => {
     achievementTitles
   );
 
-  // Format the task category to title case assuming the length is >= 2
-  let formattedTaskCategory = taskCategory.charAt(0).toUpperCase() + taskCategory.slice(1, -1);
-
   // Render level up page using user info
   res.render("level_up.ejs", {
-    username: req.session.username,
     taskCategory: taskCategory,
-    formattedTaskCategory: formattedTaskCategory,
     level: user.levels[taskCategory].level,
     rank: user.rank,
     achievements: achievementObjects
