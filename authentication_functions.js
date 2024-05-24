@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const saltRounds = 12;
 const expireTime = 1 * 60 * 60 * 1000; // one hour expiry time
+const lolAPI = require('./riotLeagueAPI.js');
+const { get } = require('http');
 
 module.exports = { submitUser, logInUser, resetPassword, renderSecurityQuestion};
 
@@ -61,6 +63,18 @@ async function submitUser(
   const RiotIDValidationResult = RiotIDSchema.validate(RiotID);
   if (RiotIDValidationResult.error != null) {
     res.render("invalid_sign_up.ejs", { type: "Riot ID" })
+    return;
+  }
+  
+  if (await lolAPI.getRiotPUUID(RiotUsername, RiotID) === false) {
+    console.log("Riot account does not exists lil bro.")
+    res.render("invalid_sign_up.ejs", { type: "Riot account does not exists lil bro." })
+    return;
+  }
+
+  if (await lolAPI.getSummonerLevelAndID(lolAPI.getRiotPUUID(RiotUsername, RiotID)) === false) {
+    console.log("No League on this rito account lil bro.")
+    res.render("invalid_sign_up.ejs", { type: "No League on this rito account lil bro." })
     return;
   }
 
