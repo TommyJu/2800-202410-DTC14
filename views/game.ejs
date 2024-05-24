@@ -1,25 +1,68 @@
-<% if (gameError) { %>
-  
+<% if (noRiot && additionalSummoner) { %>
   <%- include("templates/header_with_profile.ejs") %>
-  <%=  gameError %>
+  
+  <%- include('templates/game/helpfulMessage.ejs', {helpfulMessage: noRiot})  %>
+  
+  <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
+  
+  <%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate, otherkd: otherkd}) %>
+  
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
   
   <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
   
   <%- include("templates/footer.ejs") %>
+  
+  <% } else if (noRiot){ %>
+  
+  <%- include("templates/header_with_profile.ejs") %>
+  
+  <%- include('templates/game/helpfulMessage.ejs', {helpfulMessage: noRiot})  %>
+  
+  <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
+  
+  <!-- Parameter determines default selected dropdown category for modal -->
+  <%- include("templates/task_modal.ejs", {category: 'game'}) %>
+  
+  <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+  
+  <%- include("templates/footer.ejs") %>
+  
+  <% } else if (additionalSummoner){ %>
+  
+  <%- include("templates/header_with_profile.ejs") %>
+  
+  <div id="test" class="flex justify-around">
+    
+    <div class="w-1/3"><%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate, kd: kd}) %></div>
+    
+    <div class="w-1/3"><%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate, otherkd: otherkd}) %></div>
+    
+  </div>
+  
+  <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
+  
+
+  <!-- Parameter determines default selected dropdown category for modal -->
+  <%- include("templates/task_modal.ejs", {category: 'game'}) %>
+
+  <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+
+  <%- include("templates/footer.ejs") %>
 
 <% } else { %>
   
   <%- include("templates/header_with_profile.ejs") %>
-  <br>
-  Summoner Level: <%= level %>
-  <br>
-  Current rank: <%= rank %>
-  <br>
-  Winrate (past 20 games): <%= winrate %> %
-  <br>
-  KD Ratio: <%= kd %>
+
+  <div id="test" class="flex">
+    
+    <%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate, kd: kd}) %>
+      
+  </div>
+
+  <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
+  
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
 
