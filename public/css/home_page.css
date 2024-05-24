@@ -1,6 +1,7 @@
 #home-background {
-    width: 100%;
-    height: 100%;
+    /* overflow-y:scroll; */
+    /* width: 100%;
+    height: 100%; */
     padding: 20px;
     padding-bottom: 100px;
     background-color: var(--black);

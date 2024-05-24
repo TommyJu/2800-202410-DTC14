@@ -10,12 +10,12 @@
 
 
 /* Minimal CSS Reset */
-html {
+html, body {
     min-height: 100%;
+    height: 100%;
 }
 
 body {
-    height: 100%;
 }
 
 body, h1, h2, h3, h4, h5, h6, p, ol, ul {
