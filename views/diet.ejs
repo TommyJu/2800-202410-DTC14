@@ -8,23 +8,47 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+<style>
+body {
+    background-image: url('/images/backgrounds/home_background3.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+
+}
+
+.bg-red-900 {
+    background-image: url('https://wallpapers.com/images/hd/hypnotising-black-and-red-hexagons-1bcjfbamkbdurj5y.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+.logo {
+    width: 100px; /* adjust as needed */
+    height: auto; /* maintain aspect ratio */
+}
+
+</style>
 <%- include("templates/header_with_profile.ejs") %>
 
 <body class="bg-gray-50">
     <br><br><br><br>
     <div class="flex items-center justify-center">
-        <div class="bg-gray-200 rounded-3xl shadow-lg p-5 md:p-20 mx-5 w-5/6">
-            <button id="edit-allergies" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full">Edit Allergies</button>
+        <div class="bg-red-900 rounded-3xl shadow-lg p-5 border border-spacing-10 md:p-20 mx-5 w-5/6">
+            <button id="edit-allergies" class="py-2 px-6 rounded-full bg-blue-500 text-black font-bold w-full">Edit Allergies</button>
 
             <div class="flex justify-evenly items-center space-x-4 mt-4">
-                <select id="filter" name="filter" class="p-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="filter" name="filter" class="p-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-green-500">
                     <option value="breakfast">Breakfast</option>
                     <option value="brunch">Brunch</option>
                     <option value="lunch">Lunch</option>
                     <option value="dinner">Dinner</option>
                     <option value="snack">Snack</option>
                 </select>
-                <button id="favourites" class="py-2 px-6 rounded-2xl bg-gray-500 text-white font-bold hover:bg-gray-600">Favourites</button>
+                <button id="favourites" class="py-2 px-6 rounded-2xl bg-yellow-300 text-black font-bold hover:bg-gray-600 ">Favourites</button>
             </div>
             
             <div id="allergy-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -32,8 +56,8 @@
                     <label for="allergies" class="block text-gray-700">Enter your allergies:</label>
                     <input type="text" id="allergies" class="mt-2 p-2 border rounded-lg w-full" placeholder="e.g., peanuts, shellfish">
                     <div class="flex justify-between mt-3">
-                        <button id="save-allergies" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full mr-1">Save</button>
-                        <button id="close-modal" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full mr-1">Close</button>
+                        <button id="save-allergies" class="py-2 px-6 rounded-full bg-blue-600 text-white font-bold w-full mr-1">Save</button>
+                        <button id="close-modal" class="py-2 px-6 rounded-full bg-blue-600 text-white font-bold w-full mr-1">Close</button>
                     </div>
                 </div>
             </div>
@@ -48,7 +72,7 @@
 
             <div id="chat-box" class="mb-5 mt-2 h-96 overflow-auto border p-3 rounded-lg text-sm text-gray-600 bg-white"></div>
             <div id="typing" class="text-gray-500 text-sm italic hidden">GUD Chatbot is typing...</div>
-            <button id="generate-recipe" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full">Generate Recipe</button>
+            <button id="generate-recipe" class="py-2 px-6 rounded-full bg-blue-500 text-black font-bold w-full">Generate Recipe</button>
         </div>
     </div>
     <script>
@@ -124,10 +148,11 @@
                             formattedReply += `<p>${msg}</p>`; 
                         });
                         const responseHtml = `
+                        <br>
                             <div>
-                                <div><strong>GUD Chatbot:</strong>${formattedReply}</div>
+                                <div><img src="./images/gud_logo.png" alt="GUD Logo" class="logo">${formattedReply}</div>
                                 <div class="flex item-center justify-center">
-                                <button class="favourite-button py-1 px-3 mt-2 rounded-full bg-yellow-500 text-white font-bold">Favourite</button>
+                                <button class="favourite-button py-1 px-3 mt-2 rounded-full bg-yellow-300 text-black font-bold">Add to favourites</button>
                                 </div>
                             </div>
                         `;
