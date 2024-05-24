@@ -10,7 +10,7 @@
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
   
-  <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED']}) %>
   
   <%- include("templates/easter_footer.ejs") %>
   
@@ -25,7 +25,7 @@
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
   
-  <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED']}) %>
     
   <%- include("templates/easter_footer.ejs") %>
 
@@ -48,7 +48,7 @@
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
 
-  <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank}) %>
 
   <%- include("templates/easter_footer.ejs") %>
 
@@ -67,7 +67,7 @@
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
 
-  <%- include("templates/task_cards_container.ejs", {tasks: tasks}) %>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank}) %>
 
   <%- include("templates/easter_footer.ejs") %>
 

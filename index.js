@@ -199,6 +199,7 @@ app.get('/game', async (req, res) => {
   if (req.session.authenticated) {
     //Get tasks from databse.
     tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
+    const gameSuggestions = await database.db('gaming_pillar').collection('activities').find().toArray();
     
     //Determine username and tag based on sessions variables.
     RiotUsername = req.session.RiotUsername;
@@ -207,7 +208,7 @@ app.get('/game', async (req, res) => {
     otherRiotID = req.session.otherRiotID;
     
     //Use helper function to display stats.
-    lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID);
+    lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
     return;
   } 
   res.redirect("/");
