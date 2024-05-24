@@ -119,7 +119,7 @@ function riotCredentialsExist (RiotUsername, RiotID) {
   }
 }
 
-async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID) {
+async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
 
   if (!(riotCredentialsExist(RiotUsername, RiotID)) && (riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const otherPUUID = await getRiotPUUID(otherRiotUsername, otherRiotID);
@@ -139,6 +139,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     
     res.render("game.ejs", { 
       tasks: tasks, 
+      gamingSuggestions: gamingSuggestions,
       noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
       noSummoner: "",
       additionalSummoner: "yes", 
@@ -152,6 +153,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     if (!(riotCredentialsExist(RiotUsername, RiotID)) && !(riotCredentialsExist(otherRiotUsername, otherRiotID))) {
       res.render("game.ejs", { 
         tasks: tasks, 
+        gamingSuggestions: gamingSuggestions,
         noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
         noSummoner: "No summoner credentials provided. Cannot display other summoner stats.",
         additionalSummoner: "", 
@@ -193,6 +195,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     
     res.render("game.ejs", { 
       tasks: tasks, 
+      gamingSuggestions: gamingSuggestions,
       level: summonerLevel, 
       rank: rank, 
       winrate: winrate, 
@@ -224,6 +227,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
   const kd = winrateAndKD[1];
   res.render("game.ejs", { 
     tasks: tasks, 
+    gamingSuggestions: gamingSuggestions,
     level: summonerLevel, 
     rank: rank, 
     winrate: winrate, 

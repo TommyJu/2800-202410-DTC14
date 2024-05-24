@@ -13,6 +13,30 @@
                 }) %>
             <% } %>
         <% } %>
+    <% } else if (type === 'gameSuggestions') {%>
+      <% if (rank[0] === 'UNRANKED') { %>
+        <%- include("task_card.ejs", {
+          taskId: tasks[0]._id, 
+          title: tasks[0].title, 
+          description: tasks[0].description,
+          category: tasks[0].category,
+          type: tasks[0].type,
+          formattedTitle: tasks[0].rankToReach
+        }) %>
+      <% } else { %>
+        <% for (let i = 0; i < tasks.length; i++) { %>
+          <% if (tasks[i].rankRequired === (rank[0] + ' ' + rank[1])) { %>
+              <%- include("task_card.ejs", {
+                  taskId: tasks[i]._id, 
+                  title: tasks[i].title, 
+                  description: tasks[i].description,
+                  category: tasks[i].category,
+                  type: tasks[i].type,
+                  formattedTitle: tasks[i].rankToReach
+              }) %>
+          <% } %>
+        <% } %>
+      <% } %>
     <% } else {%>
         <% for (let i = 0; i < tasks.length; i++) { %>
             <% if (tasks[i].type === type) { %>
