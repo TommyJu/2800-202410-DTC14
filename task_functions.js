@@ -1,4 +1,5 @@
 const { ObjectId } = require("mongodb");
+const levelFunctions = require("./level_functions.js");
 
 module.exports = {
     addTask,
@@ -65,17 +66,15 @@ async function getTasksByCategory(category, username, userCollection) {
   }
 }
 
+// Returns true if the task has caused the user to level up
+// Used to redirect to the level up page
 async function completeTask(username, userCollection, taskCategory, taskIdToDelete) {
-  taskCategoryProperty = taskCategory + 'Tasks';
-  const taskObjectId = new ObjectId(taskIdToDelete);
-  
-  try {
-    await userCollection.updateOne(
-      {username: username },
-      {$pull: {[ taskCategoryProperty ]: {_id: taskObjectId}}})
-  } catch (error){
-    console.error("Failed to complete task");
-  }
+  deleteTask(username, userCollection, taskCategory, taskIdToDelete);
+  await levelFunctions.isEXPGained(username, userCollection, taskCategory);
+  let isLeveledUp = await levelFunctions.isLeveledUp(username, userCollection, taskCategory);
+  await levelFunctions.isRankedUp(username, userCollection);
+
+  return isLeveledUp;
 }
 
 async function deleteTask(username, userCollection, taskCategory, taskIdToDelete) {

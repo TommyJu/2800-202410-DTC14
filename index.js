@@ -3,6 +3,8 @@ require('dotenv').config();
 weather = require('./weather.js')
 const taskFunctions = require("./task_functions.js");
 const authenticationFunctions = require("./authentication_functions.js");
+const levelFunctions = require("./level_functions.js");
+const achievementFunctions = require("./achievement_functions.js");
 
 const { ObjectId } = require('mongodb');
 const express = require('express');
@@ -36,6 +38,7 @@ const node_session_secret = process.env.NODE_SESSION_SECRET;
 
 var { database } = include('databaseConnection');
 const userCollection = database.db(mongodb_database).collection('users');
+const achievementCollection = database.db("achievements").collection('achievements');
 
 // Store sessions in db
 var mongoStore = MongoStore.create({
@@ -49,8 +52,8 @@ const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MON
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Error connecting to MongoDB:', err));
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Error connecting to MongoDB:', err));
 
 const userSchema = new mongoose.Schema({
   allergies: String
@@ -80,24 +83,40 @@ app.use(session({
 app.use(express.static(__dirname + "/login"));
 app.use(express.static(__dirname + "/public"));
 
+// Middleware to store previous page URL in session
+app.use((req, res, next) => {
+  // Store the previous page URL in the session
+  req.session.previousPage = req.headers.referer;
+  next();
+});
+
 // Home page ---------------------------
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   if (req.session.authenticated) {
-    res.render("home_logged_in.ejs", { username: req.session.username });
-    return;
+    const result = await userCollection.findOne({ username: req.session.username }, { projection: { levels: 1, rank: 1, achievements: 1 } });
+
+    res.render("stat_summary.ejs", { 
+      username: req.session.username, 
+      levelGame: result.levels.game.level, 
+      levelFitness: result.levels.fitness.level, 
+      levelDiet: result.levels.diet.level,
+      expGame: result.levels.game.exp,
+      expFitness: result.levels.fitness.exp,
+      expDiet: result.levels.diet.exp,
+      expMax: levelFunctions.EXP_PER_LEVEL, 
+      rank: result.rank,
+      achievements: result.achievements
+    });
+      
+      return;
   }
   res.render("home_logged_out.ejs");
 })
 
 //Stats page ---------------------------
-app.get('/stats', async (req, res) => {
-  username = req.session.username;
-  const result = await userCollection.find({ username: username }).toArray();
-  levelGame = result[0].levels.game
-  levelFitness = result[0].levels.fitness
-  levelDiet = result[0].levels.diet
-  res.render("stat_summary.ejs", { levelGame: levelGame, levelFitness: levelFitness, levelDiet: levelDiet });
-})
+// app.get('/stats', async (req, res) => {
+
+// })
 
 // Sign up ----------------------------
 app.get('/signup', (req, res) => {
@@ -183,7 +202,7 @@ app.get('/game', async (req, res) => {
     user_tag = req.session.RiotID;
     if (user_name === undefined || user_tag === undefined) {
       console.log("user_name or user_tag is undefined");
-      res.render("game.ejs", { tasks: tasks, gameError: "No Riot account linked to this account."});
+      res.render("game.ejs", { tasks: tasks, gameError: "No Riot account linked to this account." });
       return;
     }
     const PUUID = await lolAPI.getRiotPUUID(user_name, user_tag);
@@ -200,7 +219,7 @@ app.get('/game', async (req, res) => {
     const winrateAndKD = await lolAPI.calculateWinLoss(match_ids, PUUID);
     const winrate = winrateAndKD[0];
     const kd = winrateAndKD[1];
-    res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd, gameError: "" });
+    res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd});
     return;
   }
   res.redirect("/");
@@ -229,11 +248,11 @@ app.get('/diet', async (req, res) => {
 app.post('/chat', async (req, res) => {
   const message = req.body.message;
   try {
-      const reply = await sendMessage(message);
-      res.json({ reply }); 
+    const reply = await sendMessage(message);
+    res.json({ reply });
   } catch (error) {
-      console.error('Error communicating with OpenAI API:', error.message);
-      res.status(500).json({ error: 'Failed to communicate with OpenAI API' });
+    console.error('Error communicating with OpenAI API:', error.message);
+    res.status(500).json({ error: 'Failed to communicate with OpenAI API' });
   }
 });
 
@@ -241,52 +260,52 @@ app.post('/allergies', async (req, res) => {
   const allergies = req.body.allergies;
   const username = req.session.username;
   try {
-      await userCollection.findOneAndUpdate(
-          { username: username },
-          { $set: { allergies: allergies } },
-          { upsert: true } 
-      );
-      res.json({ success: true, message: 'Allergies saved successfully' });
+    await userCollection.findOneAndUpdate(
+      { username: username },
+      { $set: { allergies: allergies } },
+      { upsert: true }
+    );
+    res.json({ success: true, message: 'Allergies saved successfully' });
   } catch (error) {
-      console.error('Error saving allergies:', error.message);
-      res.status(500).json({ error: 'Failed to save allergies' });
+    console.error('Error saving allergies:', error.message);
+    res.status(500).json({ error: 'Failed to save allergies' });
   }
 });
 
 app.get('/get_allergies', async (req, res) => {
   const username = req.session.username;
   try {
-      const user = await userCollection.findOne({ username: username });
-      if (user) {
-          res.json({ allergies: user.allergies });
-      } else {
-          res.status(404).json({ error: 'User not found' });
-      }
+    const user = await userCollection.findOne({ username: username });
+    if (user) {
+      res.json({ allergies: user.allergies });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
   } catch (error) {
-      console.error('Error retrieving user allergies:', error.message);
-      res.status(500).json({ error: 'Failed to retrieve user allergies' });
+    console.error('Error retrieving user allergies:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve user allergies' });
   }
 });
 
 async function sendMessage(message) {
   try {
-      const response = await axios.post(
-          'https://api.openai.com/v1/chat/completions',
-          {
-              model: 'gpt-3.5-turbo',
-              messages: [{ role: 'user', content: message }],
-          },
-          {
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${OPENAI_API_KEY}`,
-              },
-          }
-      );
-      return response.data.choices[0].message.content;
+    const response = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: message }],
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        },
+      }
+    );
+    return response.data.choices[0].message.content;
   } catch (error) {
-      console.error(error.response.data);
-      throw new Error('Failed to communicate with OpenAI API');
+    console.error(error.response.data);
+    throw new Error('Failed to communicate with OpenAI API');
   }
 }
 
@@ -303,12 +322,18 @@ app.get('/friends', (req, res) => {
 app.get('/profile', async (req, res) => {
   if (req.session.authenticated) {
     username = req.session.username;
-    const result = await userCollection.find({ username}).toArray();
-    console.log(result);
-    email = result[0].email;
-    gameID = result[0].in_game_name;
-    allergies = result[0].allergies;
-    res.render("profile.ejs", { username: username, email: email, gameID: gameID, allergies: allergies });
+    const result = await userCollection.find({ username }).toArray();
+    
+    res.render("profile.ejs", { 
+      username: username, 
+      email: result[0].email, 
+      gameName: result[0].in_game_name, 
+      allergies: result[0].allergies,
+      levelGame: result[0].levels.game.level,
+      levelDiet: result[0].levels.diet.level,
+      levelFitness: result[0].levels.fitness.level,
+      levelMax: levelFunctions.MAX_LEVEL
+    });
     return;
   }
   res.redirect("/");
@@ -316,32 +341,82 @@ app.get('/profile', async (req, res) => {
 
 // Add task from modal form
 app.post('/add_task', async (req, res) => {
-  title = req.body.title;
-  description = req.body.description;
-  category = req.body.category;
-  username = req.session.username;
+  let title = req.body.title;
+  let description = req.body.description;
+  let category = req.body.category;
+  let username = req.session.username;
 
   taskFunctions.addTask(title, description, category, username, userCollection);
 
   res.redirect(req.get('referer'));
 })
 
-app.post('/complete_task', async (req, res) => {
-  username = req.session.username;
-  taskCategory = req.body.category;
-  taskIdToDelete = req.body.taskId;
-  await taskFunctions.completeTask(username, userCollection, taskCategory, taskIdToDelete)
+app.post('/delete_task', async (req, res) => {
+  let username = req.session.username;
+  let taskCategory = req.body.category;
+  let taskIdToDelete = req.body.taskId;
+  await taskFunctions.deleteTask(username, userCollection, taskCategory, taskIdToDelete)
 
   res.redirect(req.get('referer'));
 })
 
-app.post('/delete_task', async (req, res) => {
-  username = req.session.username;
-  taskCategory = req.body.category;
-  taskIdToDelete = req.body.taskId;
-  await taskFunctions.deleteTask(username, userCollection, taskCategory, taskIdToDelete)
+app.post('/complete_task', async (req, res) => {
+  let username = req.session.username;
+  let taskCategory = req.body.category;
+  let taskIdToDelete = req.body.taskId;
+  let isLeveledUp = await taskFunctions.completeTask(username, userCollection, taskCategory, taskIdToDelete);
+  if(isLeveledUp) {
+    res.redirect(`/level_up?category=${taskCategory}`);
+  } else {
+    res.redirect(req.get('referer'));
+  }
+})
 
-  res.redirect(req.get('referer'));
+app.get('/level_up', async (req, res) => {
+  let taskCategory = req.query.category;
+  // Fetch the user using the corresponding task category
+  try {
+    user = await userCollection.findOne(
+        { username: req.session.username },
+        { projection: {
+            levels: 1,
+            rank: 1
+        }});
+} catch (error) {
+    console.error("Failed to fetch user on level up");
+}
+
+// can check for and add new achievements here, but first let's create the achievement ejs
+let achievementTitles = achievementFunctions.checkForAchievements(
+  user.levels.game.level,
+  user.levels.diet.level,
+  user.levels.fitness.level,
+);
+
+let achievementObjects = await achievementFunctions.addAchievements(
+  req.session.username,
+  userCollection,
+  achievementCollection,
+  achievementTitles
+);
+
+  // Format the task category to title case assuming the length is >= 2
+  let formattedTaskCategory = taskCategory.charAt(0).toUpperCase() + taskCategory.slice(1, -1);
+
+  // Render level up page using user info
+  res.render("level_up.ejs", {
+    username: req.session.username,
+    taskCategory: taskCategory,
+    formattedTaskCategory: formattedTaskCategory,
+    level: user.levels[taskCategory].level,
+    rank: user.rank,
+    achievements: achievementObjects
+  })
+})
+
+// Redirect to the previous page when user confirms level up
+app.post('/level_up_confirmation', (req, res) => {
+  res.redirect(`/${req.body.taskCategory}` || '/');
 })
 
 // 404 not found page ------------------

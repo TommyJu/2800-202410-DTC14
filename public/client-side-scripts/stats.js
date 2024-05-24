@@ -1,13 +1,23 @@
 const getChartOptions = () => {
   return {
+    fill: {
+      type: 'pattern',
+      pattern: {
+        style: 'horizontalLines',
+        width: 6,
+        height: 6,
+        strokeWidth: 8,
+      }
+    },
     series: [levelGame, levelFitness, levelDiet],
-    colors: ["#1C64F2", "#FDBA8C", "#E74694"],
+    colors: ["#f5b700", "#f71735", "#62c370"],
     chart: {
+      foreColor: '#f5b700',
       width: "100%",
       type: "donut",
     },
     stroke: {
-      colors: ["transparent"],
+      colors: ["#000000"],
       lineCap: "",
     },
     plotOptions: {
@@ -17,33 +27,30 @@ const getChartOptions = () => {
             show: true,
             name: {
               show: true,
-              fontFamily: "Inter, sans-serif",
-              offsetY: +20,
+              fontFamily: "Audiowide, sans-serif",
+              offsetY: +30,
             },
             total: {
               showAlways: true,
               show: true,
-              label: "Combined Level",
-              fontSize: "10px",
-              fontFamily: "Inter, sans-serif",
-              formatter: function (w) {
-                const sum = w.globals.seriesTotals.reduce((a, b) => {
-                  return a + b
-                }, 0)
-                return (sum / 3).toFixed(0)
+              label: "GUD Level",
+              fontSize: "20px",
+              fontFamily: "Audiowide, sans-serif",
+              formatter: function () {
+                return levelDiet + levelFitness + levelGame;
               },
             },
             value: {
               show: true,
-              fontSize: "50px",
-              fontFamily: "Inter, sans-serif",
-              offsetY: -10,
+              fontSize: "60px",
+              fontFamily: "Audiowide, sans-serif",
+              offsetY: -20,
               formatter: function (value) {
                 return value
               },
             },
           },
-          size: "80%",
+          size: "70%",
         },
       },
     },
@@ -58,9 +65,9 @@ const getChartOptions = () => {
     },
     legend: {
       position: "bottom",
-      fontFamily: "Inter, sans-serif",
+      fontFamily: "Audiowide, sans-serif",
       background: {
-        foreColor: "#fff"
+        foreColor: "#ffffff"
       }
     },
     yaxis: {

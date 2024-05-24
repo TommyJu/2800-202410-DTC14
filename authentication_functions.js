@@ -81,7 +81,23 @@ async function submitUser(
     securityAnswer: hashedSecurityAnswer,
     gameTasks: [],
     fitnessTasks: [],
-    dietTasks: []
+    dietTasks: [],
+    levels: {
+      game: {
+        level: 1,
+        exp: 0
+      },
+      diet: {
+        level: 1,
+        exp: 0
+      },
+      fitness: {
+        level: 1,
+        exp: 0
+      }
+    },
+    rank: "unranked",
+    achievements: []
   });
 
   req.session.authenticated = true;
