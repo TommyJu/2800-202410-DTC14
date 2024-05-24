@@ -1,10 +1,32 @@
-<div class="card-container flex flex-col gap-1">
+<div class="card-container grid grid-cols-2 gap-1 overflow-auto max-h-96">
     <!-- tasks is passed into the ejs template -->
-    <% for(let i = 0; i < tasks.length; i++) {%>
-        <%- include("task_card.ejs", {
-            taskId: tasks[i]._id, 
-            title: tasks[i].title, 
-            description: tasks[i].description,
-            category: tasks[i].category }) %>
+    <% if (type === 'suggestion') { %>   
+        <% for (let i = 0; i < tasks.length; i++) { %>
+            <% if (tasks[i].weather.includes(weatherToday)) { %>
+                <%- include("task_card.ejs", {
+                    taskId: tasks[i]._id, 
+                    title: tasks[i].title, 
+                    description: tasks[i].description,
+                    category: tasks[i].category,
+                    type: tasks[i].type,
+                    formattedTitle: tasks[i].title.replace(/ /g, '_')
+                }) %>
+            <% } %>
+        <% } %>
+    <% } else {%>
+        <% for (let i = 0; i < tasks.length; i++) { %>
+            <% if (tasks[i].type === type) { %>
+                <%- include("task_card.ejs", {
+                    taskId: tasks[i]._id, 
+                    title: tasks[i].title, 
+                    description: tasks[i].description,
+                    category: tasks[i].category,
+                    type: tasks[i].type,
+                    formattedTitle: tasks[i].title.replace(/ /g, '_')
+                }) %>
+                <% } %>
+            <% } %>
     <% } %>
+
+    
 </div>
