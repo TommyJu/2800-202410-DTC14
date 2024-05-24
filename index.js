@@ -348,7 +348,8 @@ app.get('/profile', async (req, res) => {
       levelGame: result[0].levels.game.level,
       levelDiet: result[0].levels.diet.level,
       levelFitness: result[0].levels.fitness.level,
-      levelMax: levelFunctions.MAX_LEVEL
+      levelMax: levelFunctions.MAX_LEVEL,
+      rank: result[0].rank
     });
     return;
   }

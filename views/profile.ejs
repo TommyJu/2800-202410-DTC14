@@ -1,14 +1,15 @@
 <%- include("templates/header_with_profile.ejs") %>
     <div id="profile-background">
         <div class="flex justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-circle" width="120"
-                height="120" viewBox="0 0 24 24" stroke-width="1.5" stroke="#e5e7eb" fill="none" stroke-linecap="round"
+            <!-- <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-circle" width="90"
+                height="90" viewBox="0 0 24 24" stroke-width="1.5" stroke="#e5e7eb" fill="none" stroke-linecap="round"
                 stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24H0z" fill="none" />
                 <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
                 <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
                 <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
-            </svg>
+            </svg> -->
+            <img src="./images/ranks/<%= rank %>.webp" alt="Player Rank" class="h-auto w-60">
         </div>
         <div class="text-3xl text-center">
             <%= username %>
@@ -17,45 +18,43 @@
             <%= gameName %>
         </div>
 
-        <div class="level-container mt-5">
-            <div class="flex items-center">
+        <div class="flex flex-col justify-center items-center w-full">
+            <div class="experience-container flex items-center">
                 <div class="circle flex items-center justify-center mr-3">
                     <%= levelDiet %>
                 </div>
-                <div class="ml-2 flex flex-col">
+                <div class="progress-bar-container ml-2 flex flex-col">
                     <p class="text-base mb-2">Diet Completion</p>
                     <div class="range-profile" style="--level:<%= levelDiet %>; --max-level:<%= levelMax %>;"></div>
                 </div>
             </div>
-        </div>
-        <div class="level-container">
-            <div class="flex items-center">
+        
+        
+            <div class="experience-container flex items-center">
                 <div class="circle flex items-center justify-center mr-3">
                     <%= levelFitness %>
                 </div>
-                <div class="ml-2 flex flex-col">
+                <div class="progress-bar-container ml-2 flex flex-col">
                     <p class="text-base mb-2">Fitness Completion</p>
                     <div class="range-profile" style="--level:<%= levelFitness %>; --max-level:<%= levelMax %>;"></div>
                 </div>
             </div>
-        </div>
-        <div class="level-container">
-            <div class="flex items-center">
+        
+            <div class="experience-container flex items-center">
                 <div class="circle flex items-center justify-center mr-3">
                     <%= levelGame %>
                 </div>
-                <div class="ml-2 flex flex-col">
+                <div class="progress-bar-container ml-2 flex flex-col">
                     <p class="text-base mb-2">Game Completion</p>
                     <div class="range-profile" style="--level:<%= levelGame %>; --max-level:<%= levelMax %>;"></div>
                 </div>
             </div>
         </div>
-        <div class="bordered-section text-xl">
-            <p class="">Email: <%= email %></p>
-            <p class="">Allergies: <%= allergies %></p>
-        </div>
-        <div class="bordered-section text-xl">
-            <a href="/logout" class="">Log out</a>
-        </div>
+        
+            <div class="text-xl flex flex-col gap-4 justify-center items-center">
+                <p class="">Email: <%= email %></p>
+                <p class="">Allergies: <%= allergies %></p>
+                <a href="/logout" class="text-red-500">Log out</a>
+            </div>
     </div>
 <%- include("templates/footer.ejs") %>
