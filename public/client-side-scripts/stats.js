@@ -12,6 +12,13 @@ const getChartOptions = () => {
     series: [levelGame, levelFitness, levelDiet],
     colors: ["#f5b700", "#f71735", "#62c370"],
     chart: {
+      dropShadow: {
+        enabled: true,
+        top: 5,
+        left: 5,
+        blur: 8,
+        opacity: 0.9
+      },
       foreColor: '#f5b700',
       width: "100%",
       type: "donut",
@@ -73,14 +80,14 @@ const getChartOptions = () => {
     yaxis: {
       labels: {
         formatter: function (value) {
-          return "LVL" + value
+          return "LVL " + value
         },
       },
     },
     xaxis: {
       labels: {
         formatter: function (value) {
-          return "LVL" + value
+          return "LVL " + value
         },
       },
       axisTicks: {
