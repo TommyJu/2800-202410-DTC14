@@ -4,40 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT</title>
+    <title>Get GUD</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <%- include("templates/header_with_profile.ejs") %>
 
 <body class="bg-gray-50">
-    <br>
-    <br>
-    <br>
-    <br>
+    <br><br><br><br>
     <div class="flex items-center justify-center">
         <div class="bg-gray-200 rounded-3xl shadow-lg p-5 md:p-20 mx-5 w-5/6">
-            <button id="edit-allergies" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full">Edit
-                Allergies</button>
+            <button id="edit-allergies" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full">Edit Allergies</button>
 
+            <div class="flex justify-evenly items-center space-x-4 mt-4">
+                <select id="filter" name="filter" class="p-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="breakfast">Breakfast</option>
+                    <option value="brunch">Brunch</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                    <option value="snack">Snack</option>
+                </select>
+                <button id="favourites" class="py-2 px-6 rounded-2xl bg-gray-500 text-white font-bold hover:bg-gray-600">Favourites</button>
+            </div>
+            
             <div id="allergy-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                 <div class="bg-white p-5 rounded-lg shadow-md w-11/12 max-w-md">
                     <label for="allergies" class="block text-gray-700">Enter your allergies:</label>
-                    <input type="text" id="allergies" class="mt-2 p-2 border rounded-lg w-full"
-                        placeholder="e.g., peanuts, shellfish">
+                    <input type="text" id="allergies" class="mt-2 p-2 border rounded-lg w-full" placeholder="e.g., peanuts, shellfish">
                     <div class="flex justify-between mt-3">
-                        <button id="save-allergies"
-                            class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full mr-1">Save</button>
-                        <button id="close-modal"
-                            class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full mr-1">Close</button>
+                        <button id="save-allergies" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full mr-1">Save</button>
+                        <button id="close-modal" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full mr-1">Close</button>
                     </div>
                 </div>
             </div>
 
-            <div id="chat-box" class="my-5 h-96 overflow-auto border p-3 rounded-lg text-sm text-gray-600 bg-white"></div>
+            <div id="favourites-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div class="bg-white p-5 rounded-lg shadow-md w-11/12 max-w-md">
+                    <h2 class="text-gray-700 text-lg font-bold mb-3">Your Favorite Recipes</h2>
+                    <div id="favourite-recipes-list" class="max-h-80 overflow-y-auto"></div>
+                    <button id="close-favourites-modal" class="mt-3 py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full">Close</button>
+                </div>
+            </div>
+
+            <div id="chat-box" class="mb-5 mt-2 h-96 overflow-auto border p-3 rounded-lg text-sm text-gray-600 bg-white"></div>
             <div id="typing" class="text-gray-500 text-sm italic hidden">GUD Chatbot is typing...</div>
-            <button id="generate-recipe" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full">Generate
-                Recipe</button>
+            <button id="generate-recipe" class="py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full">Generate Recipe</button>
         </div>
     </div>
     <script>
@@ -50,6 +61,11 @@
             const chatBox = document.getElementById('chat-box');
             const closeModalButton = document.getElementById('close-modal');
             const typingIndicator = document.getElementById('typing');
+            const filterRecipe = document.getElementById('filter');
+            const favouritesButton = document.getElementById('favourites');
+            const favouritesModal = document.getElementById('favourites-modal');
+            const closeFavouritesModalButton = document.getElementById('close-favourites-modal');
+            const favouriteRecipesList = document.getElementById('favourite-recipes-list');
 
             editAllergiesButton.addEventListener('click', function () {
                 allergyModal.classList.remove('hidden'); // Show modal
@@ -79,15 +95,16 @@
 
             generateRecipeButton.addEventListener('click', function (e) {
                 e.preventDefault();
+                const filter = filterRecipe.value;
                 fetch('/get_allergies', {
                     method: 'GET',
                 })
                 .then(response => response.json())
                 .then(data => {
                     const allergies = data.allergies;
-                    let message = "generate a healthy recipe";
+                    let message = `generate a healthy ${filter} recipe`;
                     if (allergies) {
-                        message = `generate a healthy recipe without ${allergies}`;
+                        message = `generate a healthy ${filter} recipe without ${allergies}`;
                     }
                     typingIndicator.classList.remove('hidden');
                     fetch('/chat', {
@@ -106,9 +123,37 @@
                         messages.forEach(msg => {
                             formattedReply += `<p>${msg}</p>`; 
                         });
+                        const responseHtml = `
+                            <div>
+                                <div><strong>GUD Chatbot:</strong>${formattedReply}</div>
+                                <div class="flex item-center justify-center">
+                                <button class="favourite-button py-1 px-3 mt-2 rounded-full bg-yellow-500 text-white font-bold">Favourite</button>
+                                </div>
+                            </div>
+                        `;
                         chatBox.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
-                        chatBox.innerHTML += `<div><strong>GUD Chatbot:</strong>${formattedReply}</div>`; 
+                        chatBox.innerHTML += responseHtml; 
                         chatBox.scrollTop = chatBox.scrollHeight; 
+
+                        const favouriteButtons = document.querySelectorAll('.favourite-button');
+                        favouriteButtons.forEach(button => {
+                            button.addEventListener('click', function () {
+                                fetch('/favouriteRecipe', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ recipe: reply }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Recipe saved as favourite:', data);
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                });
+                            });
+                        });
                     })
                     .catch((error) => {
                         typingIndicator.classList.add('hidden');
@@ -118,6 +163,63 @@
                 .catch((error) => {
                     console.error('Error:', error);
                 });
+            });
+
+            favouritesButton.addEventListener('click', function () {
+                fetch('/favouriteRecipes', {
+                    method: 'GET',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    favouriteRecipesList.innerHTML = '';
+                    if (data.success) {
+                        data.favouriteRecipes.forEach(recipe => {
+                            const formattedRecipe = recipe.replace(/\n/g, '<br>');
+                            const recipeElement = document.createElement('div');
+                            recipeElement.classList.add('mb-2', 'p-2', 'border', 'border-gray-300', 'rounded');
+                            recipeElement.innerHTML = `
+                                <div>${formattedRecipe}</div>
+                                <button class="remove-button py-1 px-3 mt-2 rounded-full bg-red-500 text-white font-bold">Remove</button>
+                            `;
+                            favouriteRecipesList.appendChild(recipeElement);
+                        });
+
+                        const removeButtons = document.querySelectorAll('.remove-button');
+                        removeButtons.forEach(button => {
+                            button.addEventListener('click', function () {
+                                const recipeDiv = this.previousElementSibling;
+                                const recipe = recipeDiv.innerHTML.replace(/<br>/g, '\n').trim();
+                                fetch('/removeFavouriteRecipe', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ recipe: recipe }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        this.parentElement.remove();
+                                        console.log('Recipe removed from favourites:', data.message);
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                });
+                            });
+                        });
+                    } else {
+                        favouriteRecipesList.innerText = 'No favorite recipes found.';
+                    }
+                    favouritesModal.classList.remove('hidden');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+
+            closeFavouritesModalButton.addEventListener('click', function () {
+                favouritesModal.classList.add('hidden');
             });
         });
     </script>
