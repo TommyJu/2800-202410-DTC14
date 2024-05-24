@@ -1,0 +1,28 @@
+<%- include("templates/header.ejs") %> <!-- change to "templates/header_with_profile.ejs" later -->
+
+    <div id="friendAddBar">
+        <form action="friendRequestSearch">
+            <input name="friendUsername" type="text" placeholder="Friend's Username">
+            <button type="submit">Search</button>
+        </form>
+
+    </div>
+    <div id="friendRequestDisplay">
+        <% if (requests.length===0) { %>
+            <div>NO Friends? :c</div>
+            <% } else { %>
+                <% requests.forEach(request=> { %>
+                    <div class="friend-card flex flex-row">
+                        <div class="friend-name-tags">
+                            <%= request %>
+                        </div>
+                        <div class="flex flex-col px-2">
+                            <button>yes</button>
+                            <button>No</button>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } %>
+    </div>
+
+    <%- include("templates/footer.ejs") %>
