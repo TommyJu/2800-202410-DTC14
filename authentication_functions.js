@@ -72,7 +72,7 @@ async function submitUser(
     return;
   }
 
-  if (await lolAPI.getSummonerLevelAndID(lolAPI.getRiotPUUID(RiotUsername, RiotID)) === false) {
+  if (await lolAPI.getSummonerLevelAndID(await lolAPI.getRiotPUUID(RiotUsername, RiotID)) === false) {
     console.log("No League on this rito account lil bro.")
     res.render("invalid_sign_up.ejs", { type: "No League on this rito account lil bro." })
     return;
