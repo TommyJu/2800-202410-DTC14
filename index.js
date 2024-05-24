@@ -340,7 +340,10 @@ app.post('/complete_task', async (req, res) => {
   username = req.session.username;
   taskCategory = req.body.category;
   taskIdToDelete = req.body.taskId;
-  await taskFunctions.completeTask(username, userCollection, taskCategory, taskIdToDelete)
+  const taskObjectId = new ObjectId(taskIdToDelete);
+  suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
+  console.log(suggestedActivity);
+  await taskFunctions.completeTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete)
 
   res.redirect(req.get('referer'));
 })

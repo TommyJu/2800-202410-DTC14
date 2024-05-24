@@ -68,8 +68,12 @@ async function getTasksByCategory(category, username, userCollection) {
 
 // Returns true if the task has caused the user to level up
 // Used to redirect to the level up page
-async function completeTask(username, userCollection, taskCategory, taskIdToDelete) {
-  updateTaskType(username, userCollection, taskCategory, taskIdToDelete);
+async function completeTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete) {
+  if (taskIdToDelete.type === 'custom') {
+    updateTaskType(username, userCollection, taskCategory, taskIdToDelete)
+  } else {
+    copySuggestion(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete);
+  }
   await levelFunctions.isEXPGained(username, userCollection, taskCategory);
   let isLeveledUp = await levelFunctions.isLeveledUp(username, userCollection, taskCategory);
   await levelFunctions.isRankedUp(username, userCollection);
@@ -87,6 +91,20 @@ async function updateTaskType(username, userCollection, taskCategory, taskIdToDe
       { $set: { [`${taskCategoryProperty}.$.type`]: 'completed' } })
   } catch (error) {
     console.error("Failed to update task");
+  }
+}
+
+async function copySuggestion(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete) {
+  taskCategoryProperty = taskCategory + 'Tasks';
+  const taskObjectId = new ObjectId(taskIdToDelete);
+  console.log(suggestedActivity[0])
+  try {
+    await userCollection.updateOne(
+      { username: username },
+      { $push: { [taskCategoryProperty]: { _id: taskObjectId, title: suggestedActivity[0].title, description: suggestedActivity[0].description, category: suggestedActivity[0].category, type: "completed" } } }
+    )
+  } catch (error) {
+    console.error("Failed to copy suggestion");
   }
 }
 
