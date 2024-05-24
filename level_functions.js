@@ -98,7 +98,7 @@ async function isEXPGained(username, userCollection, taskCategory) {
     }
 
     if(user.levels[taskCategory].exp < EXP_PER_LEVEL) {
-        incrementEXP(username, userCollection, taskCategory);
+        await incrementEXP(username, userCollection, taskCategory);
         return true;
     }
     return false;

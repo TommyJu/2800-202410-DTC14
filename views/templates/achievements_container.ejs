@@ -7,9 +7,8 @@
         <!-- tasks is passed into the ejs template -->
         <% for(let i = 0; i < achievements.length; i++) {%>
     
-            <%- include("achievement.ejs", {
+            <%- include("achievement_logo_only.ejs", {
                 image: achievements[i].image,
-                title: achievements[i].title,
                 description: achievements[i].description
             }) %>
     
