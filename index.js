@@ -95,20 +95,20 @@ app.get('/', async (req, res) => {
   if (req.session.authenticated) {
     const result = await userCollection.findOne({ username: req.session.username }, { projection: { levels: 1, rank: 1, achievements: 1 } });
 
-    res.render("stat_summary.ejs", { 
-      username: req.session.username, 
-      levelGame: result.levels.game.level, 
-      levelFitness: result.levels.fitness.level, 
+    res.render("stat_summary.ejs", {
+      username: req.session.username,
+      levelGame: result.levels.game.level,
+      levelFitness: result.levels.fitness.level,
       levelDiet: result.levels.diet.level,
       expGame: result.levels.game.exp,
       expFitness: result.levels.fitness.exp,
       expDiet: result.levels.diet.exp,
-      expMax: levelFunctions.EXP_PER_LEVEL, 
+      expMax: levelFunctions.EXP_PER_LEVEL,
       rank: result.rank,
       achievements: result.achievements
     });
-      
-      return;
+
+    return;
   }
   res.render("home_logged_out.ejs");
 })
@@ -219,7 +219,7 @@ app.get('/game', async (req, res) => {
     const winrateAndKD = await lolAPI.calculateWinLoss(match_ids, PUUID);
     const winrate = winrateAndKD[0];
     const kd = winrateAndKD[1];
-    res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd});
+    res.render("game.ejs", { tasks: tasks, level: summonerLevel, rank: rank, winrate: winrate, kd: kd });
     return;
   }
   res.redirect("/");
@@ -228,8 +228,19 @@ app.get('/game', async (req, res) => {
 // Fitness page
 app.get('/fitness', async (req, res) => {
   if (req.session.authenticated) {
+    username = req.session.username;
+    const result = await userCollection.find({ username: username }).toArray();
+    if (result[0].city === undefined) {
+      defaultCity = `Vancouver`
+    } else {
+      defaultCity = result[0].city
+    }
+    url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity},CA&appid=${weatherKey}&units=metric`
+    console.log(url)
+    const physicalCollection = await database.db('physical_pillar').collection('activities').find().toArray();
     tasks = await taskFunctions.getTasksByCategory("fitness", req.session.username, userCollection);
-    res.render("fitness.ejs", { tasks: tasks });
+    weatherData = await weather.getWeather(url)
+    res.render("fitness.ejs", { tasks: tasks, activities: physicalCollection, cityName: weatherData[0], weatherToday: weatherData[1], weatherTemp: weatherData[2], weatherIcon: weatherData[3] });
     return;
   }
   res.redirect("/");
@@ -323,11 +334,11 @@ app.get('/profile', async (req, res) => {
   if (req.session.authenticated) {
     username = req.session.username;
     const result = await userCollection.find({ username }).toArray();
-    
-    res.render("profile.ejs", { 
-      username: username, 
-      email: result[0].email, 
-      gameName: result[0].in_game_name, 
+
+    res.render("profile.ejs", {
+      username: username,
+      email: result[0].email,
+      gameName: result[0].in_game_name,
       allergies: result[0].allergies,
       levelGame: result[0].levels.game.level,
       levelDiet: result[0].levels.diet.level,
@@ -351,6 +362,8 @@ app.post('/add_task', async (req, res) => {
   res.redirect(req.get('referer'));
 })
 
+
+
 app.post('/delete_task', async (req, res) => {
   let username = req.session.username;
   let taskCategory = req.body.category;
@@ -360,12 +373,20 @@ app.post('/delete_task', async (req, res) => {
   res.redirect(req.get('referer'));
 })
 
+// Completed task page
+app.get('/completed', async (req, res) => {
+  username = req.session.username;
+  res.render("completed.ejs", { username: username });
+});
+
 app.post('/complete_task', async (req, res) => {
   let username = req.session.username;
   let taskCategory = req.body.category;
   let taskIdToDelete = req.body.taskId;
-  let isLeveledUp = await taskFunctions.completeTask(username, userCollection, taskCategory, taskIdToDelete);
-  if(isLeveledUp) {
+  suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
+  console.log(suggestedActivity);
+  let isLeveledUp = await taskFunctions.completeTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete);
+  if (isLeveledUp) {
     res.redirect(`/level_up?category=${taskCategory}`);
   } else {
     res.redirect(req.get('referer'));
@@ -377,28 +398,30 @@ app.get('/level_up', async (req, res) => {
   // Fetch the user using the corresponding task category
   try {
     user = await userCollection.findOne(
-        { username: req.session.username },
-        { projection: {
-            levels: 1,
-            rank: 1
-        }});
-} catch (error) {
+      { username: req.session.username },
+      {
+        projection: {
+          levels: 1,
+          rank: 1
+        }
+      });
+  } catch (error) {
     console.error("Failed to fetch user on level up");
-}
+  }
 
-// can check for and add new achievements here, but first let's create the achievement ejs
-let achievementTitles = achievementFunctions.checkForAchievements(
-  user.levels.game.level,
-  user.levels.diet.level,
-  user.levels.fitness.level,
-);
+  // can check for and add new achievements here, but first let's create the achievement ejs
+  let achievementTitles = achievementFunctions.checkForAchievements(
+    user.levels.game.level,
+    user.levels.diet.level,
+    user.levels.fitness.level,
+  );
 
-let achievementObjects = await achievementFunctions.addAchievements(
-  req.session.username,
-  userCollection,
-  achievementCollection,
-  achievementTitles
-);
+  let achievementObjects = await achievementFunctions.addAchievements(
+    req.session.username,
+    userCollection,
+    achievementCollection,
+    achievementTitles
+  );
 
   // Format the task category to title case assuming the length is >= 2
   let formattedTaskCategory = taskCategory.charAt(0).toUpperCase() + taskCategory.slice(1, -1);
