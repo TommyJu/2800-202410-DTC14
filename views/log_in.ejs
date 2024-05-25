@@ -2,9 +2,8 @@
 
     <h1>Log in to an existing account</h1>
     <form action="/loggingin" method="post">
-    <input type="email" name="email" placeholder="email"/><br>
-    <input type="password" name="password" placeholder='password'/><br>
-    <input type="submit"/>
+        <input type="text" name="username" placeholder="username" />
+        <input type="password" name="password" placeholder='password' />
+        <input type="submit" />
     </form>
-
-<%- include("templates/footer.ejs") %>
+    <a href="/password_recovery">I forgot my password</a>

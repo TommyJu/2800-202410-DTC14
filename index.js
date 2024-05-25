@@ -1,7 +1,7 @@
 require("./utils.js");
 require('dotenv').config();
 
-const friendFunctions = require("./friend_functions.js");
+const friendFunctions = require("./public/friend_functions.js");
 
 const express = require('express');
 const app = express();
@@ -241,6 +241,44 @@ app.get('/friendRequest', async (req, res) => {
     // not logged in
     res.render("home_logged_out.ejs");
   }
+})
+
+// method to accept friend 
+app.post('/acceptFriend', async (req, res) => {
+  const requester = req.body.requestedFriend;
+  const accepter = req.session.username;
+  const userCollection = await database.db(mongodb_database).collection('users');
+  // const recipientInfo = await userCollection.findOne({ username: req.session.username });
+  try {
+    // adds the accepter to the requester's friends
+    await userCollection.updateOne(
+      { username: requester },
+      { $push: { friends: accepter } }
+    );
+    // updates the friend requests of requester
+    await userCollection.updateOne(
+      { username: requester },
+      { $pull: { friendRequest: accepter } }
+    );
+    // adds the requester to the accepter's friends
+    await userCollection.updateOne(
+      { username: accepter },
+      { $push: { friends: requester } }
+    );
+    // updates the friend requests of accepter
+    await userCollection.updateOne(
+      { username: accepter },
+      { $pull: { friendRequest: requester } }
+    );
+  } catch (error) {
+    console.error("could not accept request(server side)", error)
+  }
+
+})
+
+// method to reject friend
+app.post('/rejectFriend', async (req, res) => {
+
 })
 
 // Log out
