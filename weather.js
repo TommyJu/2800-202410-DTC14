@@ -11,16 +11,16 @@ module.exports = {
 
 app.use(cors());
 
-function getWeather(url, res) {
-    fetch(url)
-        .then((current) => current.json())
-        .then((current) => {
-            if (current.message)
-                return res.send('Error')
-            const cityName = current.name
-            const weatherToday = current.weather[0].main
-            const weatherTemp = current.main.temp
-            const weatherIcon = current.weather[0].icon
-            res.render('fitness_weather', { cityName, weatherToday, weatherTemp, weatherIcon })
-        });
+async function getWeather(url) {
+    current = await fetch(url)
+    currentJSON = await current.json()
+    if (currentJSON.message)
+        return res.send('City not found')
+    const cityName = currentJSON.name
+    const weatherToday = currentJSON.weather[0].main
+    const weatherTemp = currentJSON.main.temp
+    const weatherIcon = currentJSON.weather[0].icon
+    weatherData = [cityName, weatherToday, weatherTemp, weatherIcon]
+    return weatherData
+
 }

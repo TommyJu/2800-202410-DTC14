@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const saltRounds = 12;
 const expireTime = 1 * 60 * 60 * 1000; // one hour expiry time
+const lolAPI = require('./riotLeagueAPI.js');
+const { get } = require('http');
 
 module.exports = { submitUser, logInUser, resetPassword, renderSecurityQuestion};
 
@@ -15,8 +17,8 @@ async function submitUser(
   const emailSchema = Joi.string().max(40).required();
   const passwordSchema = Joi.string().max(20).required();
   const securityAnswerSchema = Joi.string().max(20).required();
-  const RiotUsernameSchema = Joi.string().max(20);
-  const RiotIDSchema = Joi.string().max(20);
+  const RiotUsernameSchema = Joi.string().min(3).max(16).alphanum().allow("").optional();
+  const RiotIDSchema = Joi.string().min(3).max(5).alphanum().allow("").optional();
 
   // Username verification
   const usernameValidationResult = usernameSchema.validate(username);
@@ -63,6 +65,18 @@ async function submitUser(
     res.render("invalid_sign_up.ejs", { type: "Riot ID" })
     return;
   }
+  
+  if ((await lolAPI.getRiotPUUID(RiotUsername, RiotID) === false) && (RiotUsername != "" && RiotID != "")){
+    console.log("Riot account does not exists lil bro.")
+    res.render("invalid_sign_up.ejs", { type: "Riot account does not exists lil bro." })
+    return;
+  }
+
+  if ((await lolAPI.getSummonerLevelAndID(await lolAPI.getRiotPUUID(RiotUsername, RiotID)) === false) && (RiotUsername != "" && RiotID != "")) {
+    console.log("No League on this rito account lil bro.")
+    res.render("invalid_sign_up.ejs", { type: "No League on this rito account lil bro." })
+    return;
+  }
 
   // Hash password
   var hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -81,7 +95,23 @@ async function submitUser(
     securityAnswer: hashedSecurityAnswer,
     gameTasks: [],
     fitnessTasks: [],
-    dietTasks: []
+    dietTasks: [],
+    levels: {
+      game: {
+        level: 1,
+        exp: 0
+      },
+      diet: {
+        level: 1,
+        exp: 0
+      },
+      fitness: {
+        level: 1,
+        exp: 0
+      }
+    },
+    rank: "unranked",
+    achievements: []
   });
 
   req.session.authenticated = true;

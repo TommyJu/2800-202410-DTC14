@@ -1,0 +1,20 @@
+<%- include("templates/header_with_profile.ejs") %>
+  <div id="level-up-background">
+    
+    <div class="level-user-name">
+      <img id="level-up-gif" src="./images/level-up/<%= taskCategory %>.gif" alt="<%= taskCategory %> gif">
+      <h1 class="text-3xl">Level up! Your <%= taskCategory %> is now level <%= level %>.</h1>
+    </div>
+    
+    <img src="./images/ranks/<%= rank %>.webp" class="h-auto w-100" alt="User rank (<%= rank %>)">
+
+    <%- include("templates/achievements_container_preview.ejs", {achievements: achievements}) %>
+    
+    <form id="confirmLevelUp" action="/level_up_confirmation" method="POST">
+      <input type="hidden" name="taskCategory" value="<%= taskCategory %>">
+      <button type="submit"
+        class="inline-block bg-yellow-200 rounded-full px-6 py-3 text-lg font-semibold text-yellow-700 mr-2 mb-2">OK</button>
+    </form>
+
+  </div>
+  <%- include("templates/footer.ejs") %>

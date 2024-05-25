@@ -1,56 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include("templates/header_with_profile.ejs") %>
 
-<head>
-    <meta name="comp2800 static template" content="My 2800 App" />
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>GUD</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!--Tailwind CSS Library-->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Icons (Material Design) -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-
-    <!--Other Libraries-->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <!-- Web-based Scripts-->
-</head>
-
-<body>
-    <!------------------------------>
-    <!-- Your HTML Layout go here -->
-    <!------------------------------>
-    <div class="container">
-        <nav id="navbarTemplate" class="navbar nav-header sticky top-0">
-            <%- include("templates/header_with_profile.ejs") %>
-        </nav>
-        <div class="mx-auto max-w-sm bg-white p-4 md:p-6 h-full">
-            <!-- Donut Chart -->
-            <div class="py-6" id="donut-chart"></div>
+    <div id="home-background">
+        <div id="user-display">
+            <h1>
+                <%= username %>
+            </h1>
+            <img src="./images/ranks/<%= rank %>.webp" class="h-auto w-80" alt="Player rank">
         </div>
-        <footer id="footerTemplate" class="navbar nav-footer sticky bottom-0">
-            <%- include("templates/footer.ejs") %>
-        </footer>
-    </div>
-    <div class="hidden" id="levelGame">
-        <%=levelGame%>
-    </div>
-    <div class="hidden" id="levelFitness">
-        <%=levelFitness%>
-    </div>
-    <div class="hidden" id="levelDiet">
-        <%=levelDiet%>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-    <script src="client-side-scripts/stats.js"></script>
-</body>
-<!---------------------------------------------->
-<!-- Your own JavaScript functions go here    -->
-<!---------------------------------------------->
+        <!-- Donut Chart -->
+        <div id="donut-chart-container">
+            <div class="" id="donut-chart"></div>
+        </div>
 
-<!-- Link to scripts of your own -->
+            <!-- EXP -->
 
-</html>
+            <div class="flex flex-col justify-center items-center w-full">
+                <div class="experience-container flex items-center">
+                    <div class="circle flex items-center justify-center mr-3">
+                        <%= levelDiet %>
+                    </div>
+                    <div class="progress-bar-container ml-2 flex flex-col">
+                        <p class="text-base mb-2">Diet Experience</p>
+                        <div class="range-summary" style="--level-progress:<%= expDiet %>; --max-exp:<%= expMax %>"></div>
+                    </div>
+                </div>
+                <div class="experience-container">
+                    <div class="circle flex items-center justify-center mr-3">
+                        <%= levelFitness %>
+                    </div>
+                    <div class="progress-bar-container ml-2 flex flex-col">
+                        <p class="text-base mb-2">Fitness Experience</p>
+                        <div class="range-summary" style="--level-progress:<%= expFitness %>; --max-exp:<%= expMax %>">
+                        </div>
+                    </div>
+                </div>
+                <div class="experience-container flex items-center">
+                    <div class="circle flex items-center justify-center mr-3">
+                        <%= levelGame %>
+                    </div>
+                    <div class="progress-bar-container ml-2 flex flex-col">
+                        <p class="text-base mb-2">Game Experience</p>
+                        <div class="range-summary" style="--level-progress:<%= expGame %>; --max-exp:<%= expMax %>"></div>
+                    </div>
+                </div>
+            </div>
+            <%- include("templates/achievements_container.ejs", {achievements: achievements})%>
+
+            <!-- Used for the donut chart -->
+            <div class="hidden" id="levelGame">
+                <%=levelGame%>
+            </div>
+            <div class="hidden" id="levelFitness">
+                <%=levelFitness%>
+            </div>
+            <div class="hidden" id="levelDiet">
+                <%=levelDiet%>
+            </div>
+    </div>
+    <%- include("templates/footer.ejs") %>

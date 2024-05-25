@@ -1,19 +1,38 @@
+
+/* Color scheme */
+:root {
+    --red: #f71735;
+    --black: #100b00;
+    --green: #62c370;
+    --pink: #f7e1d7;
+    --yellow: #f5b700;
+}
+
+
 /* Minimal CSS Reset */
-html {
+html, body {
+    min-height: 100%;
     height: 100%;
 }
 
 body {
-    min-height: 100%;
+
 }
 
 body, h1, h2, h3, h4, h5, h6, p, ol, ul {
     margin: 0;
     padding: 0;
     font-weight: normal;
+    font-family: "Audiowide", sans-serif;
 }
 
 a {
     text-decoration: none;
-    color: black;
+    color: #3b82f6;
+}
+
+input {
+    /* color: white;
+    background-color: gray;
+    border: solid white 2px; */
 }

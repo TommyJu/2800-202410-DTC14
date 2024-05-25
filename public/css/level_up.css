@@ -1,0 +1,28 @@
+#level-up-background {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    color: white;
+    background-image: url("../images/backgrounds/level_up_background.jpg");
+    background-position: center;
+    background-repeat:no-repeat;
+    background-size: cover;
+    padding-bottom: 120px;
+    text-align: center;
+}
+
+.level-user-name {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+#level-up-gif {
+    width: 80px;
+    height: auto;
+}
+

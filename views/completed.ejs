@@ -1,0 +1,8 @@
+<%- include("templates/header_with_profile.ejs") %>
+    <br>
+    <h1 class="text-2xl font-bold bg-slate-500 text-white rounded-lg p-1 w-fit">Completed Page</h1>
+    <br>
+    <br>
+    <%- include("templates/task_cards_container.ejs", {tasks: tasks, type:'completed'}) %>
+        <br>
+        <%- include("templates/footer.ejs") %>
