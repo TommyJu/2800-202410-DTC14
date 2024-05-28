@@ -19,17 +19,18 @@
 
 .friendCardContainer {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     gap: 40px;
-    flex-wrap: wrap;
 }
 
 .friendCard {
     display: flex;
-    flex-direction: column;
     border: solid var(--yellow) 2px;
-    width: 300px;
+    flex-wrap: wrap;
+    /* width: 300px; */
     text-align: center;
+    justify-content: center;
     align-items: center;
     padding: 20px;
 
@@ -52,3 +53,13 @@
     gap: 12px;
 }
 
+.all-progress-containers {
+    display: flex;
+    flex-direction: column;
+}
+
+.friend-name-and-level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
