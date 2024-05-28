@@ -65,14 +65,13 @@
         completeButtons[i].classList.add("hidden")
       } else if (deleteButtons[i].name == "custom") {
         moveButtons[i].classList.add("hidden")
+      } else {
+        for (let i = 0; i < deleteButtons.length; i++) {
+          deleteButtons[i].classList.add("hidden")
+          completeButtons[i].classList.add("hidden")
+          moveButtons[i].classList.add("hidden")
+        }
       }
-    }
-  } else if (document.URL.includes("completed")) {
-    for (let i = 0; i < deleteButtons.length; i++) {
-    }
-    buttons = document.getElementsByTagName("button")
-    for (let i = 0; i < buttons.length; i++) {
-      buttons[i].classList.add("hidden");
     }
   }
 </script>
