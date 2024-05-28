@@ -5,6 +5,7 @@ const taskFunctions = require("./task_functions.js");
 const authenticationFunctions = require("./authentication_functions.js");
 const levelFunctions = require("./level_functions.js");
 const achievementFunctions = require("./achievement_functions.js");
+const friendFunctions = require("./friend_functions.js");
 
 const { ObjectId } = require('mongodb');
 const express = require('express');
@@ -189,28 +190,7 @@ app.get('/weather', async (req, res) => {
 
 // Friends
 app.get('/friends', async (req, res) => {
-  const userCollection = await database.db(mongodb_database).collection('users');
-  if (req.session.authenticated) {
-    // if logged in
-    // gets user from DB based on session username
-    const userInfo = await userCollection.findOne({ username: req.session.username });
-    
-    let userFriends = await userCollection.find({username: { $in: userInfo.friends } }).toArray();
-    userFriends.sort((a, b) => {
-      // Total level in descending order
-      return (b.levels.game.level + b.levels.diet.level + b.levels.fitness.level) 
-      - (a.levels.game.level + a.levels.diet.level + a.levels.fitness.level)
-    })
-
-    res.render("friends.ejs", {
-      friends: userFriends,
-      requests: userInfo.friendRequest
-    });
-    return;
-  } else {
-    // not logged in
-    res.render("home_logged_out.ejs");
-  }
+  friendFunctions.loadFriendsPage(req, res, userCollection);
 })
 
 // method to add friends
@@ -234,38 +214,6 @@ app.post('/addFriend', async (req, res) => {
       res.status(100).send("user not found")
     }
   } catch { console.error(error); res.status(500).send('error sending friends') }
-  //   try {
-  //   recipientInfo.friendRequest.push(req.session.username);
-  //   res.redirect('/friends');
-  // } catch (error) {
-  //   console.error(error);
-  //   res.status(500).send('error sending friends')
-  // }
-})
-
-// Friend Request
-app.get('/friendRequest', async (req, res) => {
-  const userCollection = await database.db(mongodb_database).collection('users');
-  if (req.session.authenticated) {
-    // if logged in
-    // gets user from DB based on session username
-    const userInfo = await userCollection.findOne({ username: req.session.username });
-    let userFriendRequest = [];
-    try {
-      //attempts to get friendRequest from user
-      userFriendRequest = await userInfo.friendRequest;
-    } catch (error) {
-      console.error("could not retreive firends");
-    }
-    res.render("friend_request.ejs", {
-      username: req.session.username,
-      requests: userFriendRequest
-    });
-    return;
-  } else {
-    // not logged in
-    res.render("home_logged_out.ejs");
-  }
 })
 
 // method to accept friend 
