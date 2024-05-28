@@ -248,7 +248,6 @@ app.post('/acceptFriend/:friendName', async (req, res) => {
   const requester = req.params.friendName;
   const accepter = req.session.username;
   const userCollection = await database.db(mongodb_database).collection('users');
-  // const recipientInfo = await userCollection.findOne({ username: req.session.username });
   try {
     // adds the accepter to the requester's friends
     await userCollection.updateOne(
@@ -273,13 +272,25 @@ app.post('/acceptFriend/:friendName', async (req, res) => {
   } catch (error) {
     console.error("could not accept request(server side)", error)
   }
-  res.redirect("/friends");
+  res.redirect("/friendRequests");
 
 })
 
 // method to reject friend
-app.post('/rejectFriend', async (req, res) => {
-
+app.post('/rejectFriend/:friendName', async (req, res) => {
+  const requester = req.params.friendName;
+  const accepter = req.session.username;
+  const userCollection = await database.db(mongodb_database).collection('users');
+  try {
+    // removes the friend request of accepter
+    await userCollection.updateOne(
+      { username: accepter },
+      { $pull: { friendRequest: requester } }
+    );
+  } catch (error) {
+    console.error("could not reject request(server side)", error)
+  }
+  res.redirect("/friendRequests");
 })
 
 // Log out
