@@ -14,7 +14,7 @@
     background-repeat: none;
     background-size: cover;
     /* Protects page from collapsing if no friend cards present */
-    min-height: 700px;
+    min-height: 1200px;
 }
 
 .friendCardContainer {
