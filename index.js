@@ -187,20 +187,16 @@ app.get('/weather', async (req, res) => {
   weather.getWeather(url, res)
 });
 
-// Freinds
+// Friends
 app.get('/friends', async (req, res) => {
   const userCollection = await database.db(mongodb_database).collection('users');
   if (req.session.authenticated) {
     // if logged in
     // gets user from DB based on session username
     const userInfo = await userCollection.findOne({ username: req.session.username });
-    let userFriends = [];
-    try {
-      //attempts to get friends from user
-      userFriends = await userInfo.friends;
-    } catch (error) {
-      console.error("could not retreive firends");
-    }
+    
+    let userFriends = await userCollection.find({username: { $in: userInfo.friends } }).toArray();
+
     res.render("friends.ejs", {
       username: req.session.username,
       friends: userFriends

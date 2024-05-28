@@ -9,7 +9,7 @@
             <button type="submit">add friend</button>
         </form>
     </div>
-    <div id="friendDisplay">
+    <!-- <div id="friendDisplay">
         <% if (friends.length===0) { %>
             <div>NO Friends? :c</div>
             <% } else { %>
@@ -22,7 +22,10 @@
                     </div>
                     <% }); %>
                         <% } %>
-    </div>
+    </div> -->
+    stuff --------
+
+    <%- include("templates/friends/friend_card_container", {friends: friends}) %>
 
 
     <%- include("templates/footer.ejs") %>

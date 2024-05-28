@@ -1,0 +1,12 @@
+<!-- friends passed to ejs -->
+<div class="friendCardContainer">
+    <% for (let friend of friends) { %>
+        <%- include("friend_card.ejs", {
+            username: friend.username,
+            rank: friend.rank,
+            gameLevel: friend.levels.game.level,
+            dietLevel: friend.levels.diet.level,
+            fitnessLevel: friend.levels.fitness.level
+        }) %>
+    <% } %>
+</div>
