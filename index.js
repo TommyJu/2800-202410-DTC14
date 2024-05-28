@@ -272,7 +272,7 @@ app.post('/acceptFriend/:friendName', async (req, res) => {
   } catch (error) {
     console.error("could not accept request(server side)", error)
   }
-  res.redirect("/friendRequests");
+  res.redirect("/friendRequest");
 
 })
 
@@ -290,7 +290,7 @@ app.post('/rejectFriend/:friendName', async (req, res) => {
   } catch (error) {
     console.error("could not reject request(server side)", error)
   }
-  res.redirect("/friendRequests");
+  res.redirect("/friendRequest");
 })
 
 // Log out
