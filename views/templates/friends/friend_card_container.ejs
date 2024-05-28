@@ -1,5 +1,6 @@
 <!-- friends passed to ejs -->
 <div class="friendCardContainer">
+    <p class="w-full">Friends (<%= friends.length %>)</p>
     <% for (let friend of friends) { %>
         <%- include("friend_card.ejs", {
             username: friend.username,

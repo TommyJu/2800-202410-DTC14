@@ -1,11 +1,39 @@
+#friendPage {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 120px;
+    background-color: var(--black);
+    color: var(--yellow);
+    
+    background-image: url("../images/backgrounds/home_background3.jpg");
+    background-position: center;
+    background-repeat: none;
+    background-size: cover;
+    /* Protects page from collapsing if no friend cards present */
+    min-height: 700px;
+}
+
+.friendCardContainer {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
 .friendCard {
     display: flex;
     flex-direction: column;
-    border: solid black 2px;
+    border: solid var(--yellow) 2px;
     width: 300px;
     text-align: center;
     align-items: center;
     padding: 20px;
+
+    box-shadow: 0 0 50px 0px var(--yellow);
 }
 
 .friendCard img {
@@ -19,5 +47,8 @@
 
 .progress-container {
     width: 220px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
