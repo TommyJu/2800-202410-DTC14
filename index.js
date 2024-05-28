@@ -306,6 +306,26 @@ app.get('/get_allergies', async (req, res) => {
 
 app.post('/favouriteRecipe', async (req, res) => {
   const recipe = req.body.recipe;
+  let recipeArray = recipe.split('\n');
+  if (recipeArray[0].includes('Here')) {
+    recipeTitle = recipeArray[2];
+    recipeArray.shift();
+    recipeArray.shift();
+  } else {
+    recipeTitle = recipeArray[0];
+  }
+  recipeArray.shift();
+  recipeDescription = recipeArray.join('\n');
+  console.log(recipeDescription);
+  try {
+    await userCollection.findOneAndUpdate(
+      { username: req.session.username },
+      { $push: { dietTasks: { _id: new ObjectId(), title: recipeTitle, description: recipeDescription, category: "diet", type: 'custom' } } },
+      { upsert: true });
+  } catch (error) {
+    console.error('Error adding recipe to diet tasks:', error.message);
+  }
+
   try {
     await userCollection.findOneAndUpdate(
       { username: req.session.username },
@@ -436,10 +456,22 @@ app.post('/delete_task', async (req, res) => {
   res.redirect(req.get('referer'));
 })
 
-// Completed task page
-app.get('/completed', async (req, res) => {
+// Completed game task page
+app.get('/game_completed', async (req, res) => {
   username = req.session.username;
-  res.render("completed.ejs", { username: username });
+  res.render("game_completed.ejs", { username: username });
+});
+
+// Completed diet task page
+app.get('/diet_completed', async (req, res) => {
+  username = req.session.username;
+  res.render("diet_completed.ejs", { username: username });
+});
+
+// Completed fitness task page
+app.get('/fitness_completed', async (req, res) => {
+  username = req.session.username;
+  res.render("fitness_completed.ejs", { username: username });
 });
 
 app.post('/complete_task', async (req, res) => {
