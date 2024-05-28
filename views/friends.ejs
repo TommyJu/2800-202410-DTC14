@@ -9,22 +9,6 @@
             <button type="submit">add friend</button>
         </form>
     </div>
-    <!-- <div id="friendDisplay">
-        <% if (friends.length===0) { %>
-            <div>NO Friends? :c</div>
-            <% } else { %>
-                <% friends.forEach(friend=> { %>
-                    <div class="friend-card flex flex-row bg-green-100  rounded border-black">
-                        <div class="friend-name-tags m-2">
-                            <%= friend %>
-                        </div>
-                        <div>F:1 D:2 G:3 R:gold hi</div>
-                    </div>
-                    <% }); %>
-                        <% } %>
-    </div> -->
-    stuff --------
-
     <%- include("templates/friends/friend_card_container", {friends: friends}) %>
 
 

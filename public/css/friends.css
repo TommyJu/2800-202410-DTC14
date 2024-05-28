@@ -1,0 +1,23 @@
+.friendCard {
+    display: flex;
+    flex-direction: column;
+    border: solid black 2px;
+    width: 300px;
+    text-align: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.friendCard img {
+    height: auto;
+    width: 200px;
+}
+
+.friendCard p {
+    font-size: 2rem;
+}
+
+.progress-container {
+    width: 220px;
+}
+

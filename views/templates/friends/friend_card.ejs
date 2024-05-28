@@ -1,7 +1,21 @@
 <div class="friendCard">
-    <%= username %>
-    <%= rank %>
-    <%= gameLevel %>
-    <%= dietLevel %>
-    <%= fitnessLevel %>
+    <p class="friendUsername"><%= username %></p>
+    <img src="./images/ranks/<%= rank %>.webp" alt="player rank (<%= rank %>)">
+    <div class="circle mb-4"><%= totalLevel %></div>
+    <div class="progress-container p-4">        
+        <!-- <progress value="<%= gameLevel %>" max="15"></progress> -->
+        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-red-600 h-2.5 rounded-full" style="width: <%= (gameLevel / 15) * 100 %>%"></div>
+        </div>
+    </div>
+    <div class="progress-container p-4">
+        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-red-600 h-2.5 rounded-full" style="width: <%= (dietLevel / 15) * 100 %>%"></div>
+        </div>
+    </div>
+    <div class="progress-container p-4">
+        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-red-600 h-2.5 rounded-full" style="width: <%= (fitnessLevel / 15) * 100 %>%"></div>
+        </div>
+    </div>
 </div>

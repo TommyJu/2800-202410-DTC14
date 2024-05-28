@@ -6,7 +6,11 @@
             rank: friend.rank,
             gameLevel: friend.levels.game.level,
             dietLevel: friend.levels.diet.level,
-            fitnessLevel: friend.levels.fitness.level
+            fitnessLevel: friend.levels.fitness.level,
+            totalLevel: 
+                friend.levels.game.level
+                + friend.levels.diet.level
+                + friend.levels.fitness.level
         }) %>
     <% } %>
 </div>
