@@ -195,75 +195,18 @@ app.get('/friends', async (req, res) => {
 
 // method to add friends
 app.post('/addFriend', async (req, res) => {
-  const recipientUsername = req.body.friendUsername;
-  // need to catch if user DNE
-  const userCollection = await database.db(mongodb_database).collection('users');
-  const recipientInfo = await userCollection.findOne({ username: recipientUsername });
-  try {
-    if (recipientInfo) {
-      // If recipient user exists, push the current user's username to their friendRequest array
-      recipientInfo.friendRequest.push(req.session.username);
-      // Update the recipient user document in the database
-      await userCollection.updateOne(
-        { username: recipientUsername },
-        { $set: { friendRequest: recipientInfo.friendRequest } }
-      );
-      // Redirect to the friends page
-      res.redirect('/friends');
-    } else {
-      res.status(100).send("user not found")
-    }
-  } catch { console.error(error); res.status(500).send('error sending friends') }
+  friendFunctions.sendFriendRequest(req, res, userCollection);
 })
 
 // method to accept friend 
 app.post('/acceptFriend/:friendName', async (req, res) => {
-  const requester = req.params.friendName;
-  const accepter = req.session.username;
-  const userCollection = await database.db(mongodb_database).collection('users');
-  try {
-    // adds the accepter to the requester's friends
-    await userCollection.updateOne(
-      { username: requester },
-      { $push: { friends: accepter } }
-    );
-    // updates the friend requests of requester
-    await userCollection.updateOne(
-      { username: requester },
-      { $pull: { friendRequest: accepter } }
-    );
-    // adds the requester to the accepter's friends
-    await userCollection.updateOne(
-      { username: accepter },
-      { $push: { friends: requester } }
-    );
-    // updates the friend requests of accepter
-    await userCollection.updateOne(
-      { username: accepter },
-      { $pull: { friendRequest: requester } }
-    );
-  } catch (error) {
-    console.error("could not accept request(server side)", error)
-  }
-  res.redirect("/friendRequest");
+  friendFunctions.acceptFriend(req, res, userCollection);
 
 })
 
 // method to reject friend
 app.post('/rejectFriend/:friendName', async (req, res) => {
-  const requester = req.params.friendName;
-  const accepter = req.session.username;
-  const userCollection = await database.db(mongodb_database).collection('users');
-  try {
-    // removes the friend request of accepter
-    await userCollection.updateOne(
-      { username: accepter },
-      { $pull: { friendRequest: requester } }
-    );
-  } catch (error) {
-    console.error("could not reject request(server side)", error)
-  }
-  res.redirect("/friendRequest");
+  friendFunctions.rejectFriend(req, res, userCollection);
 })
 
 // Log out
