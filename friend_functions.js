@@ -26,7 +26,7 @@ async function loadFriendsPage(req, res, userCollection) {
 }
 
 async function sendFriendRequest(req, res, userCollection) {
-    const senderUsername = req.body.username;
+    const senderUsername = req.session.username;
     const recipientUsername = req.body.friendUsername;
     
     // Verify that the recipient username is not a noSQL injection
@@ -66,10 +66,14 @@ async function sendFriendRequest(req, res, userCollection) {
     } catch { console.error(error); res.status(500).send('error sending friends') }
 }
 
-async function canFriendRequestBeSent(recepientInfo, senderInfo) {
-    if () {
-        
-    }
+function canFriendRequestBeSent(recipientInfo, senderInfo) {
+    // Cannot add a friend that is already a friend
+    if (senderInfo.friends.includes(recipientInfo.username)) { return false; }
+    // Cannot add a friend that is already in friend request
+    if (senderInfo.friendRequests.includes(recipientInfo.username)) { return false; }
+    // Cannot add yourself
+    if (senderInfo.username == recipientInfo.username) { return false; }
+    
     return true;
 }
 
