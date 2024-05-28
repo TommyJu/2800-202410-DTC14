@@ -103,7 +103,7 @@ async function moveTask(username, userCollection, suggestedActivity, taskCategor
   try {
     await userCollection.updateOne(
       { username: username },
-      { $push: { [taskCategoryProperty]: { _id: taskObjectId, title: suggestedActivity[0].title, description: suggestedActivity[0].description, category: suggestedActivity[0].category, type: "custom" } } }
+      { $push: { [taskCategoryProperty]: { _id: new ObjectId(), title: suggestedActivity[0].title, description: suggestedActivity[0].description, category: suggestedActivity[0].category, type: "custom" } } }
     )
   } catch (error) {
     console.error("Failed to copy suggestion");
