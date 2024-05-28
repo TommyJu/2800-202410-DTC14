@@ -372,12 +372,13 @@ app.get('/fitness', async (req, res) => {
     } else {
       defaultCity = result[0].city
     }
+    const weatherKey = process.env.OPEN_WEATHER_API_KEY;
     url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity},CA&appid=${weatherKey}&units=metric`
     console.log(url)
     const physicalCollection = await database.db('physical_pillar').collection('activities').find().toArray();
     tasks = await taskFunctions.getTasksByCategory("fitness", req.session.username, userCollection);
     weatherData = await weather.getWeather(url)
-    res.render("fitness.ejs", { tasks: tasks, activities: physicalCollection, cityName: weatherData[0], weatherToday: weatherData[1], weatherTemp: weatherData[2], weatherIcon: weatherData[3] });
+    res.render("fitness.ejs", { tasks: tasks, activities: physicalCollection, cityName: weatherData[0], weatherToday: weatherData[1], weatherTemp: weatherData[2], weatherIcon: weatherData[3], apiKey: weatherKey });
     return;
   }
   res.redirect("/");
@@ -489,6 +490,57 @@ app.post('/removeFavouriteRecipe', async (req, res) => {
     res.status(500).json({ error: 'Failed to remove recipe' });
   }
 });
+
+app.post('/addToDo', async (req, res) => {
+  const recipe = lineBreaks(req.body.recipe);
+  try {
+    await userCollection.updateOne(
+      { username: req.session.username },
+      { $addToSet: { dietToDo: recipe } }
+    );
+    res.json({ success: true, message: 'Recipe added to to-do list' });
+  } catch (error) {
+    console.error('Error adding to to-do list:', error.message);
+    res.status(500).json({ error: 'Failed to add to to-do list' });
+  }
+});
+
+app.get('/getToDo', async (req, res) => {
+  try {
+    const user = await userCollection.findOne(
+      { username: req.session.username },
+      { projection: { dietToDo: 1, _id: 0 } }
+    );
+
+    if (user && user.dietToDo) {
+      user.dietToDo = user.dietToDo.map(lineBreaks);
+      res.json({ success: true, dietToDo: user.dietToDo });
+    } else {
+      res.json({ success: false, message: 'No to-do list recipes found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving to-do list:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve to-do list' });
+  }
+});
+
+app.post('/removeToDo', async (req, res) => {
+  const recipe = lineBreaks(req.body.recipe);
+  try {
+    const result = await userCollection.updateOne(
+      { username: req.session.username },
+      { $pull: { dietToDo: recipe } }
+    );
+    if (result.modifiedCount === 0) {
+      throw new Error('Recipe not found or not removed');
+    }
+    res.json({ success: true, message: 'Recipe removed from to-do list' });
+  } catch (error) {
+    console.error('Error removing recipe from to-do list:', error.message);
+    res.status(500).json({ error: 'Failed to remove recipe from to-do list' });
+  }
+});
+
 
 
 async function sendMessage(message) {

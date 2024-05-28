@@ -15,7 +15,6 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
-
 }
 
 .bg-red-900 {
@@ -27,15 +26,17 @@ body {
 }
 
 .logo {
-    width: 100px; /* adjust as needed */
-    height: auto; /* maintain aspect ratio */
+    width: 100px;
+    height: auto; 
 }
-
 </style>
 <%- include("templates/header_with_profile.ejs") %>
 
 <body class="bg-gray-50">
     <br><br><br><br>
+    <div class="flex justify-center mb-2 mx-10">
+    <button id="todo-list" class="py-2 px-6 rounded-2xl bg-orange-500 text-black font-bold hover:bg-gray-600 w-full">To-Do List</button>
+    </div>
     <div class="flex items-center justify-center">
         <div class="bg-red-900 rounded-3xl shadow-lg p-5 border border-spacing-10 md:p-20 mx-5 w-5/6">
             <button id="edit-allergies" class="py-2 px-6 rounded-full bg-blue-500 text-black font-bold w-full">Edit Allergies</button>
@@ -70,6 +71,14 @@ body {
                 </div>
             </div>
 
+            <div id="todo-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div class="bg-white p-5 rounded-lg shadow-md w-11/12 max-w-md">
+                    <h2 class="text-gray-700 text-lg font-bold mb-3">Your To-Do List</h2>
+                    <div id="todo-list-recipes" class="max-h-80 overflow-y-auto"></div>
+                    <button id="close-todo-modal" class="mt-3 py-2 px-6 rounded-full bg-gray-600 text-white font-bold w-full">Close</button>
+                </div>
+            </div>
+
             <div id="chat-box" class="mb-5 mt-2 h-96 overflow-auto border p-3 rounded-lg text-sm text-gray-600 bg-white"></div>
             <div id="typing" class="text-gray-500 text-sm italic hidden">GUD Chatbot is typing...</div>
             <button id="generate-recipe" class="py-2 px-6 rounded-full bg-blue-500 text-black font-bold w-full">Generate Recipe</button>
@@ -90,13 +99,17 @@ body {
             const favouritesModal = document.getElementById('favourites-modal');
             const closeFavouritesModalButton = document.getElementById('close-favourites-modal');
             const favouriteRecipesList = document.getElementById('favourite-recipes-list');
+            const todoButton = document.getElementById('todo-list');
+            const todoModal = document.getElementById('todo-modal');
+            const closeTodoModalButton = document.getElementById('close-todo-modal');
+            const todoListRecipes = document.getElementById('todo-list-recipes');
 
             editAllergiesButton.addEventListener('click', function () {
-                allergyModal.classList.remove('hidden'); // Show modal
+                allergyModal.classList.remove('hidden');
             });
 
             closeModalButton.addEventListener('click', function () {
-                allergyModal.classList.add('hidden'); // Hide modal
+                allergyModal.classList.add('hidden');
             });
 
             saveAllergiesButton.addEventListener('click', function () {
@@ -151,12 +164,14 @@ body {
                         <br>
                             <div>
                                 <div><img src="./images/gud_logo.png" alt="GUD Logo" class="logo">${formattedReply}</div>
-                                <div class="flex item-center justify-center">
-                                <button class="favourite-button py-1 px-3 mt-2 rounded-full bg-yellow-300 text-black font-bold">Add to favourites</button>
+                                <div class="flex item-center justify-evenly">
+                                <button class="favourite-button py-1 px-1 mt-2 rounded-full bg-yellow-300 text-black font-bold">Add to favourites</button>
+                                <button class="todo-button py-1 px-1 mt-2 rounded-full bg-orange-400 text-black font-bold">Add to to-do list</button>
                                 </div>
                             </div>
                         `;
-                        chatBox.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+                        chatBox.innerHTML += `<br> 
+                        <p><strong>You:</strong> ${message}</p>`;
                         chatBox.innerHTML += responseHtml; 
                         chatBox.scrollTop = chatBox.scrollHeight; 
 
@@ -173,6 +188,26 @@ body {
                                 .then(response => response.json())
                                 .then(data => {
                                     console.log('Recipe saved as favourite:', data);
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                });
+                            });
+                        });
+
+                        const todoButtons = document.querySelectorAll('.todo-button');
+                        todoButtons.forEach(button => {
+                            button.addEventListener('click', function () {
+                                fetch('/addToDo', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ recipe: reply }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Recipe added to to-do list:', data);
                                 })
                                 .catch((error) => {
                                     console.error('Error:', error);
@@ -243,8 +278,65 @@ body {
                 });
             });
 
+            todoButton.addEventListener('click', function () {
+                fetch('/getToDo', {
+                    method: 'GET',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    todoListRecipes.innerHTML = '';
+                    if (data.success) {
+                        data.dietToDo.forEach(recipe => {
+                            const formattedRecipe = recipe.replace(/\n/g, '<br>');
+                            const recipeElement = document.createElement('div');
+                            recipeElement.classList.add('mb-2', 'p-2', 'border', 'border-gray-300', 'rounded');
+                            recipeElement.innerHTML = `
+                                <div>${formattedRecipe}</div>
+                                <button class="remove-todo-button py-1 px-3 mt-2 rounded-full bg-red-500 text-white font-bold">Remove</button>
+                            `;
+                            todoListRecipes.appendChild(recipeElement);
+                        });
+
+                        const removeButtons = document.querySelectorAll('.remove-todo-button');
+                        removeButtons.forEach(button => {
+                            button.addEventListener('click', function () {
+                                const recipeDiv = this.previousElementSibling;
+                                const recipe = recipeDiv.innerHTML.replace(/<br>/g, '\n').trim();
+                                fetch('/removeToDo', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ recipe: recipe }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        this.parentElement.remove();
+                                        console.log('Recipe removed from to-do list:', data.message);
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                });
+                            });
+                        });
+                    } else {
+                        todoListRecipes.innerText = 'No to-do list recipes found.';
+                    }
+                    todoModal.classList.remove('hidden');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+
             closeFavouritesModalButton.addEventListener('click', function () {
                 favouritesModal.classList.add('hidden');
+            });
+
+            closeTodoModalButton.addEventListener('click', function () {
+                todoModal.classList.add('hidden');
             });
         });
     </script>
