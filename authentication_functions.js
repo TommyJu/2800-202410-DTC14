@@ -113,7 +113,7 @@ async function submitUser(
     rank: "unranked",
     achievements: [],
     friends: [],
-    friendReqests: []
+    friendRequests: []
   });
 
   req.session.authenticated = true;
@@ -234,4 +234,6 @@ async function renderSecurityQuestion(req, res, username, userCollection) {
     username: username,
     securityQuestion: securityQuestion
   })
+
+
 }
