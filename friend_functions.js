@@ -26,8 +26,8 @@ async function loadFriendsPage(req, res, userCollection) {
 }
 
 async function sendFriendRequest(req, res, userCollection) {
-    const senderUsername = req.body.username;
-    const recipientUsername = req.body.friendUsername;
+    const senderUsername = req.session.username;
+    const recipientUsername = req.body.friendUsername.trim();
     
     // Verify that the recipient username is not a noSQL injection
     const usernameSchema = Joi.string().max(20).required();
