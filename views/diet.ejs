@@ -240,6 +240,7 @@ body {
                             recipeElement.innerHTML = `
                                 <div>${formattedRecipe}</div>
                                 <button class="remove-button py-1 px-3 mt-2 rounded-full bg-red-500 text-white font-bold">Remove</button>
+                                <button class="py-1 px-3 mt-2 rounded-full bg-orange-500 text-white font-bold">Add to to-do list</button>
                             `;
                             favouriteRecipesList.appendChild(recipeElement);
                         });
@@ -293,6 +294,8 @@ body {
                             recipeElement.innerHTML = `
                                 <div>${formattedRecipe}</div>
                                 <button class="remove-todo-button py-1 px-3 mt-2 rounded-full bg-red-500 text-white font-bold">Remove</button>
+                                <button class="py-1 px-3 mt-2 rounded-full bg-green-500 text-white font-bold">Complete</button>
+
                             `;
                             todoListRecipes.appendChild(recipeElement);
                         });
