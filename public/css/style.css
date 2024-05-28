@@ -6,6 +6,8 @@
     --green: #62c370;
     --pink: #f7e1d7;
     --yellow: #f5b700;
+    /* Form controls will use dark mode on some browsers */
+    color-scheme: dark;
 }
 
 
