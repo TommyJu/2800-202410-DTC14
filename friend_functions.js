@@ -1,4 +1,4 @@
-
+const Joi = require('joi');
 module.exports = { loadFriendsPage, sendFriendRequest, acceptFriend, rejectFriend }
 
 async function loadFriendsPage(req, res, userCollection) {
@@ -33,18 +33,18 @@ async function sendFriendRequest(req, res, userCollection) {
     const usernameSchema = Joi.string().max(20).required();
     const usernameValidationResult = usernameSchema.validate(recipientUsername);
     if (usernameValidationResult.error != null) {
-        res.render("invalid_friend_request.ejs", { type: "Invalid username." });
+        res.render("./templates/friends/invalid_friend_request.ejs", { type: "Invalid username." });
         return;
     }
     const recipientInfo = await userCollection.findOne({ username: recipientUsername });
     // Verify that the recipient username exists
     if (recipientInfo == null) {
-    res.render("invalid_friend_request.ejs", { type: "User not found." });
+    res.render("./templates/friends/invalid_friend_request.ejs", { type: "User not found." });
     return;
   }
     const senderInfo = await userCollection.findOne({ username: senderUsername });
     if (!canFriendRequestBeSent(recipientInfo, senderInfo)) {
-        res.render("invalid_friend_request.ejs", { type: "Friend request cannot be sent to this user." });
+        res.render("./templates/friends/invalid_friend_request.ejs", { type: "Friend request cannot be sent to this user." });
     return;
     }
 
