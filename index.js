@@ -405,15 +405,6 @@ async function sendMessage(message) {
   }
 }
 
-// Friends page
-app.get('/friends', (req, res) => {
-  if (req.session.authenticated) {
-    res.render("friends.ejs");
-    return;
-  }
-  res.redirect("/");
-})
-
 // Profile page
 app.get('/profile', async (req, res) => {
   if (req.session.authenticated) {

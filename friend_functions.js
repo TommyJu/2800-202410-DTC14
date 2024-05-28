@@ -28,7 +28,6 @@ async function loadFriendsPage(req, res, userCollection) {
 async function sendFriendRequest(req, res, userCollection) {
     const recipientUsername = req.body.friendUsername;
   // need to catch if user DNE
-  const userCollection = await database.db(mongodb_database).collection('users');
   const recipientInfo = await userCollection.findOne({ username: recipientUsername });
   try {
     if (recipientInfo) {
