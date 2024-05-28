@@ -26,17 +26,18 @@ async function loadFriendsPage(req, res, userCollection) {
 }
 
 async function sendFriendRequest(req, res, userCollection) {
+    const senderUsername = req.body.username;
     const recipientUsername = req.body.friendUsername;
   // need to catch if user DNE
   const recipientInfo = await userCollection.findOne({ username: recipientUsername });
   try {
     if (recipientInfo) {
       // If recipient user exists, push the current user's username to their friendRequest array
-      recipientInfo.friendRequest.push(req.session.username);
+      recipientInfo.friendRequests.push(req.session.username);
       // Update the recipient user document in the database
       await userCollection.updateOne(
         { username: recipientUsername },
-        { $set: { friendRequest: recipientInfo.friendRequest } }
+        { $set: { friendRequests: recipientInfo.friendRequests } }
       );
       // Redirect to the friends page
       res.redirect('/friends');
@@ -58,7 +59,7 @@ async function acceptFriend(req, res, userCollection) {
     // updates the friend requests of requester
     await userCollection.updateOne(
       { username: requester },
-      { $pull: { friendRequest: accepter } }
+      { $pull: { friendRequests: accepter } }
     );
     // adds the requester to the accepter's friends
     await userCollection.updateOne(
@@ -68,7 +69,7 @@ async function acceptFriend(req, res, userCollection) {
     // updates the friend requests of accepter
     await userCollection.updateOne(
       { username: accepter },
-      { $pull: { friendRequest: requester } }
+      { $pull: { friendRequests: requester } }
     );
   } catch (error) {
     console.error("could not accept request(server side)", error)
@@ -83,10 +84,14 @@ async function rejectFriend(req, res, userCollection) {
     // removes the friend request of accepter
     await userCollection.updateOne(
       { username: accepter },
-      { $pull: { friendRequest: requester } }
+      { $pull: { friendRequests: requester } }
     );
   } catch (error) {
     console.error("could not reject request(server side)", error)
   }
   res.redirect("/friends");
+}
+
+async function canFriendRequestBeSent() {
+
 }
