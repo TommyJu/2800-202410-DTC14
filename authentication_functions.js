@@ -218,6 +218,13 @@ async function renderSecurityQuestion(req, res, username, userCollection) {
   user = await userCollection.findOne(
     { username: username },
     { projection: { securityQuestion: 1 } });
+
+  // User not found
+  if (!user) {
+    res.render("invalid_password_recovery.ejs", { type: "username (user not found)" });
+    return;
+  }
+
   securityQuestion = user.securityQuestion;
 
   // Render security question
