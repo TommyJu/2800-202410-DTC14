@@ -196,6 +196,11 @@ app.get('/friends', async (req, res) => {
     const userInfo = await userCollection.findOne({ username: req.session.username });
     
     let userFriends = await userCollection.find({username: { $in: userInfo.friends } }).toArray();
+    userFriends.sort((a, b) => {
+      // Total level in descending order
+      return (b.levels.game.level + b.levels.diet.level + b.levels.fitness.level) 
+      - (a.levels.game.level + a.levels.diet.level + a.levels.fitness.level)
+    })
 
     res.render("friends.ejs", {
       friends: userFriends,
