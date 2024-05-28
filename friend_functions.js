@@ -16,7 +16,7 @@ async function loadFriendsPage(req, res, userCollection) {
     
         res.render("friends.ejs", {
           friends: userFriends,
-          requests: userInfo.friendRequest
+          requests: userInfo.friendRequests
         });
         return;
       } else {
