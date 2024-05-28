@@ -5,7 +5,8 @@ module.exports = {
   addTask,
   getTasksByCategory,
   completeTask,
-  deleteTask
+  deleteTask,
+  moveTask
 }
 
 async function addTask(title, description, category, username, userCollection) {
@@ -14,7 +15,8 @@ async function addTask(title, description, category, username, userCollection) {
     _id: newTaskId,
     title: title,
     description: description,
-    category: category
+    category: category,
+    type: 'custom'
   }
 
   switch (category) {
@@ -69,11 +71,11 @@ async function getTasksByCategory(category, username, userCollection) {
 // Returns true if the task has caused the user to level up
 // Used to redirect to the level up page
 async function completeTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete) {
-  if (taskIdToDelete.type === 'custom') {
-    updateTaskType(username, userCollection, taskCategory, taskIdToDelete)
-  } else {
-    copySuggestion(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete);
-  }
+  task = await userCollection.findOne({ username: username }, { projection: { [taskCategory + 'Tasks']: { $elemMatch: { _id: new ObjectId(taskIdToDelete) } } } });
+  categoryProperty = taskCategory + 'Tasks';
+  taskGroup = task[categoryProperty];
+  console.log(taskGroup[0].type)
+  updateTaskType(username, userCollection, taskCategory, taskIdToDelete)
   await levelFunctions.isEXPGained(username, userCollection, taskCategory);
   let isLeveledUp = await levelFunctions.isLeveledUp(username, userCollection, taskCategory);
   await levelFunctions.isRankedUp(username, userCollection);
@@ -94,14 +96,14 @@ async function updateTaskType(username, userCollection, taskCategory, taskIdToDe
   }
 }
 
-async function copySuggestion(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete) {
+async function moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToMove) {
   taskCategoryProperty = taskCategory + 'Tasks';
-  const taskObjectId = new ObjectId(taskIdToDelete);
+  const taskObjectId = new ObjectId(taskIdToMove);
   console.log(suggestedActivity[0])
   try {
     await userCollection.updateOne(
       { username: username },
-      { $push: { [taskCategoryProperty]: { _id: taskObjectId, title: suggestedActivity[0].title, description: suggestedActivity[0].description, category: suggestedActivity[0].category, type: "completed" } } }
+      { $push: { [taskCategoryProperty]: { _id: taskObjectId, title: suggestedActivity[0].title, description: suggestedActivity[0].description, category: suggestedActivity[0].category, type: "custom" } } }
     )
   } catch (error) {
     console.error("Failed to copy suggestion");

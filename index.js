@@ -200,17 +200,17 @@ app.get('/game', async (req, res) => {
     //Get tasks from databse.
     tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
     const gameSuggestions = await database.db('gaming_pillar').collection('activities').find().toArray();
-    
+
     //Determine username and tag based on sessions variables.
     RiotUsername = req.session.RiotUsername;
     RiotID = req.session.RiotID;
     otherRiotUsername = req.session.otherRiotUsername;
     otherRiotID = req.session.otherRiotID;
-    
+
     //Use helper function to display stats.
     lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
     return;
-  } 
+  }
   res.redirect("/");
 })
 
@@ -220,7 +220,7 @@ app.post('/searchSummoner', async (req, res) => {
 
   var summonerUsername = req.body.summonerUsername;
   var summonerID = req.body.summonerID;
-  
+
   if (lolAPI.validateSummonerCredentials(summonerUsername, summonerID)) {
     req.session.otherRiotUsername = summonerUsername;
     req.session.otherRiotID = summonerID;
@@ -455,6 +455,17 @@ app.post('/complete_task', async (req, res) => {
   } else {
     res.redirect(req.get('referer'));
   }
+})
+
+app.post('/move_task', async (req, res) => {
+  let username = req.session.username;
+  let taskCategory = req.body.category;
+  let taskIdToDelete = req.body.taskId;
+  const taskObjectId = new ObjectId(taskIdToDelete);
+  suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
+  console.log(suggestedActivity);
+  await taskFunctions.moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete);
+  res.redirect(req.get('referer'));
 })
 
 app.get('/level_up', async (req, res) => {
