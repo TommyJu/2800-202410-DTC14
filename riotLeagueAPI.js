@@ -1,8 +1,13 @@
 const Joi = require('joi');
+const bottleneck = require('bottleneck');
 const daily_api_key = process.env.DAILY_RIOT_API_KEY;
 
+const apiReqestLimiter = new bottleneck({
+  minTime: 50
+});
+
 async function calculateWinLoss(match_ids, PUUID) {
-  const numberOfMatches = 1
+  const numberOfMatches = 1;
   const slicedMatch_ids = match_ids.slice(0, numberOfMatches);
   const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
   var wins = 0;
@@ -29,13 +34,11 @@ async function calculateWinLoss(match_ids, PUUID) {
       } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
       }
-      await delay(500);
+      await delay(50);
     };
     let decimal_places = 2;
     let winrate = (wins/numberOfMatches * 100).toFixed(decimal_places);
     let kd = (kills/deaths).toFixed(decimal_places);
-    console.log("winrate: " + winrate + "%");
-    console.log("KD:" + kd)
     return [winrate, kd];
   }
 }
@@ -57,15 +60,44 @@ async function getSummonerRank(encryptedSummonerId) {
     const dataJson = await data.json();
     console.log(dataJson);
     if (dataJson.length === 0) {
-      console.log("Currrent rank: unranked");
       return null;
     } else {
-      var tier = dataJson[0].tier;
-      var rank = dataJson[0].rank;
-      return [tier, rank];
+      return returnSummonerRank(dataJson);
     };
   } catch (error) {
     console.error('There has been a problem with your fetch operation:', error);
+  }
+};
+
+async function getSummonerWinrate(encryptedSummonerId) {
+  try {
+    const data = await fetch(`https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/${encryptedSummonerId}?api_key=${daily_api_key}`);
+    const dataJson = await data.json();
+    console.log(dataJson);
+    if (dataJson.length === 0) {
+      return null;
+    } else {
+      return returnSummonerWinrate(dataJson);
+    };
+  } catch (error) {
+    console.error('There has been a problem with your fetch operation:', error);
+  }
+};
+
+function returnSummonerWinrate(dataJson) {
+  for (let i = 0; i < dataJson.length; i++) {
+    if (dataJson[i].queueType === "RANKED_SOLO_5x5") {
+      let decimalPlaces = 2;
+      return (dataJson[i].wins / (dataJson[i].wins + dataJson[i].losses) * 100).toFixed(decimalPlaces);
+    }
+  }
+}
+
+function returnSummonerRank(dataJson) {
+  for (let i = 0; i < dataJson.length; i++) {
+    if (dataJson[i].queueType === "RANKED_SOLO_5x5") {
+      return [dataJson[i].tier, dataJson[i].rank];
+    }
   }
 };
 
@@ -73,17 +105,14 @@ async function getSummonerLevelAndID(PUUID) {
   try {
     const data = await fetch(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${PUUID}?api_key=${daily_api_key}`);
     const dataJson = await data.json();
-    console.log(dataJson);
     const encryptedSummonerId = dataJson.id;
     if (encryptedSummonerId === undefined) {
       return false;
     }
-    console.log("summonerID: " + encryptedSummonerId);
     const summonerLevel = dataJson.summonerLevel;
     if (summonerLevel === undefined) {
       return false;
     }
-    console.log("summoner level: " + summonerLevel);
     return [encryptedSummonerId, summonerLevel];
   } catch (error) {
     console.error('There has been a problem with your fetch operation:', error);
@@ -101,7 +130,6 @@ async function getRiotPUUID(user_name, user_tag) {
     if (PUUID === undefined) {
     return false;
     }
-    console.log("account_puuid:" + PUUID);
     return PUUID;
   } catch (error){
     console.error('There has been a problem with your fetch operation:', error);
@@ -228,7 +256,8 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     }
     const otherMatch_ids = await getMatchHistory(otherPUUID);
     const otherWinrateAndKD = await calculateWinLoss(otherMatch_ids, otherPUUID);
-    const otherWinrate = otherWinrateAndKD[0];
+    // const otherWinrate = otherWinrateAndKD[0];
+    const otherWinrate = await getSummonerWinrate(otherEncryptedSummonerId);
     const otherkd = otherWinrateAndKD[1];
     
     res.render("game.ejs", { 
