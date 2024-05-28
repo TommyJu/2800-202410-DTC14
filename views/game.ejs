@@ -5,7 +5,7 @@
   
   <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
   
-  <%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate, otherkd: otherkd}) %>
+  <%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate}) %>
   
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
@@ -36,9 +36,9 @@
   
   <div id="test" class="flex justify-around">
     
-    <div class="w-1/3"><%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate, kd: kd}) %></div>
+    <div class="w-1/3"><%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate}) %></div>
     
-    <div class="w-1/3"><%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate, otherkd: otherkd}) %></div>
+    <div class="w-1/3"><%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate}) %></div>
     
   </div>
   
@@ -58,7 +58,7 @@
 
   <div id="test" class="flex">
     
-    <%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate, kd: kd}) %>
+    <%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate}) %>
       
   </div>
 
