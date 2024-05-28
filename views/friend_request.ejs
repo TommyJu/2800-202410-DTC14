@@ -29,8 +29,10 @@
                                 <%= request %>
                             </div>
                             <div class="flex flex-col px-2">
-                                <button onclick="acceptFriend('<%= request %>')">yes</button>
-                                <button onclick="rejectFriend('<%= request %>')">No</button>
+                                <form action="" method="post">
+                                    <button onclick="acceptFriend('<%= request %>')">yes</button>
+                                    <button onclick="rejectFriend('<%= request %>')">No</button>
+                                </form>
                             </div>
                         </div>
                         <% }); %>
