@@ -244,8 +244,8 @@ app.get('/friendRequest', async (req, res) => {
 })
 
 // method to accept friend 
-app.post('/acceptFriend', async (req, res) => {
-  const requester = req.body.requestedFriend;
+app.post('/acceptFriend/:friendName', async (req, res) => {
+  const requester = req.params.friendName;
   const accepter = req.session.username;
   const userCollection = await database.db(mongodb_database).collection('users');
   // const recipientInfo = await userCollection.findOne({ username: req.session.username });
@@ -273,6 +273,7 @@ app.post('/acceptFriend', async (req, res) => {
   } catch (error) {
     console.error("could not accept request(server side)", error)
   }
+  res.redirect("/friends");
 
 })
 

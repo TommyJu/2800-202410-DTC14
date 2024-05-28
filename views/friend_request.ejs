@@ -29,10 +29,10 @@
                                 <%= request %>
                             </div>
                             <div class="flex flex-col px-2">
-                                <form action="acceptFriend" method="post">
+                                <form action="/acceptFriend/<%= request %>" method="post">
                                     <button type="submit">yes</button>
                                 </form>
-                                <form action="rejectFriend" method="post">
+                                <form action="/rejectFriend" method="post">
                                     <button type="submit">No</button>
                                 </form>
                             </div>
