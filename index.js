@@ -198,8 +198,8 @@ app.get('/friends', async (req, res) => {
     let userFriends = await userCollection.find({username: { $in: userInfo.friends } }).toArray();
 
     res.render("friends.ejs", {
-      username: req.session.username,
-      friends: userFriends
+      friends: userFriends,
+      requests: userInfo.friendRequest
     });
     return;
   } else {

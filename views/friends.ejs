@@ -2,14 +2,14 @@
     <div id="friendPage">
         <div id="friendAddBar">
             <form id="friendAdd" method="post" action="/addFriend">
-                <h3>hi
-                    <% username %>
-                        Add a Friend
+                <h3 class="text-4xl">
+                    Friends
                 </h3>
                 <input name="friendUsername" type="text" placeholder="Friend's Username">
                 <button type="submit">add friend</button>
             </form>
         </div>
+    <%- include("templates/friends/friend_request", {requests: requests}) %>
     <%- include("templates/friends/friend_card_container", {friends: friends}) %>
 </div>
 
