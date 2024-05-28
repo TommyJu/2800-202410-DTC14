@@ -112,7 +112,8 @@ async function submitUser(
     },
     rank: "unranked",
     achievements: [],
-    friends: []
+    friends: [],
+    friendReqests: []
   });
 
   req.session.authenticated = true;
