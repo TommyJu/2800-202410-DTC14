@@ -186,7 +186,6 @@ app.get('/weather', async (req, res) => {
   }
   weather.getWeather(url, res)
 });
-
 // Freinds
 app.get('/friends', async (req, res) => {
   const userCollection = await database.db(mongodb_database).collection('users');
@@ -316,7 +315,6 @@ app.post('/rejectFriend/:friendName', async (req, res) => {
   }
   res.redirect("/friendRequest");
 })
-
 // Log out
 app.get('/logout', async (req, res) => {
   const userCollection = database.db(mongodb_database).collection('users')
@@ -331,17 +329,17 @@ app.get('/game', async (req, res) => {
     //Get tasks from databse.
     tasks = await taskFunctions.getTasksByCategory("game", req.session.username, userCollection);
     const gameSuggestions = await database.db('gaming_pillar').collection('activities').find().toArray();
-    
+
     //Determine username and tag based on sessions variables.
     RiotUsername = req.session.RiotUsername;
     RiotID = req.session.RiotID;
     otherRiotUsername = req.session.otherRiotUsername;
     otherRiotID = req.session.otherRiotID;
-    
+
     //Use helper function to display stats.
     lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
     return;
-  } 
+  }
   res.redirect("/");
 })
 
@@ -351,7 +349,7 @@ app.post('/searchSummoner', async (req, res) => {
 
   var summonerUsername = req.body.summonerUsername;
   var summonerID = req.body.summonerID;
-  
+
   if (lolAPI.validateSummonerCredentials(summonerUsername, summonerID)) {
     req.session.otherRiotUsername = summonerUsername;
     req.session.otherRiotID = summonerID;
@@ -437,6 +435,7 @@ app.get('/get_allergies', async (req, res) => {
 
 app.post('/favouriteRecipe', async (req, res) => {
   const recipe = req.body.recipe;
+
   try {
     await userCollection.findOneAndUpdate(
       { username: req.session.username },
@@ -474,7 +473,9 @@ app.get('/favouriteRecipes', async (req, res) => {
 });
 
 app.post('/removeFavouriteRecipe', async (req, res) => {
-  const recipe = lineBreaks(req.body.recipe);
+  const recipe = linkeBreaks(req.body.recipe);
+
+
   try {
     const result = await userCollection.updateOne(
       { username: req.session.username },
@@ -487,6 +488,66 @@ app.post('/removeFavouriteRecipe', async (req, res) => {
   } catch (error) {
     console.error('Error removing recipe:', error.message);
     res.status(500).json({ error: 'Failed to remove recipe' });
+  }
+});
+
+app.post('/addToDo', async (req, res) => {
+  const recipe = lineBreaks(req.body.recipe);
+  let recipeArray = recipe.split('\n');
+  if (recipeArray[0].includes('Here')) {
+    recipeTitle = recipeArray[2];
+    recipeArray.shift();
+    recipeArray.shift();
+    recipeArray.shift();
+  } else if (recipeArray[0].includes('Ingredients')) {
+    recipeTitle = "Untitled Recipe"
+  }
+  else {
+    recipeTitle = recipeArray[0];
+    recipeArray.shift();
+  }
+  recipeDescription = recipeArray.join('\n');
+  try {
+    await userCollection.findOneAndUpdate(
+      { username: req.session.username },
+      { $push: { dietTasks: { _id: new ObjectId(), title: recipeTitle, description: recipeDescription, category: "diet", type: 'custom' } } },
+      { upsert: true });
+  } catch (error) {
+    console.error('Error adding recipe to diet tasks:', error.message);
+  }
+});
+
+app.get('/getToDo', async (req, res) => {
+  try {
+    const user = await userCollection.findOne(
+      { username: req.session.username },
+      { projection: { dietTasks: 1, _id: 0 } }
+    );
+    if (user && user.dietTasks.length > 0) {
+      res.json({ success: true, dietTasks: user.dietTasks });
+    } else {
+      res.json({ success: false, message: 'No to-do list recipes found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving to-do list:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve to-do list' });
+  }
+});
+
+app.post('/removeToDo', async (req, res) => {
+  const recipe = lineBreaks(req.body.recipe);
+  try {
+    const result = await userCollection.updateOne(
+      { username: req.session.username },
+      { $pull: { dietToDo: recipe } }
+    );
+    if (result.modifiedCount === 0) {
+      throw new Error('Recipe not found or not removed');
+    }
+    res.json({ success: true, message: 'Recipe removed from to-do list' });
+  } catch (error) {
+    console.error('Error removing recipe from to-do list:', error.message);
+    res.status(500).json({ error: 'Failed to remove recipe from to-do list' });
   }
 });
 
@@ -562,15 +623,28 @@ app.post('/delete_task', async (req, res) => {
   let username = req.session.username;
   let taskCategory = req.body.category;
   let taskIdToDelete = req.body.taskId;
+  console.log(`I'm deleting task ${taskIdToDelete}`)
   await taskFunctions.deleteTask(username, userCollection, taskCategory, taskIdToDelete)
 
   res.redirect(req.get('referer'));
 })
 
-// Completed task page
-app.get('/completed', async (req, res) => {
+// Completed game task page
+app.get('/game_completed', async (req, res) => {
   username = req.session.username;
-  res.render("completed.ejs", { username: username });
+  res.render("game_completed.ejs", { username: username });
+});
+
+// Completed diet task page
+app.get('/diet_completed', async (req, res) => {
+  username = req.session.username;
+  res.render("diet_completed.ejs", { username: username });
+});
+
+// Completed fitness task page
+app.get('/fitness_completed', async (req, res) => {
+  username = req.session.username;
+  res.render("fitness_completed.ejs", { username: username });
 });
 
 app.post('/complete_task', async (req, res) => {
@@ -579,13 +653,24 @@ app.post('/complete_task', async (req, res) => {
   let taskIdToDelete = req.body.taskId;
   const taskObjectId = new ObjectId(taskIdToDelete);
   suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
-  console.log(suggestedActivity);
   let isLeveledUp = await taskFunctions.completeTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete);
   if (isLeveledUp) {
     res.redirect(`/level_up?category=${taskCategory}`);
   } else {
     res.redirect(req.get('referer'));
   }
+})
+
+app.post('/move_task', async (req, res) => {
+  let username = req.session.username;
+  let taskCategory = req.body.category;
+  let taskIdToDelete = req.body.taskId;
+  let taskTitle = req.body.title;
+  let taskDescription = req.body.description;
+  const taskObjectId = new ObjectId(taskIdToDelete);
+  suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
+  await taskFunctions.moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete, taskTitle, taskDescription);
+  res.redirect(req.get('referer'));
 })
 
 app.get('/level_up', async (req, res) => {
