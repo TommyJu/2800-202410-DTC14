@@ -14,6 +14,8 @@
     background-position: center;
     background-repeat: none;
     background-size: cover;
+    width: 100%;
+    min-height: 100%;
 }
 
 #donut-chart-container {

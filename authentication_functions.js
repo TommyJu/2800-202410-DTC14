@@ -13,10 +13,10 @@ async function submitUser(
   email, password,
   securityQuestion, securityAnswer,
   RiotUsername, RiotID) {
-  const usernameSchema = Joi.string().max(20).required();
+  const usernameSchema = Joi.string().max(20).alphanum().required();
   const emailSchema = Joi.string().max(40).required();
-  const passwordSchema = Joi.string().max(20).required();
-  const securityAnswerSchema = Joi.string().max(20).required();
+  const passwordSchema = Joi.string().max(20).alphanum().required();
+  const securityAnswerSchema = Joi.string().max(20).alphanum().required();
   const RiotUsernameSchema = Joi.string().min(3).max(16).alphanum().allow("").optional();
   const RiotIDSchema = Joi.string().min(3).max(5).alphanum().allow("").optional();
 
@@ -126,8 +126,8 @@ async function submitUser(
 }
 
 async function logInUser(req, res, username, password, userCollection) {
-  const usernameSchema = Joi.string().max(20).required();
-  const passwordSchema = Joi.string().max(20).required();
+  const usernameSchema = Joi.string().max(20).alphanum().required();
+  const passwordSchema = Joi.string().max(20).alphanum().required();
 
   // username verification
   const usernameValidationResult = usernameSchema.validate(username);
@@ -177,9 +177,9 @@ async function resetPassword(req, res, username, securityAnswer, newPassword, us
     { username: username },
     { projection: { securityAnswer: 1 } });
 
-  const newPasswordSchema = Joi.string().max(20).required();
+  const newPasswordSchema = Joi.string().max(20).alphanum().required();
   const newPasswordValidationResult = newPasswordSchema.validate(newPassword);
-  const securityAnswerSchema = Joi.string().max(20).required();
+  const securityAnswerSchema = Joi.string().max(20).alphanum().required();
   const securityAnswerValidationResult = securityAnswerSchema.validate(securityAnswer);
 
   if (newPasswordValidationResult.error != null) {
@@ -209,7 +209,7 @@ async function resetPassword(req, res, username, securityAnswer, newPassword, us
 }
 
 async function renderSecurityQuestion(req, res, username, userCollection) {
-  const usernameSchema = Joi.string().max(20).required();
+  const usernameSchema = Joi.string().max(20).alphanum().required();
   const usernameValidationResult = usernameSchema.validate(username);
 
   if (usernameValidationResult.error != null) {
