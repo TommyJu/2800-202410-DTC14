@@ -116,13 +116,24 @@ async function moveTask(username, userCollection, suggestedActivity, taskCategor
     } else {
       selectedActivity = gamingActivity[0];
     }
-    try {
-      await userCollection.updateOne(
-        { username: username },
-        { $push: { [taskCategoryProperty]: { _id: new ObjectId(), title: selectedActivity.title, description: selectedActivity.description, category: selectedActivity.category, type: "custom" } } }
-      )
-    } catch (error) {
-      console.error("Failed to copy suggestion");
+    if (selectedActivity.rankToReach) {
+      try {
+        await userCollection.updateOne(
+          { username: username },
+          { $push: { [taskCategoryProperty]: { _id: new ObjectId(), title: selectedActivity.title, description: selectedActivity.description, category: selectedActivity.category, type: "custom", rankToReach: selectedActivity.rankToReach } } }
+        )
+      } catch (error) {
+        console.error("Failed to copy suggestion");
+      }
+    } else {
+      try {
+        await userCollection.updateOne(
+          { username: username },
+          { $push: { [taskCategoryProperty]: { _id: new ObjectId(), title: selectedActivity.title, description: selectedActivity.description, category: selectedActivity.category, type: "custom" } } }
+        )
+      } catch (error) {
+        console.error("Failed to copy suggestion");
+      }
     }
   }
 }
