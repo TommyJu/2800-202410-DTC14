@@ -640,6 +640,17 @@ app.post('/complete_task', async (req, res) => {
   }
 })
 
+app.post('/move_task', async (req, res) => {
+  let username = req.session.username;
+  let taskCategory = req.body.category;
+  let taskIdToDelete = req.body.taskId;
+  const taskObjectId = new ObjectId(taskIdToDelete);
+  suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
+  console.log(suggestedActivity);
+  await taskFunctions.moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete);
+  res.redirect(req.get('referer'));
+})
+
 app.get('/level_up', async (req, res) => {
   let taskCategory = req.query.category;
   // Fetch the user using the corresponding task category
@@ -655,6 +666,17 @@ app.get('/level_up', async (req, res) => {
   } catch (error) {
     console.error("Failed to fetch user on level up");
   }
+
+  app.post('/move_task', async (req, res) => {
+    let username = req.session.username;
+    let taskCategory = req.body.category;
+    let taskIdToDelete = req.body.taskId;
+    const taskObjectId = new ObjectId(taskIdToDelete);
+    suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
+    console.log(suggestedActivity);
+    await taskFunctions.moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete);
+    res.redirect(req.get('referer'));
+  })
 
   // can check for and add new achievements here, but first let's create the achievement ejs
   let achievementTitles = achievementFunctions.checkForAchievements(
