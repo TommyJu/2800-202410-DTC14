@@ -1,20 +1,18 @@
-<h5 class="font-bold pb-5">Your Stats</h5>
-
-<div id="user" class="flex justify-between min-w-1/3">
-  <img id="userRankIcon" class="w-40 h-40"  src="./images/lolRanks/<%=rank[0]%>.webp" alt="">
-
-  <div id="userStats" class="flex flex-col justify-center gap-2">
-    <div>
-      <span class="font-bold">Summoner Level:</span> <%= level %>
-    </div>
-    <div>
-      <span class="font-bold">Current rank:</span> <%= rank[0] %> <%= rank[1] %>
-    </div>
-    <div>
-      <span class="font-bold">Winrate:</span> <%= winrate %> %
-    </div>
-    <div>
-      <span class="font-bold">KD Ratio:</span> <%= kd %>
+<div id="userStatsCard" class="flex flex-col">
+  <h5 class="font-bold pb-5">Your Stats</h5>
+  <div id="stats" class="flex justify-between min-w-1/3">
+    <img id="userRankIcon" class="w-40 h-40"  src="./images/lolRanks/<%=rank[0]%>.webp" alt="">
+  
+    <div id="userStats" class="flex flex-col justify-center gap-2">
+      <div>
+        <span class="font-bold">Summoner Level:</span> <%= level %>
+      </div>
+      <div>
+        <span class="font-bold">Current rank:</span> <%= rank[0] %> <%= rank[1] %>
+      </div>
+      <div>
+        <span class="font-bold">Winrate:</span> <%= winrate %> %
+      </div>
     </div>
   </div>
 </div>
