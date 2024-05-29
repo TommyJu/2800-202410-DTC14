@@ -198,6 +198,16 @@ app.post('/addFriend', async (req, res) => {
   friendFunctions.sendFriendRequest(req, res, userCollection);
 })
 
+// method to delete a frirend
+app.post('/deleteFriend/:friendName', async (req, res) => {
+  friendFunctions.deleteFriend(req, res, userCollection);
+})
+
+// method to display searched friend
+app.post('/searchFriend/:friendName', async (req, res) => {
+
+})
+
 // method to accept friend 
 app.post('/acceptFriend/:friendName', async (req, res) => {
   friendFunctions.acceptFriend(req, res, userCollection);

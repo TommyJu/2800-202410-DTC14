@@ -1,5 +1,5 @@
 const Joi = require('joi');
-module.exports = { loadFriendsPage, sendFriendRequest, acceptFriend, rejectFriend }
+module.exports = { loadFriendsPage, sendFriendRequest, acceptFriend, rejectFriend, deleteFriend, captureText}
 
 async function loadFriendsPage(req, res, userCollection) {
     if (req.session.authenticated) {
@@ -120,4 +120,28 @@ async function rejectFriend(req, res, userCollection) {
         console.error("could not reject request(server side)", error)
     }
     res.redirect("/friends");
+}
+
+async function deleteFriend(req, res, userCollection) {
+    const toDelete = req.params.friendName;
+    const currentUser = req.session.username;
+    try {
+        // removes friend toDelete from current user
+        await userCollection.updateOne(
+            { username: currentUser },
+            { $pull: { friends: toDelete } }
+        );
+        // removes friend currentUser from toDelete
+        await userCollection.updateOne(
+            { username: toDelete },
+            { $pull: { friends: currentUser } }
+        );
+    } catch (error) {
+        console.error("could not delete friend(server side)", error)
+    }
+    res.redirect("/friends");
+}
+
+async function captureText() {
+
 }

@@ -23,5 +23,10 @@
                 <div class="bg-red-600 h-2.5 rounded-full" style="width: <%= (fitnessLevel / 15) * 100 %>%"></div>
             </div>
         </div>
+        <div>
+            <form action="/deleteFriend/<%= username %>" method="post">
+                <button type="submit">delete</button>
+            </form>
+        </div>
     </div>
 </div>
