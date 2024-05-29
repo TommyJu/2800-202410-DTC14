@@ -1,5 +1,4 @@
 #friendPage {
-    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 100px;
@@ -15,8 +14,8 @@
     background-position: center;
     background-repeat: none;
     background-size: cover;
-    /* Protects page from collapsing if no friend cards present */
-    min-height: 1200px;
+    width: 100%;
+    height: 100%;
 }
 
 .friendCardContainer {
