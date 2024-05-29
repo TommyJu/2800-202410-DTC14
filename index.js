@@ -227,6 +227,11 @@ app.post('/searchFriends/display', async (req, res) => {
   friendFunctions.searchFriendDisplay(req, res);
 })
 
+// method to clear search result
+app.post('/searchFriends/clear', async (req, res) => {
+  friendFunctions.searchFriendClear(req, res);
+})
+
 // method to accept friend 
 app.post('/acceptFriend/:friendName', async (req, res) => {
   friendFunctions.acceptFriend(req, res, userCollection);

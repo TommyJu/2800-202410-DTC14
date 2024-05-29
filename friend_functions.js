@@ -1,5 +1,5 @@
 const Joi = require('joi');
-module.exports = { loadFriendsPage, loadFriendsPageWithRequestSearch, loadFriendsPageWithFriendSearch,searchFriendRequest , searchFriendDisplay, sendFriendRequest, acceptFriend, rejectFriend, deleteFriend, captureText}
+module.exports = { loadFriendsPage, loadFriendsPageWithRequestSearch, loadFriendsPageWithFriendSearch,searchFriendRequest , searchFriendDisplay, sendFriendRequest, searchFriendClear, acceptFriend, rejectFriend, deleteFriend, captureText}
 
 async function loadFriendsPage(req, res, userCollection, friendFunctions) {
     if (req.session.authenticated) {
@@ -106,6 +106,10 @@ async function searchFriendDisplay(req, res) {
   }
   const redirectLink = '/friends?type=display&searched=' + searchedUsername;
   res.redirect( redirectLink);
+}
+
+function searchFriendClear(req, res) {
+    res.redirect('/friends');
 }
 
 async function sendFriendRequest(req, res, userCollection) {
