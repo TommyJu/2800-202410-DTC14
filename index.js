@@ -127,13 +127,13 @@ app.get('/signup', (req, res) => {
 
 // Submit new user to database and validate inputs
 app.post('/submitUser', async (req, res) => {
-  var username = req.body.username;
-  var email = req.body.email;
-  var password = req.body.password;
+  var username = req.body.username.trim();
+  var email = req.body.email.trim();
+  var password = req.body.password.trim();
   var securityQuestion = req.body.securityQuestion;
-  var securityAnswer = req.body.securityAnswer
-  var RiotUsername = req.body.RiotUsername;
-  var RiotID = req.body.RiotID;
+  var securityAnswer = req.body.securityAnswer.trim();
+  var RiotUsername = req.body.RiotUsername.trim();
+  var RiotID = req.body.RiotID.trim();
 
   await authenticationFunctions.submitUser(
     req, res,
@@ -150,8 +150,8 @@ app.get('/login', (req, res) => {
 
 // Log in submission and verification
 app.post('/loggingin', async (req, res) => {
-  var username = req.body.username;
-  var password = req.body.password;
+  var username = req.body.username.trim();
+  var password = req.body.password.trim();
 
   await authenticationFunctions.logInUser(req, res, username, password, userCollection);
 });
@@ -161,16 +161,16 @@ app.get('/password_recovery', (req, res) => {
 })
 
 app.post('/security_question', async (req, res) => {
-  username = req.body.username;
+  username = req.body.username.trim();
   await authenticationFunctions.renderSecurityQuestion(req, res, username, userCollection);
 
 })
 
 app.post('/password_reset', async (req, res) => {
   // Validate new password and security answer input
-  username = req.body.username;
-  securityAnswer = req.body.securityAnswer;
-  newPassword = req.body.newPassword;
+  username = req.body.username.trim();
+  securityAnswer = req.body.securityAnswer.trim();
+  newPassword = req.body.newPassword.trim();
 
   await authenticationFunctions.resetPassword(req, res, username, securityAnswer, newPassword, userCollection);
 })
