@@ -183,6 +183,20 @@ async function getSummonerStats(riotUsername, riotID) {
 
 };
 
+function renderCaseBaseCase (res, tasks, gamingSuggestions, summonerLevel, summonerRank, winrate) {
+  res.render("game.ejs", { 
+    tasks: tasks, 
+    gamingSuggestions: gamingSuggestions,
+    level: summonerLevel, 
+    rank: summonerRank, 
+    winrate: winrate, 
+    noRiot: "", 
+    noSummoner: "No summoner credentials provided. Cannot display other summoner stats.",
+    additionalSummoner: "", 
+  });
+  return;
+}
+
 function renderCaseNoRiotNoSearch (res, tasks, gamingSuggestions) {
   res.render("game.ejs", { 
     tasks: tasks, 
@@ -220,7 +234,6 @@ function renderCaseNoRiotValidSearch (res, tasks, gamingSuggestions, otherSummon
 };
 
 async function displayStatsNoRiotCases (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
-  
   if (!(riotCredentialsExist(RiotUsername, RiotID)) && (riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const otherSummonerStats = await getSummonerStats(otherRiotUsername, otherRiotID);
     console.log(otherSummonerStats);
@@ -243,11 +256,27 @@ async function displayStatsNoRiotCases (res, RiotUsername, RiotID, tasks, otherR
   }
 };
 
+async function displayStatsBaseCase (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
+  if ((riotCredentialsExist(RiotUsername, RiotID)) && (!riotCredentialsExist(otherRiotUsername, otherRiotID))) {
+    const userStats = await getSummonerStats(RiotUsername, RiotID);
+    console.log(userStats);
+    console.log('here2')
+    if (userStats === false) {
+      renderCaseNoRiotInvalidSearch(res, tasks, gamingSuggestions);
+      return;
+    } else {
+      summonerLevel = userStats[0];
+      summonerRank = verifyLeagueRank(userStats[1]);
+      winrate = userStats[2];
+      renderCaseBaseCase(res, tasks, gamingSuggestions, summonerLevel, summonerRank, winrate);
+      return;
+    };
+  };
+};
+
 async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
   
   displayStatsNoRiotCases(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions);
-
-
 
   if (riotCredentialsExist(RiotUsername, RiotID) && (!(otherRiotUsername === undefined) || !(otherRiotID === undefined))) {
     const PUUID = await getRiotPUUID(RiotUsername, RiotID);
@@ -313,32 +342,7 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
     return;
   };
 
-  // const PUUID = await getRiotPUUID(RiotUsername, RiotID);
-  // const summonerDetails = await getSummonerLevelAndID(PUUID);
-  // const summonerLevel = summonerDetails[1];
-  // const encryptedSummonerId = summonerDetails[0];
-  // const summonerRank = await getSummonerRank(encryptedSummonerId);
-  // if (summonerRank === null) {
-  //   var rank = ["UNRANKED"];
-  // } else {
-  //   var rank = summonerRank;
-  // }
-  // const match_ids = await getMatchHistory(PUUID);
-  // const winrateAndKD = await calculateWinLoss(match_ids, PUUID);
-  // const winrate = winrateAndKD[0];
-  // const kd = winrateAndKD[1];
-  // res.render("game.ejs", { 
-  //   tasks: tasks, 
-  //   gamingSuggestions: gamingSuggestions,
-  //   level: summonerLevel, 
-  //   rank: rank, 
-  //   winrate: winrate, 
-  //   kd: kd, 
-  //   noRiot: "", 
-  //   noSummoner: "No summoner credentials provided. Cannot display other summoner stats.",
-  //   additionalSummoner: "", 
-  // });
-  // return;
+  displayStatsBaseCase(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions);
 };
 
 //Exporting my API logic functions so they may be used in the index.js file.
