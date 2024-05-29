@@ -5,20 +5,21 @@ const expireTime = 1 * 60 * 60 * 1000; // one hour expiry time
 const lolAPI = require('./riotLeagueAPI.js');
 const { get } = require('http');
 
-module.exports = { submitUser, logInUser, resetPassword, renderSecurityQuestion};
+module.exports = { submitUser, logInUser, resetPassword, renderSecurityQuestion };
 
 async function submitUser(
   req, res,
   username, userCollection,
   email, password,
   securityQuestion, securityAnswer,
-  RiotUsername, RiotID) {
-  const usernameSchema = Joi.string().max(20).alphanum().required();
+  RiotUsername, RiotID, city) {
+  const usernameSchema = Joi.string().max(20).required();
   const emailSchema = Joi.string().max(40).required();
   const passwordSchema = Joi.string().max(20).required();
   const securityAnswerSchema = Joi.string().max(20).alphanum().required();
   const RiotUsernameSchema = Joi.string().min(3).max(16).alphanum().allow("").optional();
   const RiotIDSchema = Joi.string().min(3).max(5).alphanum().allow("").optional();
+  const citySchema = Joi.string().min(3).alphanum().allow("").optional();
 
   // Username verification
   const usernameValidationResult = usernameSchema.validate(username);
@@ -65,8 +66,14 @@ async function submitUser(
     res.render("invalid_sign_up.ejs", { type: "Riot ID" })
     return;
   }
-  
-  if ((await lolAPI.getRiotPUUID(RiotUsername, RiotID) === false) && (RiotUsername != "" && RiotID != "")){
+
+  const cityValidationResult = citySchema.validate(city);
+  if (cityValidationResult.error != null) {
+    res.render("invalid_sign_up.ejs", { type: "city" })
+    return;
+  }
+
+  if ((await lolAPI.getRiotPUUID(RiotUsername, RiotID) === false) && (RiotUsername != "" && RiotID != "")) {
     console.log("Riot account does not exists lil bro.")
     res.render("invalid_sign_up.ejs", { type: "Riot account does not exist lil bro." })
     return;
@@ -112,6 +119,7 @@ async function submitUser(
     },
     rank: "unranked",
     achievements: [],
+    city: city,
     friends: [],
     friendRequests: []
   });
@@ -161,8 +169,8 @@ async function logInUser(req, res, username, password, userCollection) {
       req.session.RiotUsername = result[0].in_game_name;
     }
     if (!(result[0].RiotID == null)) {
-        req.session.RiotID= result[0].RiotID;
-      }  
+      req.session.RiotID = result[0].RiotID;
+    }
     res.redirect('/');
     return;
   }

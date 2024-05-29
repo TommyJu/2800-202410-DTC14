@@ -134,13 +134,14 @@ app.post('/submitUser', async (req, res) => {
   var securityAnswer = req.body.securityAnswer.trim();
   var RiotUsername = req.body.RiotUsername.trim();
   var RiotID = req.body.RiotID.trim();
+  var city = req.body.city.trim();
 
   await authenticationFunctions.submitUser(
     req, res,
     username, userCollection,
     email, password,
     securityQuestion, securityAnswer,
-    RiotUsername, RiotID);
+    RiotUsername, RiotID, city);
 });
 
 // Log in page -------------------------------
@@ -193,11 +194,11 @@ app.get('/friends', async (req, res) => {
   const type = req.query.type;
   const searched = req.query.searched;
   // no param case
-  if(!type || !searched) {
+  if (!type || !searched) {
     return friendFunctions.loadFriendsPage(req, res, userCollection, friendFunctions);
   }
   //param case
-  if(type == "requests") {
+  if (type == "requests") {
     return friendFunctions.loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched);
   } else if (type == "display") {
     return friendFunctions.loadFriendsPageWithFriendSearch(req, res, userCollection, friendFunctions, searched);
