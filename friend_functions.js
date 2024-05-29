@@ -25,7 +25,7 @@ async function loadFriendsPage(req, res, userCollection, friendFunctions) {
     }
 }
 
-async function loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched, type) {
+async function loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched) {
     if (req.session.authenticated) {
         // if logged in
         // gets user from DB based on session username
