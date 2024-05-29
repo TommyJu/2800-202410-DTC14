@@ -58,7 +58,7 @@
   completeButtons = document.getElementsByClassName("completeButton")
   moveButtons = document.getElementsByClassName("moveButton")
 
-  if (document.URL.includes("fitness" || "game" || "diet")) {
+  if ((document.URL.includes("fitness")) || (document.URL.includes("game")) || (document.URL.includes("diet"))) {
     for (let i = 0; i < deleteButtons.length; i++) {
       if (deleteButtons[i].name == "suggestion") {
         deleteButtons[i].classList.add("hidden")

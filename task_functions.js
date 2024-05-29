@@ -96,7 +96,7 @@ async function updateTaskType(username, userCollection, taskCategory, taskIdToDe
   }
 }
 
-async function moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToMove, taskTitle, taskDescription) {
+async function moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToMove, taskTitle, taskDescription, gamingActivity) {
   taskCategoryProperty = taskCategory + 'Tasks';
   const taskObjectId = new ObjectId(taskIdToMove);
   console.log(suggestedActivity[0])
@@ -111,10 +111,15 @@ async function moveTask(username, userCollection, suggestedActivity, taskCategor
     }
     return;
   } else {
+    if (suggestedActivity[0]) {
+      selectedActivity = suggestedActivity[0];
+    } else {
+      selectedActivity = gamingActivity[0];
+    }
     try {
       await userCollection.updateOne(
         { username: username },
-        { $push: { [taskCategoryProperty]: { _id: new ObjectId(), title: suggestedActivity[0].title, description: suggestedActivity[0].description, category: suggestedActivity[0].category, type: "custom" } } }
+        { $push: { [taskCategoryProperty]: { _id: new ObjectId(), title: selectedActivity.title, description: selectedActivity.description, category: selectedActivity.category, type: "custom" } } }
       )
     } catch (error) {
       console.error("Failed to copy suggestion");

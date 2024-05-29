@@ -10,7 +10,7 @@
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
   
-  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED']}) %>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED'], category: 'game'}) %>
   
   <%- include("templates/easter_footer.ejs") %>
   
@@ -25,7 +25,7 @@
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
   
-  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED']}) %>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED'], category: 'game'}) %>
     
   <%- include("templates/easter_footer.ejs") %>
 
@@ -48,7 +48,7 @@
   <!-- Parameter determines default selected dropdown category for modal -->
   <%- include("templates/task_modal.ejs", {category: 'game'}) %>
 
-  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank}) %>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank, category: 'game'}) %>
 
   <%- include("templates/easter_footer.ejs") %>
 
@@ -65,10 +65,21 @@
   <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
   
   <!-- Parameter determines default selected dropdown category for modal -->
-  <%- include("templates/task_modal.ejs", {category: 'game'}) %>
+  <div class="flex place-content-between">
+    <a href="/game_completed"
+        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        type="button">
+        Completed Tasks
+    </a>
+    <%- include("templates/task_modal.ejs", {category: 'game' }) %>
+  </div>
+  
+  <h3 class="text-xl font-bold bg-red-500 text-white rounded-lg p-1 w-fit">To Do List</h3>
+  <%- include("templates/task_cards_container.ejs", {tasks: tasks, activities: gamingSuggestions, type:'custom'}) %>
 
-  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank}) %>
+  <h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit"> Suggested Tasks</h3>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank, category: 'game'}) %>
 
-  <%- include("templates/easter_footer.ejs") %>
+  <%- include("templates/footer.ejs") %>
 
 <% } %>

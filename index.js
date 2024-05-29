@@ -655,7 +655,8 @@ app.post('/complete_task', async (req, res) => {
   let taskIdToDelete = req.body.taskId;
   const taskObjectId = new ObjectId(taskIdToDelete);
   suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
-  let isLeveledUp = await taskFunctions.completeTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete);
+  gamingActivity = await database.db('gaming_pillar').collection('activities').find(taskObjectId).toArray();
+  let isLeveledUp = await taskFunctions.completeTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete, gamingActivity);
   if (isLeveledUp) {
     res.redirect(`/level_up?category=${taskCategory}`);
   } else {
@@ -671,7 +672,8 @@ app.post('/move_task', async (req, res) => {
   let taskDescription = req.body.description;
   const taskObjectId = new ObjectId(taskIdToDelete);
   suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
-  await taskFunctions.moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete, taskTitle, taskDescription);
+  gamingActivity = await database.db('gaming_pillar').collection('activities').find(taskObjectId).toArray();
+  await taskFunctions.moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete, taskTitle, taskDescription, gamingActivity);
   res.redirect(req.get('referer'));
 })
 
