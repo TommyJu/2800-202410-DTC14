@@ -59,13 +59,15 @@
                     class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
                 <label for="RiotUsername" class="sr-only">Riot Username:</label>
                 <input type="text" id="RiotUsername" name="RiotUsername" placeholder="Riot Username"
-                    class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full" minlength="3" maxlength="16">
+                    class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full" 
+                    minlength="3" maxlength="16" pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed">
             </div>
             <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
                 <img src="riot.png" alt="ID Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
                 <label for="RiotID" class="sr-only">Riot ID:</label>
                 <input type="text" id="RiotID" name="RiotID" placeholder="Riot ID"
-                    class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full" minlength="3" maxlength="5">
+                    class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full" 
+                    minlength="3" maxlength="5" pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed">
             </div>
 
             <input
