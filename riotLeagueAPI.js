@@ -219,16 +219,11 @@ async function displayStatsNoRiotCases (res, RiotUsername, RiotID, tasks, otherR
 async function displayStatsBaseCase (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
   if ((riotCredentialsExist(RiotUsername, RiotID)) && (!riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const userStats = await getSummonerStats(RiotUsername, RiotID);
-    if (userStats === false) {
-      renderCaseNoRiotInvalidSearch(res, tasks, gamingSuggestions);
-      return;
-    } else {
-      summonerLevel = userStats[0];
-      summonerRank = verifyLeagueRank(userStats[1]);
-      winrate = userStats[2];
-      renderCaseBaseCase(res, tasks, gamingSuggestions, summonerLevel, summonerRank, winrate);
-      return;
-    };
+    summonerLevel = userStats[0];
+    summonerRank = verifyLeagueRank(userStats[1]);
+    winrate = userStats[2];
+    renderCaseBaseCase(res, tasks, gamingSuggestions, summonerLevel, summonerRank, winrate);
+    return;
   };
 };
 
