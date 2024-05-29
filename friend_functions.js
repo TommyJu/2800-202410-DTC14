@@ -1,5 +1,5 @@
 const Joi = require('joi');
-module.exports = { loadFriendsPage, loadFriendsPageWithRequestSearch, loadFriendsPageWithFriendSearch, sendFriendRequest, acceptFriend, rejectFriend, deleteFriend, captureText}
+module.exports = { loadFriendsPage, loadFriendsPageWithRequestSearch, loadFriendsPageWithFriendSearch,searchFriendRequest , searchFriendDisplay, sendFriendRequest, acceptFriend, rejectFriend, deleteFriend, captureText}
 
 async function loadFriendsPage(req, res, userCollection, friendFunctions) {
     if (req.session.authenticated) {
@@ -76,6 +76,36 @@ async function loadFriendsPageWithFriendSearch(req, res, userCollection, friendF
         // not logged in
         res.render("home_logged_out.ejs");
     }
+}
+
+async function searchFriendRequest(req, res) {
+    
+    const searchedUsername = req.body.friendUsername.trim();
+
+  // Verify that the input username is not a noSQL injection
+  const usernameSchema = Joi.string().max(20).required();
+  const usernameValidationResult = usernameSchema.validate(searchedUsername);
+  if (usernameValidationResult.error != null) {
+      res.render("./templates/friends/invalid_friend_request.ejs", { type: "Invalid username." });
+      return;
+  }
+  const redirectLink = '/friends/requests/' + searchedUsername;
+  res.redirect( redirectLink);
+}
+
+async function searchFriendDisplay(req, res) {
+    
+    const searchedUsername = req.body.friendUsername.trim();
+
+  // Verify that the input username is not a noSQL injection
+  const usernameSchema = Joi.string().max(20).required();
+  const usernameValidationResult = usernameSchema.validate(searchedUsername);
+  if (usernameValidationResult.error != null) {
+      res.render("./templates/friends/invalid_friend_request.ejs", { type: "Invalid username." });
+      return;
+  }
+  const redirectLink = '/friends/display/' + searchedUsername;
+  res.redirect( redirectLink);
 }
 
 async function sendFriendRequest(req, res, userCollection) {
@@ -198,4 +228,5 @@ async function deleteFriend(req, res, userCollection) {
 async function captureText() {
     const externalInput = document.querySelector('[name="testUsername"]').value
     console.log("test:", externalInput);
+    
 }

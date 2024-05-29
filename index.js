@@ -198,8 +198,7 @@ app.get(['/friends', '/friends/:type/:searched'], async (req, res) => {
   }
   //param case
   if(type == "requests") {
-    console.log("hello index.js");
-    return friendFunctions.loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched, type);
+    return friendFunctions.loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched);
   } else if (type == "display") {
     return friendFunctions.loadFriendsPageWithFriendSearch(req, res, userCollection, friendFunctions, searched);
   } else {
@@ -218,9 +217,14 @@ app.post('/deleteFriend/:friendName', async (req, res) => {
   friendFunctions.deleteFriend(req, res, userCollection);
 })
 
-// method to display searched friend
-app.post('/searchFriend/:friendName', async (req, res) => {
+// method to display searched user in request
+app.post('/searchFriends/request', async (req, res) => {
+  friendFunctions.searchFriendRequest(req, res);
+})
 
+// method to display searched user in friend display
+app.post('/searchFriends/display', async (req, res) => {
+  friendFunctions.searchFriendDisplay(req, res);
 })
 
 // method to accept friend 

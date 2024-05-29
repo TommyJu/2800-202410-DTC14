@@ -1,17 +1,27 @@
 <%- include("templates/header_with_profile.ejs") %> 
     <div id="friendPage">
         <div id="friendAddBar">
-            <form id="friendAdd" method="post" action="/addFriend">
-                <h3 class="text-4xl">
+            <h3 class="text-4xl">
                     Friends
-                </h3>
+            </h3>
+            
+            <form id="friendAdd" method="post" action="/addFriend">  
                 <input name="friendUsername" type="text" placeholder="Friend's Username" 
                 pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required maxlength="20">
                 <button type="submit">Add friend</button>
+            </form>
+            <form id="friendDisplaySearch" method="post" action="/searchFriends/display">
+                <input name="friendUsername" type="text" placeholder="search friends" 
+                pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required maxlength="20">
+                <button type="submit"> search friends</button>
+            </form>
+            <form id="friendRequestSearch" method="post" action="/searchFriends/request">
+                <input name="friendUsername" type="text" placeholder="search request" 
+                pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required maxlength="20">
+                <button type="submit"> search requests</button>
             </form>
         </div>
     <%- include("templates/friends/friend_request", {requests: requests}) %>
     <%- include("templates/friends/friend_card_container", {friends: friends}) %>
 </div>
-
-    <%- include("templates/footer.ejs") %>
+<%- include("templates/footer.ejs") %>
