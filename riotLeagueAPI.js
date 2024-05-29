@@ -149,7 +149,7 @@ function renderCaseBaseCase (res, tasks, gamingSuggestions, summonerLevel, summo
     rank: summonerRank, 
     winrate: winrate, 
     noRiot: "", 
-    noSummoner: "Please provide summoner credentials to display other summoner stats.",
+    noSummoner: "",
     additionalSummoner: "", 
   });
   return;
@@ -163,7 +163,7 @@ function renderCaseBaseCaseInvalidSearch (res, tasks, gamingSuggestions, summone
     rank: summonerRank, 
     winrate: winrate, 
     noRiot: "", 
-    noSummoner: "Summoner credentials provided are invalid. Cannot display other summoner stats.",
+    noSummoner: "Cannot search for summoner. Summoner credentials are invalid.",
     additionalSummoner: "", 
   });
   return;
@@ -174,7 +174,7 @@ function renderCaseNoRiotNoSearch (res, tasks, gamingSuggestions) {
     tasks: tasks, 
     gamingSuggestions: gamingSuggestions,
     noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
-    noSummoner: "Please provide summoner credentials to display other summoner stats.",
+    noSummoner: "",
     additionalSummoner: "", 
   });
   return;
@@ -185,7 +185,7 @@ function renderCaseNoRiotInvalidSearch (res, tasks, gamingSuggestions) {
     tasks: tasks, 
     gamingSuggestions: gamingSuggestions,
     noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
-    noSummoner: "Summoner credentials provided are invalid. Cannot display other summoner stats.",
+    noSummoner: "Cannot search for summoner. Summoner credentials are invalid.",
     additionalSummoner: "", 
   });
   return;
