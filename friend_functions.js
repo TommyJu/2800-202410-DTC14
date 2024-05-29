@@ -1,7 +1,7 @@
 const Joi = require('joi');
-module.exports = { loadFriendsPage, sendFriendRequest, acceptFriend, rejectFriend, deleteFriend, captureText}
+module.exports = { loadFriendsPage, loadFriendsPageWithRequestSearch, loadFriendsPageWithFriendSearch, sendFriendRequest, acceptFriend, rejectFriend, deleteFriend, captureText}
 
-async function loadFriendsPage(req, res, userCollection) {
+async function loadFriendsPage(req, res, userCollection, friendFunctions) {
     if (req.session.authenticated) {
         // if logged in
         // gets user from DB based on session username
@@ -17,6 +17,59 @@ async function loadFriendsPage(req, res, userCollection) {
         res.render("friends.ejs", {
             friends: userFriends,
             requests: userInfo.friendRequests
+        });
+        return;
+    } else {
+        // not logged in
+        res.render("home_logged_out.ejs");
+    }
+}
+
+async function loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched, type) {
+    if (req.session.authenticated) {
+        // if logged in
+        // gets user from DB based on session username
+        const userInfo = await userCollection.findOne({ username: req.session.username });
+
+        let userFriends = await userCollection.find({ username: { $in: userInfo.friends } }).toArray();
+        // create shallow copy of friendRequest to change array
+        let userRequests = userInfo.friendRequests.slice();
+        // filters the request user to only have the searched username
+        userRequests = userRequests.filter((checkingUserName) => {return checkingUserName == searched});
+
+        userFriends.sort((a, b) => {
+            // Total level in descending order
+            return (b.levels.game.level + b.levels.diet.level + b.levels.fitness.level)
+                - (a.levels.game.level + a.levels.diet.level + a.levels.fitness.level)
+        });
+
+        res.render("friends.ejs", {
+            friends: userFriends,
+            requests: userRequests
+        });
+        return;
+    } else {
+        // not logged in
+        res.render("home_logged_out.ejs");
+    }
+}
+// when param is /display/someuser
+async function loadFriendsPageWithFriendSearch(req, res, userCollection, friendFunctions, searched) {
+    if (req.session.authenticated) {
+        // if logged in
+        // gets user from DB based on session username
+        const userInfo = await userCollection.findOne({ username: req.session.username });
+        let userRequests = userInfo.friendRequests;
+        let userFriendsList = userInfo.friends;
+        // creates a copy to remove lements from
+        let userFriendsSlice = userFriendsList.slice();
+        // filters the friend array
+        userFriendsSlice = userFriendsSlice.filter((checkingUserName) => {return checkingUserName == searched})
+        let userFriends = await userCollection.find({ username: { $in: userFriendsSlice } }).toArray();
+
+        res.render("friends.ejs", {
+            friends: userFriends,
+            requests: userRequests
         });
         return;
     } else {
@@ -143,5 +196,6 @@ async function deleteFriend(req, res, userCollection) {
 }
 
 async function captureText() {
-
+    const externalInput = document.querySelector('[name="testUsername"]').value
+    console.log("test:", externalInput);
 }

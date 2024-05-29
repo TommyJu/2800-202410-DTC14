@@ -189,8 +189,23 @@ app.get('/weather', async (req, res) => {
 });
 
 // Friends
-app.get('/friends', async (req, res) => {
-  friendFunctions.loadFriendsPage(req, res, userCollection);
+app.get(['/friends', '/friends/:type/:searched'], async (req, res) => {
+  const type = req.params.type;
+  const searched = req.params.searched;
+  // no param case
+  if(!type || !searched) {
+    return friendFunctions.loadFriendsPage(req, res, userCollection, friendFunctions);
+  }
+  //param case
+  if(type == "requests") {
+    console.log("hello index.js");
+    return friendFunctions.loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched, type);
+  } else if (type == "display") {
+    return friendFunctions.loadFriendsPageWithFriendSearch(req, res, userCollection, friendFunctions, searched);
+  } else {
+    // catch faulty urls
+    return friendFunctions.loadFriendsPage(req, res, userCollection, friendFunctions);
+  }
 })
 
 // method to add friends
