@@ -308,12 +308,6 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
 
 //Exporting my API logic functions so they may be used in the index.js file.
 module.exports = {
-  getRiotPUUID,
-  getSummonerLevelAndID,
-  getSummonerRank,
-  getMatchHistory,
-  calculateWinLoss,
   validateSummonerCredentials,
-  riotCredentialsExist,
   displayStats,
 };
