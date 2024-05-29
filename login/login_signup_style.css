@@ -1,5 +1,5 @@
 body {
-    background-image: url('try.jpeg');
+    background-image: url('home_background2.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -13,7 +13,7 @@ body {
 .broken-border::before, .broken-border::after {
     content: '';
     position: absolute;
-    border: 4px solid gray;
+    border: 4px solid #f5b700;
     animation: flash 1.5s infinite;
 }
 
@@ -38,7 +38,7 @@ body {
 .broken-border span::before, .broken-border span::after {
     content: '';
     position: absolute;
-    border: 4px solid gray;
+    border: 4px solid #f5b700;
     animation: flash 1.5s infinite;
 }
 
@@ -68,3 +68,70 @@ body {
         opacity: 0;
     }
 }
+
+
+.audiowide {
+    font-family: 'Audiowide', cursive;
+}
+.buttons {
+        padding: 0.6em 2em;
+        border: none;
+        outline: none;
+        color: black;
+        background: #f5b700;
+        cursor: pointer;
+        position: relative;
+        z-index: 0;
+        border-radius: 10px;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+    .buttons:before {
+        content: "";
+        background: linear-gradient(45deg,
+                #f71735,
+                #100b00,
+                #62c370,
+                #f7e1d7,
+                #f5b700);
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        background-size: 400%;
+        z-index: -1;
+        filter: blur(5px);
+        -webkit-filter: blur(5px);
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+        animation: glowing-button-85 20s linear infinite;
+        transition: opacity 0.3s ease-in-out;
+        border-radius: 10px;
+    }
+
+    @keyframes glowing-button-85 {
+        0% {
+            background-position: 0 0;
+        }
+
+        50% {
+            background-position: 400% 0;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    .buttons:after {
+        z-index: -1;
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #f5b700;
+        left: 0;
+        top: 0;
+        border-radius: 10px;
+    }

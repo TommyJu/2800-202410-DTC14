@@ -1,3 +1,52 @@
-<%- include("templates/header_logo_only.ejs") %>
-<a href="/signup">Sign up</a>
-<a href="/login">Log in</a>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login_signup_style.css">
+    <title>Get GUD</title>
+    <style>
+        .audiowide {
+            font-family: 'Audiowide', cursive;
+        }
+
+        body {
+            background-image: url('./images/backgrounds/home_background2.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+        }
+
+        .bg-black {
+            background-color: #000000;
+        }
+
+
+    </style>
+</head>
+
+<body class="bg-black">
+    <div class="flex justify-center">
+        <img src="./images/gud_logo.png" alt="GUD Logo" class="w-96 mt-40">
+    </div>
+    <p class="mx-10 text-center text-yellow-300 audiowide mb-10 text-xl">Gamified User Development</p>
+
+    <div class="mx-10 text-center text-[#f5b700] audiowide">
+        <p>GUD aims to motivate gamers to develop healthy habits by gamifying their lives and tapping into the
+            competitive spirit among gamers.</p>
+    </div>
+    <div class="flex flex-col justify-center items-center mt-10 w-1/2 mx-auto">
+        <a href="/signup" class="buttons m-3 audiowide w-full text-center">Sign up</a>
+        <a href="/login" class="buttons m-3 audiowide w-full text-center">Log in</a>
+    </div>
+</body>
+
+</html>
+
+
