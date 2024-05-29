@@ -189,9 +189,9 @@ app.get('/weather', async (req, res) => {
 });
 
 // Friends
-app.get(['/friends', '/friends/:type/:searched'], async (req, res) => {
-  const type = req.params.type;
-  const searched = req.params.searched;
+app.get('/friends', async (req, res) => {
+  const type = req.query.type;
+  const searched = req.query.searched;
   // no param case
   if(!type || !searched) {
     return friendFunctions.loadFriendsPage(req, res, userCollection, friendFunctions);

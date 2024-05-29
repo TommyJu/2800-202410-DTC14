@@ -89,7 +89,7 @@ async function searchFriendRequest(req, res) {
       res.render("./templates/friends/invalid_friend_request.ejs", { type: "Invalid username." });
       return;
   }
-  const redirectLink = '/friends/requests/' + searchedUsername;
+  const redirectLink = '/friends?type=requests&searched=' + searchedUsername;
   res.redirect( redirectLink);
 }
 
@@ -104,7 +104,7 @@ async function searchFriendDisplay(req, res) {
       res.render("./templates/friends/invalid_friend_request.ejs", { type: "Invalid username." });
       return;
   }
-  const redirectLink = '/friends/display/' + searchedUsername;
+  const redirectLink = '/friends?type=display&searched=' + searchedUsername;
   res.redirect( redirectLink);
 }
 
