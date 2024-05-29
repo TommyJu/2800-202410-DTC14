@@ -1,0 +1,15 @@
+#game-background {
+    padding: 20px;
+    padding-bottom: 100px;
+    color: var(--yellow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../images/backgrounds/profile_background2.jpg");
+    width: 100%;
+    min-height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
