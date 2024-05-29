@@ -4,9 +4,9 @@
   
     <%- include('templates/game/helpfulMessage.ejs', {helpfulMessage: noRiot})  %>
   
-    <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
-  
+    <!-- Other summoner game stats -->
     <div class="w-4/5"><%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate}) %></div>
+    <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
   
     <!-- Parameter determines default selected dropdown category for modal -->
     <div class="flex place-content-between">
@@ -82,7 +82,7 @@
     <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank, category: 'game', userTasks: tasks, suggestionValid: true}) %>
   
     <%- include("templates/easter_footer.ejs") %>
-  
+  <!-- Riot account but no other summoner searched -->
   <% } else { %>
 
   
