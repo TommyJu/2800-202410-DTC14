@@ -9,9 +9,21 @@
       <% } %>
   <% } else if (type==='gameSuggestions' ) { %>
     <% if (rank[0]==='UNRANKED' ) { %>
-    <%- include("task_card.ejs", { taskId: tasks[0]._id, title: tasks[0].title, description:
-    tasks[0].description, category: tasks[0].category, type: tasks[0].type, formattedTitle:
-    tasks[0].rankToReach }) %>
+      <% for (let i=0; i < tasks.length; i++) { %>
+        <% if (tasks[i].rankRequired==='UNRANKED') { %>
+          <% let suggestionTitle = tasks[i].title %>
+          <% for (let i=0; i < userTasks.length; i++) { %> 
+            <% if (suggestionTitle===userTasks[i].title) { %>
+              <% suggestionValid = false %>
+            <% } %>
+          <% } %>
+          <% if (suggestionValid) { %>
+            <%- include("task_card.ejs", { taskId: tasks[6]._id, title: tasks[6].title, description:
+            tasks[6].description, category: tasks[6].category, type: tasks[6].type, formattedTitle:
+            tasks[6].rankToReach }) %>
+          <% } %>
+        <% } %>
+      <% } %>
     <% } else { %>
       <% for (let i=0; i < tasks.length; i++) { %>
         <% if (tasks[i].rankRequired===(rank[0] + ' ' + rank[1])) { %>
