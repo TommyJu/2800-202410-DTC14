@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
     <audio id="gameAudio" src="./footer-icons/LOL.mp3" preload="auto"></audio>
     <footer class="fixed w-full left-0 bottom-0 bg-black p-2 z-50">
         <div id="links-container" class="flex justify-evenly items-center">
@@ -25,10 +17,13 @@
             </div>
         </div>
     </footer>
-</body>
-<script>
-    function playAudio() {
+    <script>
+      function playAudio() {
         document.getElementById('gameAudio').play();
-    }
+      }
     </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+<script src="client-side-scripts/stats.js"></script>
+<script src=./client-side-scripts/event_listeners.js></script>
+</body>
 </html>
