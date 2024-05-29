@@ -14,6 +14,19 @@
         .audiowide {
             font-family: 'Audiowide', cursive;
         }
+        .audiowide {
+            font-family: 'Audiowide', cursive;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
     </style>
 </head>
 
@@ -45,23 +58,18 @@
                 <input type="password" id="password" name="password" placeholder="Password *" required
                     class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full" maxlength="20">
             </div>
-            <div class="textbox w-full text-ellipsis text-lg py-2 my-2 border-b border-[#f5b700] relative">
+            <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-[#f5b700] relative">
                 <img src="security.png" alt="Security Icon"
                     class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
                 <label for="securityQuestion" class="sr-only">Security Question:</label>
                 <select id="securityQuestion" name="securityQuestion"
-                    class="text-ellipsis border-none outline-none bg-transparent text-gray-400 text-base pl-10 w-full"
-                    required>
-                    <option value="" disabled selected>-Select an Option-</option>
-                    <option value="In what city were you born?">In what city were you born?
+                    class="border-none outline-none bg-transparent text-gray-400 text-lg pl-10 w-full">
+                    <option value="" disabled selected>Security Question</option>
+                    <option value="In what city were you born?">In what city were you born?</option>
+                    <option value="What is the name of your favourite pet?">What is the name of your favourite pet?
                     </option>
-                    <option value="What is the name of your favourite pet?">What is the name of
-                        your favourite pet?
-                    </option>
-                    <option value="What is your mother's maiden name?">What is your mother's
-                        maiden name?</option>
-                    <option value="What was the name of your first childhood friend?">What was the
-                        name of your first
+                    <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+                    <option value="What was the name of your first childhood friend?">What was the name of your first
                         childhood friend?</option>
                 </select>
             </div>
@@ -102,6 +110,33 @@
                 type="submit" value="Sign Up">
         </form>
     </div>
+    <script>
+                const selectElement = document.getElementById('securityQuestion');
+        const marqueeElement = document.createElement('div');
+        marqueeElement.style.overflow = 'hidden';
+        marqueeElement.style.whiteSpace = 'nowrap';
+        marqueeElement.style.marginLeft = '2.8rem';
+
+        const marqueeTextElement = document.createElement('div');
+        marqueeTextElement.style.display = 'inline-block';
+        marqueeTextElement.style.paddingLeft = '100%';
+        marqueeTextElement.style.animation = 'marquee 10s linear infinite';
+
+        marqueeElement.appendChild(marqueeTextElement);
+
+        function updateMarquee() {
+            const selectedValue = selectElement.value;
+            marqueeTextElement.textContent = selectedValue;
+            marqueeTextElement.style.color = '#718096';
+            marqueeTextElement.style.animation = 'marquee 8s linear infinite';
+        }
+
+        selectElement.addEventListener('change', updateMarquee);
+
+        updateMarquee();
+
+        selectElement.parentNode.appendChild(marqueeElement);
+    </script>
 </body>
 
 </html>
