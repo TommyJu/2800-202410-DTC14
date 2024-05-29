@@ -7,16 +7,14 @@
       <%= description %>
     </p>
     <!-- <% formattedTitle %> = <%= title %>.replace(/ /g, '_') -->
-    <img class="w-12" src="./images/sporticons/<%= formattedTitle%>.png"
-      onerror="this.onerror=null; this.src='./images/sporticons/pencil2.png';" alt="Icon" name="normalIcon" />
-
+    <img class="w-12" src="./images/<%= formattedTitle%>.png" alt="Hockey" />
   </div>
   <div class="px-6 pt-4 pb-2">
     <!-- The task-id attribute is used to delete a specific task -->
     <form id="completeTaskForm" action="/complete_task" method="POST">
       <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
       <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
-      <button type="submit" class="completeButton" name="<%= type %>"><svg xmlns="http://www.w3.org/2000/svg"
+      <button type="submit" class="completeButton"><svg xmlns="http://www.w3.org/2000/svg"
           class="icon icon-tabler icon-tabler-circle-check" width="44" height="44" viewBox="0 0 24 24"
           stroke-width="1.5" stroke="#00b341" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -27,7 +25,7 @@
     <form id="deleteTaskForm" action="/delete_task" method="POST">
       <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
       <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
-      <button type="submit" class="deleteButton" name="<%= type %>">
+      <button type="submit" class="deleteButton">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-x" width="44" height="44"
           viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff2825" fill="none" stroke-linecap="round"
           stroke-linejoin="round">
@@ -37,47 +35,14 @@
         </svg>
       </button>
     </form>
-    <form id="moveTaskForm" action="/move_task" method="POST">
-      <input type="hidden" name="category" value="<%= category %>"> <!-- Example category value -->
-      <input type="hidden" name="taskId" value="<%= taskId %>"> <!-- Example taskId value -->
-      <button type="submit" class="moveButton" name="<%= type %>">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-plus" width="44" height="44"
-          viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff9300" fill="none" stroke-linecap="round"
-          stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-          <path d="M9 12h6" />
-          <path d="M12 9v6" />
-        </svg>
-      </button>
-    </form>
   </div>
 </div>
 <script>
-  deleteButtons = document.getElementsByClassName("deleteButton")
-  completeButtons = document.getElementsByClassName("completeButton")
-  moveButtons = document.getElementsByClassName("moveButton")
-
-  if (document.URL.includes("fitness" || "game" || "diet")) {
-    for (let i = 0; i < deleteButtons.length; i++) {
-      if (deleteButtons[i].name == "suggestion") {
-        deleteButtons[i].classList.add("hidden")
-        completeButtons[i].classList.add("hidden")
-      } else if (deleteButtons[i].name == "custom") {
-        moveButtons[i].classList.add("hidden")
-      } else {
-        for (let i = 0; i < deleteButtons.length; i++) {
-          deleteButtons[i].classList.add("hidden")
-          completeButtons[i].classList.add("hidden")
-          moveButtons[i].classList.add("hidden")
-        }
-      }
-    }
-  } else if (document.URL.includes("_completed")) {
-    for (let i = 0; i < deleteButtons.length; i++) {
-      deleteButtons[i].classList.add("hidden")
-      completeButtons[i].classList.add("hidden")
-      moveButtons[i].classList.add("hidden")
+  if (document.URL.includes("completed")) {
+    buttons = document.getElementsByTagName("button")
+    for (let i = 0; i < buttons.length; i++) {
+      console.log(buttons);
+      buttons[i].classList.add("hidden");
     }
   }
 </script>
