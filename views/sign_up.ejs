@@ -39,7 +39,8 @@
             <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
                 <img src="security.png" alt="Security Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
                 <label for="securityQuestion" class="sr-only">Security Question:</label>
-                <select id="securityQuestion" name="securityQuestion" class="border-none outline-none bg-transparent text-gray-400 text-lg pl-10 w-full">
+                <select id="securityQuestion" name="securityQuestion" class="border-none outline-none bg-transparent text-gray-400 text-lg pl-10 w-full" required>
+                    <option value="" disabled selected>-Select an Option-</option>
                     <option value="In what city were you born?">In what city were you born?</option>
                     <option value="What is the name of your favourite pet?">What is the name of your favourite pet?</option>
                     <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
