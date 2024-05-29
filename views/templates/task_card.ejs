@@ -73,5 +73,11 @@
         }
       }
     }
+  } else if (document.URL.includes("_completed")) {
+    for (let i = 0; i < deleteButtons.length; i++) {
+      deleteButtons[i].classList.add("hidden")
+      completeButtons[i].classList.add("hidden")
+      moveButtons[i].classList.add("hidden")
+    }
   }
 </script>

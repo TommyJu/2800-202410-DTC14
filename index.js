@@ -21,6 +21,7 @@ const lolAPI = require('./riotLeagueAPI.js');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const ejs = require('ejs');
+const { error } = require("console");
 app.set('view engine', 'ejs');
 
 const port = process.env.PORT || 3000;
@@ -185,7 +186,135 @@ app.get('/weather', async (req, res) => {
   }
   weather.getWeather(url, res)
 });
+// Freinds
+app.get('/friends', async (req, res) => {
+  const userCollection = await database.db(mongodb_database).collection('users');
+  if (req.session.authenticated) {
+    // if logged in
+    // gets user from DB based on session username
+    const userInfo = await userCollection.findOne({ username: req.session.username });
+    let userFriends = [];
+    try {
+      //attempts to get friends from user
+      userFriends = await userInfo.friends;
+    } catch (error) {
+      console.error("could not retreive firends");
+    }
+    res.render("friends.ejs", {
+      username: req.session.username,
+      friends: userFriends
+    });
+    return;
+  } else {
+    // not logged in
+    res.render("home_logged_out.ejs");
+  }
+})
 
+// method to add friends
+app.post('/addFriend', async (req, res) => {
+  const recipientUsername = req.body.friendUsername;
+  // need to catch if user DNE
+  const userCollection = await database.db(mongodb_database).collection('users');
+  const recipientInfo = await userCollection.findOne({ username: recipientUsername });
+  try {
+    if (recipientInfo) {
+      // If recipient user exists, push the current user's username to their friendRequest array
+      recipientInfo.friendRequest.push(req.session.username);
+      // Update the recipient user document in the database
+      await userCollection.updateOne(
+        { username: recipientUsername },
+        { $set: { friendRequest: recipientInfo.friendRequest } }
+      );
+      // Redirect to the friends page
+      res.redirect('/friends');
+    } else {
+      res.status(100).send("user not found")
+    }
+  } catch { console.error(error); res.status(500).send('error sending friends') }
+  //   try {
+  //   recipientInfo.friendRequest.push(req.session.username);
+  //   res.redirect('/friends');
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).send('error sending friends')
+  // }
+})
+
+// Friend Request
+app.get('/friendRequest', async (req, res) => {
+  const userCollection = await database.db(mongodb_database).collection('users');
+  if (req.session.authenticated) {
+    // if logged in
+    // gets user from DB based on session username
+    const userInfo = await userCollection.findOne({ username: req.session.username });
+    let userFriendRequest = [];
+    try {
+      //attempts to get friendRequest from user
+      userFriendRequest = await userInfo.friendRequest;
+    } catch (error) {
+      console.error("could not retreive firends");
+    }
+    res.render("friend_request.ejs", {
+      username: req.session.username,
+      requests: userFriendRequest
+    });
+    return;
+  } else {
+    // not logged in
+    res.render("home_logged_out.ejs");
+  }
+})
+
+// method to accept friend 
+app.post('/acceptFriend/:friendName', async (req, res) => {
+  const requester = req.params.friendName;
+  const accepter = req.session.username;
+  const userCollection = await database.db(mongodb_database).collection('users');
+  try {
+    // adds the accepter to the requester's friends
+    await userCollection.updateOne(
+      { username: requester },
+      { $push: { friends: accepter } }
+    );
+    // updates the friend requests of requester
+    await userCollection.updateOne(
+      { username: requester },
+      { $pull: { friendRequest: accepter } }
+    );
+    // adds the requester to the accepter's friends
+    await userCollection.updateOne(
+      { username: accepter },
+      { $push: { friends: requester } }
+    );
+    // updates the friend requests of accepter
+    await userCollection.updateOne(
+      { username: accepter },
+      { $pull: { friendRequest: requester } }
+    );
+  } catch (error) {
+    console.error("could not accept request(server side)", error)
+  }
+  res.redirect("/friendRequest");
+
+})
+
+// method to reject friend
+app.post('/rejectFriend/:friendName', async (req, res) => {
+  const requester = req.params.friendName;
+  const accepter = req.session.username;
+  const userCollection = await database.db(mongodb_database).collection('users');
+  try {
+    // removes the friend request of accepter
+    await userCollection.updateOne(
+      { username: accepter },
+      { $pull: { friendRequest: requester } }
+    );
+  } catch (error) {
+    console.error("could not reject request(server side)", error)
+  }
+  res.redirect("/friendRequest");
+})
 // Log out
 app.get('/logout', async (req, res) => {
   const userCollection = database.db(mongodb_database).collection('users')
@@ -306,25 +435,6 @@ app.get('/get_allergies', async (req, res) => {
 
 app.post('/favouriteRecipe', async (req, res) => {
   const recipe = req.body.recipe;
-  let recipeArray = recipe.split('\n');
-  if (recipeArray[0].includes('Here')) {
-    recipeTitle = recipeArray[2];
-    recipeArray.shift();
-    recipeArray.shift();
-  } else {
-    recipeTitle = recipeArray[0];
-  }
-  recipeArray.shift();
-  recipeDescription = recipeArray.join('\n');
-  console.log(recipeDescription);
-  try {
-    await userCollection.findOneAndUpdate(
-      { username: req.session.username },
-      { $push: { dietTasks: { _id: new ObjectId(), title: recipeTitle, description: recipeDescription, category: "diet", type: 'custom' } } },
-      { upsert: true });
-  } catch (error) {
-    console.error('Error adding recipe to diet tasks:', error.message);
-  }
 
   try {
     await userCollection.findOneAndUpdate(
@@ -363,7 +473,9 @@ app.get('/favouriteRecipes', async (req, res) => {
 });
 
 app.post('/removeFavouriteRecipe', async (req, res) => {
-  const recipe = lineBreaks(req.body.recipe);
+  const recipe = linkeBreaks(req.body.recipe);
+
+
   try {
     const result = await userCollection.updateOne(
       { username: req.session.username },
@@ -376,6 +488,66 @@ app.post('/removeFavouriteRecipe', async (req, res) => {
   } catch (error) {
     console.error('Error removing recipe:', error.message);
     res.status(500).json({ error: 'Failed to remove recipe' });
+  }
+});
+
+app.post('/addToDo', async (req, res) => {
+  const recipe = lineBreaks(req.body.recipe);
+  let recipeArray = recipe.split('\n');
+  if (recipeArray[0].includes('Here')) {
+    recipeTitle = recipeArray[2];
+    recipeArray.shift();
+    recipeArray.shift();
+    recipeArray.shift();
+  } else if (recipeArray[0].includes('Ingredients')) {
+    recipeTitle = "Untitled Recipe"
+  }
+  else {
+    recipeTitle = recipeArray[0];
+    recipeArray.shift();
+  }
+  recipeDescription = recipeArray.join('\n');
+  try {
+    await userCollection.findOneAndUpdate(
+      { username: req.session.username },
+      { $push: { dietTasks: { _id: new ObjectId(), title: recipeTitle, description: recipeDescription, category: "diet", type: 'custom' } } },
+      { upsert: true });
+  } catch (error) {
+    console.error('Error adding recipe to diet tasks:', error.message);
+  }
+});
+
+app.get('/getToDo', async (req, res) => {
+  try {
+    const user = await userCollection.findOne(
+      { username: req.session.username },
+      { projection: { dietTasks: 1, _id: 0 } }
+    );
+    if (user && user.dietTasks.length > 0) {
+      res.json({ success: true, dietTasks: user.dietTasks });
+    } else {
+      res.json({ success: false, message: 'No to-do list recipes found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving to-do list:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve to-do list' });
+  }
+});
+
+app.post('/removeToDo', async (req, res) => {
+  const recipe = lineBreaks(req.body.recipe);
+  try {
+    const result = await userCollection.updateOne(
+      { username: req.session.username },
+      { $pull: { dietToDo: recipe } }
+    );
+    if (result.modifiedCount === 0) {
+      throw new Error('Recipe not found or not removed');
+    }
+    res.json({ success: true, message: 'Recipe removed from to-do list' });
+  } catch (error) {
+    console.error('Error removing recipe from to-do list:', error.message);
+    res.status(500).json({ error: 'Failed to remove recipe from to-do list' });
   }
 });
 
@@ -451,6 +623,7 @@ app.post('/delete_task', async (req, res) => {
   let username = req.session.username;
   let taskCategory = req.body.category;
   let taskIdToDelete = req.body.taskId;
+  console.log(`I'm deleting task ${taskIdToDelete}`)
   await taskFunctions.deleteTask(username, userCollection, taskCategory, taskIdToDelete)
 
   res.redirect(req.get('referer'));
@@ -480,7 +653,6 @@ app.post('/complete_task', async (req, res) => {
   let taskIdToDelete = req.body.taskId;
   const taskObjectId = new ObjectId(taskIdToDelete);
   suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
-  console.log(suggestedActivity);
   let isLeveledUp = await taskFunctions.completeTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete);
   if (isLeveledUp) {
     res.redirect(`/level_up?category=${taskCategory}`);
@@ -493,10 +665,11 @@ app.post('/move_task', async (req, res) => {
   let username = req.session.username;
   let taskCategory = req.body.category;
   let taskIdToDelete = req.body.taskId;
+  let taskTitle = req.body.title;
+  let taskDescription = req.body.description;
   const taskObjectId = new ObjectId(taskIdToDelete);
   suggestedActivity = await database.db('physical_pillar').collection('activities').find(taskObjectId).toArray();
-  console.log(suggestedActivity);
-  await taskFunctions.moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete);
+  await taskFunctions.moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToDelete, taskTitle, taskDescription);
   res.redirect(req.get('referer'));
 })
 

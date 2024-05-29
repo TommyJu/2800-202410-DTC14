@@ -96,17 +96,29 @@ async function updateTaskType(username, userCollection, taskCategory, taskIdToDe
   }
 }
 
-async function moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToMove) {
+async function moveTask(username, userCollection, suggestedActivity, taskCategory, taskIdToMove, taskTitle, taskDescription) {
   taskCategoryProperty = taskCategory + 'Tasks';
   const taskObjectId = new ObjectId(taskIdToMove);
   console.log(suggestedActivity[0])
-  try {
-    await userCollection.updateOne(
-      { username: username },
-      { $push: { [taskCategoryProperty]: { _id: new ObjectId(), title: suggestedActivity[0].title, description: suggestedActivity[0].description, category: suggestedActivity[0].category, type: "custom" } } }
-    )
-  } catch (error) {
-    console.error("Failed to copy suggestion");
+  if (taskTitle) {
+    try {
+      await userCollection.updateOne(
+        { username: username },
+        { $push: { [taskCategoryProperty]: { _id: new ObjectId(), title: taskTitle, description: taskDescription, category: "diet", type: "custom" } } }
+      )
+    } catch (error) {
+      console.error("Failed to copy recipe");
+    }
+    return;
+  } else {
+    try {
+      await userCollection.updateOne(
+        { username: username },
+        { $push: { [taskCategoryProperty]: { _id: new ObjectId(), title: suggestedActivity[0].title, description: suggestedActivity[0].description, category: suggestedActivity[0].category, type: "custom" } } }
+      )
+    } catch (error) {
+      console.error("Failed to copy suggestion");
+    }
   }
 }
 
