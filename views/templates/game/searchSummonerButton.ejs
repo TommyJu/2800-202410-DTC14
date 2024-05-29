@@ -1,14 +1,12 @@
 <div id="summonerEntry" class="py-10">
   <h1 class="font-bold">Look up a summoner!</h1>
-  <form action='/searchSummoner' method='post' class="flex-col">
-    <div class="searchInputs flex w-4/5 justify-between">
-      <input class="max-w-min" name='summonerUsername' type='text' placeholder='Riot Username' value="">
-      <input class="max-w-min" name='summonerID' type='text' placeholder='Riot ID' value="">
+  <form action='/searchSummoner' method='post' class="flex flex-col gap-4">
+    <div class="searchInputs flex w-4/5 justify-between gap-2">
+      <input class="max-w-min p-1 text-black bg-gray-200" name='summonerUsername' type='text' placeholder='Riot Username' value="">
+      <input class="max-w-min p-1 text-black bg-gray-200" name='summonerID' type='text' placeholder='Riot ID' value="">
     </div>
-    <button type="submit" class="rounded border-solid border-2 border-sky-500">
-      <div class="">
+    <button type="submit" class="rounded border-solid border-2 border-yellow-500 p-2">
         Search for Summoner
-      </div>
     </button>
   </form>
   <% if (noSummoner) { %>
