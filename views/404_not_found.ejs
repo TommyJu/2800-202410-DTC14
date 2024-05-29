@@ -1,3 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="login_signup_style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <title>Get GUD</title>
+</head>
+
 <%- include("templates/header_logo_only.ejs") %>
 
-    <h1>Page not found - 404</h1>
+<body class="m-0 p-0 font-sans bg-cover bg-center h-screen">
+    <div class="login-box max-w-sm w-11/12 sm:w-64 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white broken-border p-6 bg-black bg-opacity-50 rounded-lg flex flex-col items-center justify-center">
+        <h1 class="mb-12 py-3 text-4xl text-center"><span class="border-[#f5b700] text-[#f5b700] audiowide">Page not found 404</span></h1>
+        <a href="/" class="btn border-2 border-[#f5b700] text-black px-3 py-2 text-lg cursor-pointer my-3 audiowide bg-[#f5b700] buttons">Go to home</a>
+    </div>
+</body>
+</html>
