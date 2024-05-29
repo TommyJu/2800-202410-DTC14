@@ -7,68 +7,17 @@ const apiReqestLimiter = new bottleneck({
   minTime: 50
 });
 
-async function calculateWinLoss(match_ids, PUUID) {
-  const numberOfMatches = 1;
-  const slicedMatch_ids = match_ids.slice(0, numberOfMatches);
-  const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-  var wins = 0;
-  var kills = 0;
-  var deaths = 0;
-  if (match_ids.length === 0) {
-    console.log("No matches found in match history, returning 0% winrate and 0 KD");
-    return ["Not enough games have been played on this account to display winrate.", 
-    "Not enough games have been played on this account to display KD ratio."];
-  } else {
-    for (let match_id of slicedMatch_ids) {
-      try {
-        const data = await fetch(`https://americas.api.riotgames.com/lol/match/v5/matches/${match_id}?api_key=${daily_api_key}`);
-        const dataJson = await data.json();
-        for (let participant of dataJson.info.participants) {
-          if (participant.puuid === PUUID) {
-            kills += participant.kills;
-            deaths += participant.deaths;
-            if (participant.win === true) {
-              wins++;
-            }
-          }
-        }
-      } catch (error) {
-        console.error('There has been a problem with your fetch operation:', error);
-      }
-      await delay(50);
-    };
-    let decimal_places = 2;
-    let winrate = (wins/numberOfMatches * 100).toFixed(decimal_places);
-    let kd = (kills/deaths).toFixed(decimal_places);
-    return [winrate, kd];
-  }
-}
-
-async function getMatchHistory(PUUID) {
-  try {
-    const data = await fetch(`https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${PUUID}/ids?start=0&count=20&api_key=${daily_api_key}`);
-    const dataJson = await data.json();
-    var match_ids = dataJson;
-    return match_ids;
-  } catch (error) {
-    console.error('There has been a problem with your fetch operation:', error);
-  };
-}
-
 function validateSummonerCredentials(summonerUsername, summonerID) {
   const summonerUsernameSchema = Joi.string().min(3).max(16).alphanum().required();
   const summonerIDSchema = Joi.string().min(3).max(5).alphanum().required();
-  
   const summonerUsernameValidationResult = summonerUsernameSchema.validate(summonerUsername);
   if (summonerUsernameValidationResult.error != null) {
     return false;
   }
-  
   const summonerIDValidationResult = summonerIDSchema.validate(summonerID);
   if (summonerIDValidationResult.error != null) {
     return false;
   }
-  
   return true;
 };
 
@@ -180,7 +129,6 @@ async function getSummonerStats(riotUsername, riotID) {
     console.error('Could not fetch summoner stats:', error);
   }
   return [summonerLevel, summonerRank, summonerWinrate];
-
 };
 
 function renderCaseBaseCase (res, tasks, gamingSuggestions, summonerLevel, summonerRank, winrate) {
@@ -196,6 +144,20 @@ function renderCaseBaseCase (res, tasks, gamingSuggestions, summonerLevel, summo
   });
   return;
 }
+
+function renderCaseBaseCaseInvalidSearch (res, tasks, gamingSuggestions, summonerLevel, summonerRank, winrate) {
+  res.render("game.ejs", { 
+    tasks: tasks, 
+    gamingSuggestions: gamingSuggestions,
+    level: summonerLevel, 
+    rank: summonerRank, 
+    winrate: winrate, 
+    noRiot: "", 
+    noSummoner: "Summoner credentials provided are invalid. Cannot display other summoner stats.",
+    additionalSummoner: "", 
+  });
+  return;
+};
 
 function renderCaseNoRiotNoSearch (res, tasks, gamingSuggestions) {
   res.render("game.ejs", { 
@@ -236,8 +198,6 @@ function renderCaseNoRiotValidSearch (res, tasks, gamingSuggestions, otherSummon
 async function displayStatsNoRiotCases (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
   if (!(riotCredentialsExist(RiotUsername, RiotID)) && (riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const otherSummonerStats = await getSummonerStats(otherRiotUsername, otherRiotID);
-    console.log(otherSummonerStats);
-    console.log('here')
     if (otherSummonerStats === false) {
       renderCaseNoRiotInvalidSearch(res, tasks, gamingSuggestions);
       return;
@@ -259,8 +219,6 @@ async function displayStatsNoRiotCases (res, RiotUsername, RiotID, tasks, otherR
 async function displayStatsBaseCase (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
   if ((riotCredentialsExist(RiotUsername, RiotID)) && (!riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const userStats = await getSummonerStats(RiotUsername, RiotID);
-    console.log(userStats);
-    console.log('here2')
     if (userStats === false) {
       renderCaseNoRiotInvalidSearch(res, tasks, gamingSuggestions);
       return;
@@ -274,73 +232,42 @@ async function displayStatsBaseCase (res, RiotUsername, RiotID, tasks, otherRiot
   };
 };
 
-async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
-  
-  displayStatsNoRiotCases(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions);
-
-  if (riotCredentialsExist(RiotUsername, RiotID) && (!(otherRiotUsername === undefined) || !(otherRiotID === undefined))) {
-    const PUUID = await getRiotPUUID(RiotUsername, RiotID);
-    const summonerDetails = await getSummonerLevelAndID(PUUID);
-    const summonerLevel = summonerDetails[1];
-    const encryptedSummonerId = summonerDetails[0];
-    const summonerRank = await getSummonerRank(encryptedSummonerId);
-    if (summonerRank === null) {
-      var rank = ["UNRANKED"];
-    } else {
-      var rank = summonerRank;
-    }
-    const match_ids = await getMatchHistory(PUUID);
-    const winrateAndKD = await calculateWinLoss(match_ids, PUUID);
-    const winrate = winrateAndKD[0];
-    const kd = winrateAndKD[1];
-    
-    const otherPUUID = await getRiotPUUID(otherRiotUsername, otherRiotID);
-    const otherSummonerDetails = await getSummonerLevelAndID(otherPUUID);
-    const otherSummonerLevel = otherSummonerDetails[1];
-    const otherEncryptedSummonerId = otherSummonerDetails[0];
-    const otherSummonerRank = await getSummonerRank(otherEncryptedSummonerId);
-    if ((otherEncryptedSummonerId || otherSummonerRank) === undefined) {
+async function displayStatsRiotAndSearch (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
+  if (riotCredentialsExist(RiotUsername, RiotID) && (riotCredentialsExist(otherRiotUsername, otherRiotID))) {
+    const userStats = await getSummonerStats(RiotUsername, RiotID);
+    const otherSummonerStats = await getSummonerStats(otherRiotUsername, otherRiotID);
+    if (otherSummonerStats === false) {
+      renderCaseBaseCaseInvalidSearch(res, tasks, gamingSuggestions, summonerLevel, summonerRank, winrate);
+      return;
+    } else { 
+      summonerLevel = userStats[0];
+      summonerRank = verifyLeagueRank(userStats[1]);
+      winrate = userStats[2];
+      otherSummonerLevel = otherSummonerStats[0];
+      otherRank = verifyLeagueRank(otherSummonerStats[1]);
+      otherWinrate = otherSummonerStats[2];
       res.render("game.ejs", { 
         tasks: tasks, 
         gamingSuggestions: gamingSuggestions,
         level: summonerLevel, 
-        rank: rank, 
+        rank: summonerRank, 
         winrate: winrate, 
-        kd: kd, 
         noRiot: "", 
-        noSummoner: "Summoner credentials provided are invalid. Cannot display other summoner stats.",
-        additionalSummoner: "", 
+        noSummoner: "",
+        additionalSummoner: "yes", 
+        otherSummonerLevel: otherSummonerLevel,
+        otherRank: otherRank,
+        otherWinrate: otherWinrate,
       });
       return;
     };
-    if (otherSummonerRank === null) {
-      var otherRank = ["UNRANKED"];
-    } else {
-      var otherRank = otherSummonerRank;
-    }
-    const otherMatch_ids = await getMatchHistory(otherPUUID);
-    const otherWinrateAndKD = await calculateWinLoss(otherMatch_ids, otherPUUID);
-    // const otherWinrate = otherWinrateAndKD[0];
-    const otherWinrate = await getSummonerWinrate(otherEncryptedSummonerId);
-    const otherkd = otherWinrateAndKD[1];
-    
-    res.render("game.ejs", { 
-      tasks: tasks, 
-      gamingSuggestions: gamingSuggestions,
-      level: summonerLevel, 
-      rank: rank, 
-      winrate: winrate, 
-      kd: kd, 
-      noRiot: "", 
-      noSummoner: "",
-      additionalSummoner: "yes", 
-      otherSummonerLevel: otherSummonerLevel,
-      otherRank: otherRank,
-      otherWinrate: otherWinrate,
-      otherkd: otherkd
-    });
-    return;
   };
+};
+
+async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
+  displayStatsNoRiotCases(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions);
+
+  displayStatsRiotAndSearch(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions);
 
   displayStatsBaseCase(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions);
 };
