@@ -21,7 +21,7 @@
   <%- include("templates/task_cards_container.ejs", {tasks: tasks, activities: gamingSuggestions, type:'custom'}) %>
 
   <h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit"> Suggested Tasks</h3>
-  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED'], category: 'game'}) %>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED'], category: 'game', userTasks: tasks, suggestionValid: true}) %>
   
   <%- include("templates/easter_footer.ejs") %>
   
@@ -47,7 +47,7 @@
     <%- include("templates/task_cards_container.ejs", {tasks: tasks, activities: gamingSuggestions, type:'custom'}) %>
 
     <h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit"> Suggested Tasks</h3>
-    <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED'], category: 'game'}) %>
+    <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED'], category: 'game', userTasks: tasks, suggestionValid: true}) %>
       
     <%- include("templates/easter_footer.ejs") %>
 
@@ -81,7 +81,7 @@
   <%- include("templates/task_cards_container.ejs", {tasks: tasks, activities: gamingSuggestions, type:'custom'}) %>
 
   <h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit"> Suggested Tasks</h3>
-  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank, category: 'game'}) %>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank, category: 'game', userTasks: tasks, suggestionValid: true}) %>
 
   <%- include("templates/easter_footer.ejs") %>
 
