@@ -149,7 +149,7 @@ function renderCaseBaseCase (res, tasks, gamingSuggestions, summonerLevel, summo
     rank: summonerRank, 
     winrate: winrate, 
     noRiot: "", 
-    noSummoner: "",
+    noSummoner: " ",
     additionalSummoner: "", 
   });
   return;
@@ -174,7 +174,7 @@ function renderCaseNoRiotNoSearch (res, tasks, gamingSuggestions) {
     tasks: tasks, 
     gamingSuggestions: gamingSuggestions,
     noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
-    noSummoner: "",
+    noSummoner: " ",
     additionalSummoner: "", 
   });
   return;
