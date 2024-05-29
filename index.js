@@ -133,13 +133,14 @@ app.post('/submitUser', async (req, res) => {
   var securityAnswer = req.body.securityAnswer
   var RiotUsername = req.body.RiotUsername;
   var RiotID = req.body.RiotID;
+  var city = req.body.city;
 
   await authenticationFunctions.submitUser(
     req, res,
     username, userCollection,
     email, password,
     securityQuestion, securityAnswer,
-    RiotUsername, RiotID);
+    RiotUsername, RiotID, city);
 });
 
 // Log in page -------------------------------
