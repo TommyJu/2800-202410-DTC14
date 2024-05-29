@@ -23,12 +23,14 @@
             <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-[#f5b700] relative">
                 <img src="user.png" alt="Email Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
                 <label for="username" class="sr-only">Username:</label>
-                <input type="username" id="username" name="username" placeholder="Username" class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
+                <input type="username" id="username" name="username" placeholder="Username *" pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required
+                class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full" maxlength="20">
             </div>
             <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-[#f5b700] relative">
                 <img src="password.png" alt="Password Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
                 <label for="password" class="sr-only">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Password" class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
+                <input type="password" id="password" name="password" placeholder="Password *" required
+                class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full" maxlength="20">
             </div>
             <a href="/password_recovery" class="text-center text-gray-400 text-lg underline">Forgot Password?</a>
             <input class="btn w-full bg-transparent border-2 border-[#f5b700] text-white py-1 text-lg cursor-pointer my-3" type="submit" value="Sign in">

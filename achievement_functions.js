@@ -5,17 +5,20 @@ module.exports = {checkForAchievements, addAchievements};
 async function addAchievements(username, userCollection, achievementCollection, achievementTitles) {
     let achievementObjects = [];
     try {
-        // Find the achievement using its title
+        // Fetch the user and their current achievements
+        let user = await userCollection.findOne({ username: username });
+        let userAchievements = user.achievements.map(a => a.title);
+
+        // Find the achievement using its title and add if not already present
         for (let title of achievementTitles) {
-            let achievementObject = await achievementCollection.findOne(
-                {title: title}
-            );
-            achievementObjects.push(achievementObject);
-            // Add the achievement to the user
-            await userCollection.updateOne(
-                { username: username },
-                { $push: { achievements: achievementObject } }
-            );
+            if (!userAchievements.includes(title)) {
+                let achievementObject = await achievementCollection.findOne({ title: title });
+                achievementObjects.push(achievementObject);
+                await userCollection.updateOne(
+                    { username: username },
+                    { $push: { achievements: achievementObject } }
+                );
+            }
         }
     } catch (error) {
         console.error("Failed to add achievement objects to user", error);

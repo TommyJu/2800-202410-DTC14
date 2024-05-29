@@ -5,6 +5,7 @@ const taskFunctions = require("./task_functions.js");
 const authenticationFunctions = require("./authentication_functions.js");
 const levelFunctions = require("./level_functions.js");
 const achievementFunctions = require("./achievement_functions.js");
+const friendFunctions = require("./friend_functions.js");
 
 const { ObjectId } = require('mongodb');
 const express = require('express');
@@ -126,13 +127,13 @@ app.get('/signup', (req, res) => {
 
 // Submit new user to database and validate inputs
 app.post('/submitUser', async (req, res) => {
-  var username = req.body.username;
-  var email = req.body.email;
-  var password = req.body.password;
+  var username = req.body.username.trim();
+  var email = req.body.email.trim();
+  var password = req.body.password.trim();
   var securityQuestion = req.body.securityQuestion;
-  var securityAnswer = req.body.securityAnswer
-  var RiotUsername = req.body.RiotUsername;
-  var RiotID = req.body.RiotID;
+  var securityAnswer = req.body.securityAnswer.trim();
+  var RiotUsername = req.body.RiotUsername.trim();
+  var RiotID = req.body.RiotID.trim();
 
   await authenticationFunctions.submitUser(
     req, res,
@@ -149,8 +150,8 @@ app.get('/login', (req, res) => {
 
 // Log in submission and verification
 app.post('/loggingin', async (req, res) => {
-  var username = req.body.username;
-  var password = req.body.password;
+  var username = req.body.username.trim();
+  var password = req.body.password.trim();
 
   await authenticationFunctions.logInUser(req, res, username, password, userCollection);
 });
@@ -160,16 +161,16 @@ app.get('/password_recovery', (req, res) => {
 })
 
 app.post('/security_question', async (req, res) => {
-  username = req.body.username;
+  username = req.body.username.trim();
   await authenticationFunctions.renderSecurityQuestion(req, res, username, userCollection);
 
 })
 
 app.post('/password_reset', async (req, res) => {
   // Validate new password and security answer input
-  username = req.body.username;
-  securityAnswer = req.body.securityAnswer;
-  newPassword = req.body.newPassword;
+  username = req.body.username.trim();
+  securityAnswer = req.body.securityAnswer.trim();
+  newPassword = req.body.newPassword.trim();
 
   await authenticationFunctions.resetPassword(req, res, username, securityAnswer, newPassword, userCollection);
 })
@@ -187,134 +188,59 @@ app.get('/weather', async (req, res) => {
   weather.getWeather(url, res)
 });
 
-// Freinds
+// Friends
 app.get('/friends', async (req, res) => {
-  const userCollection = await database.db(mongodb_database).collection('users');
-  if (req.session.authenticated) {
-    // if logged in
-    // gets user from DB based on session username
-    const userInfo = await userCollection.findOne({ username: req.session.username });
-    let userFriends = [];
-    try {
-      //attempts to get friends from user
-      userFriends = await userInfo.friends;
-    } catch (error) {
-      console.error("could not retreive firends");
-    }
-    res.render("friends.ejs", {
-      username: req.session.username,
-      friends: userFriends
-    });
-    return;
+  const type = req.query.type;
+  const searched = req.query.searched;
+  // no param case
+  if(!type || !searched) {
+    return friendFunctions.loadFriendsPage(req, res, userCollection, friendFunctions);
+  }
+  //param case
+  if(type == "requests") {
+    return friendFunctions.loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched);
+  } else if (type == "display") {
+    return friendFunctions.loadFriendsPageWithFriendSearch(req, res, userCollection, friendFunctions, searched);
   } else {
-    // not logged in
-    res.render("home_logged_out.ejs");
+    // catch faulty urls
+    return friendFunctions.loadFriendsPage(req, res, userCollection, friendFunctions);
   }
 })
 
 // method to add friends
 app.post('/addFriend', async (req, res) => {
-  const recipientUsername = req.body.friendUsername;
-  // need to catch if user DNE
-  const userCollection = await database.db(mongodb_database).collection('users');
-  const recipientInfo = await userCollection.findOne({ username: recipientUsername });
-  try {
-    if (recipientInfo) {
-      // If recipient user exists, push the current user's username to their friendRequest array
-      recipientInfo.friendRequest.push(req.session.username);
-      // Update the recipient user document in the database
-      await userCollection.updateOne(
-        { username: recipientUsername },
-        { $set: { friendRequest: recipientInfo.friendRequest } }
-      );
-      // Redirect to the friends page
-      res.redirect('/friends');
-    } else {
-      res.status(100).send("user not found")
-    }
-  } catch { console.error(error); res.status(500).send('error sending friends') }
-  //   try {
-  //   recipientInfo.friendRequest.push(req.session.username);
-  //   res.redirect('/friends');
-  // } catch (error) {
-  //   console.error(error);
-  //   res.status(500).send('error sending friends')
-  // }
+  friendFunctions.sendFriendRequest(req, res, userCollection);
 })
 
-// Friend Request
-app.get('/friendRequest', async (req, res) => {
-  const userCollection = await database.db(mongodb_database).collection('users');
-  if (req.session.authenticated) {
-    // if logged in
-    // gets user from DB based on session username
-    const userInfo = await userCollection.findOne({ username: req.session.username });
-    let userFriendRequest = [];
-    try {
-      //attempts to get friendRequest from user
-      userFriendRequest = await userInfo.friendRequest;
-    } catch (error) {
-      console.error("could not retreive firends");
-    }
-    res.render("friend_request.ejs", {
-      username: req.session.username,
-      requests: userFriendRequest
-    });
-    return;
-  } else {
-    // not logged in
-    res.render("home_logged_out.ejs");
-  }
+// method to delete a frirend
+app.post('/deleteFriend/:friendName', async (req, res) => {
+  friendFunctions.deleteFriend(req, res, userCollection);
+})
+
+// method to display searched user in request
+app.post('/searchFriends/request', async (req, res) => {
+  friendFunctions.searchFriendRequest(req, res);
+})
+
+// method to display searched user in friend display
+app.post('/searchFriends/display', async (req, res) => {
+  friendFunctions.searchFriendDisplay(req, res);
+})
+
+// method to clear search result
+app.post('/searchFriends/clear', async (req, res) => {
+  friendFunctions.searchFriendClear(req, res);
 })
 
 // method to accept friend 
 app.post('/acceptFriend/:friendName', async (req, res) => {
-  const requester = req.params.friendName;
-  const accepter = req.session.username;
-  const userCollection = await database.db(mongodb_database).collection('users');
-  try {
-    // adds the accepter to the requester's friends
-    await userCollection.updateOne(
-      { username: requester },
-      { $push: { friends: accepter } }
-    );
-    // updates the friend requests of requester
-    await userCollection.updateOne(
-      { username: requester },
-      { $pull: { friendRequest: accepter } }
-    );
-    // adds the requester to the accepter's friends
-    await userCollection.updateOne(
-      { username: accepter },
-      { $push: { friends: requester } }
-    );
-    // updates the friend requests of accepter
-    await userCollection.updateOne(
-      { username: accepter },
-      { $pull: { friendRequest: requester } }
-    );
-  } catch (error) {
-    console.error("could not accept request(server side)", error)
-  }
-  res.redirect("/friendRequest");
+  friendFunctions.acceptFriend(req, res, userCollection);
 
 })
 
 // method to reject friend
 app.post('/rejectFriend/:friendName', async (req, res) => {
-  const requester = req.params.friendName;
-  const accepter = req.session.username;
-  const userCollection = await database.db(mongodb_database).collection('users');
-  try {
-    // removes the friend request of accepter
-    await userCollection.updateOne(
-      { username: accepter },
-      { $pull: { friendRequest: requester } }
-    );
-  } catch (error) {
-    console.error("could not reject request(server side)", error)
-  }
-  res.redirect("/friendRequest");
+  friendFunctions.rejectFriend(req, res, userCollection);
 })
 
 // Log out
@@ -575,15 +501,6 @@ async function sendMessage(message) {
     throw new Error('Failed to communicate with OpenAI API');
   }
 }
-
-// Friends page
-app.get('/friends', (req, res) => {
-  if (req.session.authenticated) {
-    res.render("friends.ejs");
-    return;
-  }
-  res.redirect("/");
-})
 
 // Profile page
 app.get('/profile', async (req, res) => {

@@ -1,0 +1,23 @@
+    <div id="friendRequestDisplay">
+        <% if (requests.length===0) { %>
+            <div>No friend requests</div>
+            <% } else { %>
+                <div>Friend requests (<%= requests.length %>)</div>
+                <div class="friendRequestContainer">
+                    <% requests.forEach(request=> { %>
+                        <div class="friendRequestCard p-4">
+                                <p class = "text-lg"><%= request %></p>
+                                <p class="text-sm textNoWrap"><i>Incoming friend request</i></p>
+                            <div class="flex justify-between">
+                                <form action="/acceptFriend/<%= request %>" method="post">
+                                    <button type="submit">✅</button>
+                                </form>
+                                <form action="/rejectFriend/<%= request %>" method="post">
+                                    <button type="submit">❌</button>
+                                </form>
+                            </div>
+                        </div>
+                        <% }); %>
+                </div>
+                        <% } %>
+    </div>
