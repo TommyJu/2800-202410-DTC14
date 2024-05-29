@@ -276,4 +276,6 @@ async function displayStats (res, RiotUsername, RiotID, tasks, otherRiotUsername
 module.exports = {
   validateSummonerCredentials,
   displayStats,
+  getRiotPUUID,
+  getSummonerEncryptedIdAndLevel,
 };
