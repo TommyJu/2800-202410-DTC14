@@ -286,13 +286,13 @@ app.post('/searchSummoner', async (req, res) => {
     req.session.otherRiotID = summonerID;
     res.redirect('/game');
   } else {
-    if (summonerUsername == "" || summonerID == "") {
+    if (summonerUsername === "" || summonerID === "") {
       console.log("Empty summoner credentials");
       req.session.otherRiotUsername = undefined;
       req.session.otherRiotID = undefined;
     } else {
-      req.session.otherRiotUsername = 'surelynot';
-      req.session.otherRiotID = 'haha';
+      req.session.otherRiotUsername = 'inval';
+      req.session.otherRiotID = 'inval';
     }
     console.log("Invalid summoner credentials");
     res.redirect('/game');
