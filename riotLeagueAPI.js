@@ -22,6 +22,7 @@ function validateSummonerCredentials(summonerUsername, summonerID) {
 };
 
 function riotCredentialsExist (RiotUsername, RiotID) {
+  console.log(RiotUsername, RiotID);
   if (!RiotUsername || !RiotID) {
     return false;
   } else {
@@ -41,6 +42,7 @@ async function getRiotPUUID(riotUsername, riotID) {
   try {
     const data = await fetch(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${riotUsername}/${riotID}?api_key=${daily_api_key}`)
     if (data.status != 200) {
+      console.log('puuid response was not 200');
       return false;
     }
     const dataJson = await data.json();
@@ -48,6 +50,7 @@ async function getRiotPUUID(riotUsername, riotID) {
     if (PUUID === undefined) {
       return false;
     }
+    console.log('puuid=' + PUUID);
     return PUUID;
   } catch (error){
     console.error('Could not fetch puuid:', error);
@@ -57,6 +60,10 @@ async function getRiotPUUID(riotUsername, riotID) {
 async function getSummonerEncryptedIdAndLevel(PUUID) {
   try {
     const data = await fetch(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${PUUID}?api_key=${daily_api_key}`);
+    if (data.status != 200) {
+      console.log('summonerv4 api call response was not 200');
+      return false;
+    }
     const dataJson = await data.json();
     const encryptedSummonerId = dataJson.id;
     if (encryptedSummonerId === undefined) {
@@ -114,6 +121,9 @@ async function getSummonerStats(riotUsername, riotID) {
       return false;
     } 
     const summonerDetails = await getSummonerEncryptedIdAndLevel(PUUID);
+    if (summonerDetails === false) {
+      return false;
+    } 
     const encryptedSummonerId = summonerDetails[0];
     summonerLevel = summonerDetails[1];
     const summonerRankAndWinrate = await getSummonerRankAndWinrate(encryptedSummonerId);
@@ -139,7 +149,7 @@ function renderCaseBaseCase (res, tasks, gamingSuggestions, summonerLevel, summo
     rank: summonerRank, 
     winrate: winrate, 
     noRiot: "", 
-    noSummoner: "",
+    noSummoner: " ",
     additionalSummoner: "", 
   });
   return;
@@ -164,7 +174,7 @@ function renderCaseNoRiotNoSearch (res, tasks, gamingSuggestions) {
     tasks: tasks, 
     gamingSuggestions: gamingSuggestions,
     noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
-    noSummoner: "",
+    noSummoner: " ",
     additionalSummoner: "", 
   });
   return;
@@ -231,13 +241,13 @@ async function displayStatsRiotAndSearch (res, RiotUsername, RiotID, tasks, othe
   if (riotCredentialsExist(RiotUsername, RiotID) && (riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const userStats = await getSummonerStats(RiotUsername, RiotID);
     const otherSummonerStats = await getSummonerStats(otherRiotUsername, otherRiotID);
+    summonerLevel = userStats[0];
+    summonerRank = verifyLeagueRank(userStats[1]);
+    winrate = userStats[2];
     if (otherSummonerStats === false) {
       renderCaseBaseCaseInvalidSearch(res, tasks, gamingSuggestions, summonerLevel, summonerRank, winrate);
       return;
     } else { 
-      summonerLevel = userStats[0];
-      summonerRank = verifyLeagueRank(userStats[1]);
-      winrate = userStats[2];
       otherSummonerLevel = otherSummonerStats[0];
       otherRank = verifyLeagueRank(otherSummonerStats[1]);
       otherWinrate = otherSummonerStats[2];
