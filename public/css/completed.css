@@ -1,0 +1,14 @@
+#completed-background {
+    padding: 20px;
+    padding-bottom: 100px;
+    color: var(--yellow);
+    display: flex;
+    flex-direction: column;
+    background-image: url("../images/backgrounds/profile_background2.jpg");
+    width: 100%;
+    min-height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
