@@ -5,26 +5,8 @@
     <%- include('templates/game/helpfulMessage.ejs', {helpfulMessage: noRiot})  %>
   
     <!-- Other summoner game stats -->
-    <div class="w-4/5"><%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate}) %></div>
+    <div class=""><%- include('templates/game/summonerGameStats.ejs', {otherSummonerLevel: otherSummonerLevel, otherRank: otherRank, otherWinrate: otherWinrate}) %></div>
     <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
-  
-    <!-- Parameter determines default selected dropdown category for modal -->
-    <div class="flex place-content-between">
-      <a href="/game_completed"
-          class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          type="button">
-          Completed Tasks
-      </a>
-      <%- include("templates/task_modal.ejs", {category: 'game' }) %>
-    </div>
-  
-    <h3 class="text-xl font-bold bg-red-500 text-white rounded-lg p-1 w-fit">To Do List</h3>
-    <%- include("templates/task_cards_container.ejs", {tasks: tasks, activities: gamingSuggestions, type:'custom'}) %>
-  
-    <h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit"> Suggested Tasks</h3>
-    <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED'], category: 'game', userTasks: tasks, suggestionValid: true}) %>
-  
-    <%- include("templates/easter_footer.ejs") %>
   
     <% } else if (noRiot){ %>
   
@@ -32,24 +14,6 @@
       <%- include('templates/game/helpfulMessage.ejs', {helpfulMessage: noRiot})  %>
   
       <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
-  
-      <!-- Parameter determines default selected dropdown category for modal -->
-      <div class="flex place-content-between">
-        <a href="/game_completed"
-            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            type="button">
-            Completed Tasks
-        </a>
-        <%- include("templates/task_modal.ejs", {category: 'game' }) %>
-      </div>
-  
-      <h3 class="text-xl font-bold bg-red-500 text-white rounded-lg p-1 w-fit">To Do List</h3>
-      <%- include("templates/task_cards_container.ejs", {tasks: tasks, activities: gamingSuggestions, type:'custom'}) %>
-  
-      <h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit"> Suggested Tasks</h3>
-      <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: ['UNRANKED'], category: 'game', userTasks: tasks, suggestionValid: true}) %>
-  
-      <%- include("templates/easter_footer.ejs") %>
   
   <!-- user has riot account, and other summoner searched -->
     <% } else if (additionalSummoner){ %>
@@ -60,54 +24,37 @@
     </div>
   
     <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
-  
-    <!-- Parameter determines default selected dropdown category for modal -->
-  
-    <div class="flex place-content-between">
-      <a href="/game_completed"
-          class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          type="button">
-          Completed Tasks
-      </a>
-      <%- include("templates/task_modal.ejs", {category: 'game' }) %>
-    </div>
-  
-    <h3 class="text-xl font-bold bg-red-500 text-white rounded-lg p-1 w-fit">To Do List</h3>
-    <%- include("templates/task_cards_container.ejs", {tasks: tasks, activities: gamingSuggestions, type:'custom'}) %>
-  
-    <h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit"> Suggested Tasks</h3>
-    <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank, category: 'game', userTasks: tasks, suggestionValid: true}) %>
-  
-    <%- include("templates/easter_footer.ejs") %>
   <!-- Riot account but no other summoner searched -->
   <% } else { %>
 
   
     <div id="test" class="flex">
   
-      <div class="w-4/5"><%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate}) %></div>
+      <div class=""><%- include('templates/game/userGameStats.ejs', {level: level, rank: rank, winrate: winrate}) %></div>
   
     </div>
   
     <%- include('templates/game/searchSummonerButton.ejs', {noSummoner: noSummoner}) %>
-  
-    <!-- Parameter determines default selected dropdown category for modal -->
-    <div class="flex place-content-between">
-      <a href="/game_completed"
-          class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          type="button">
-          Completed Tasks
-      </a>
-      <%- include("templates/task_modal.ejs", {category: 'game' }) %>
-    </div>
-  
-    <h3 class="text-xl font-bold bg-red-500 text-white rounded-lg p-1 w-fit">To Do List</h3>
-    <%- include("templates/task_cards_container.ejs", {tasks: tasks, activities: gamingSuggestions, type:'custom'}) %>
-  
-    <h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit"> Suggested Tasks</h3>
-    <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank, category: 'game', userTasks: tasks, suggestionValid: true}) %>
-  
-    <%- include("templates/easter_footer.ejs") %>
-  
   <% } %>
+
+  <!-- Tasks -->
+  <h3 class="text-center text-white text-2xl font-bold rounded-lg m-6 w-3/4">Tasks</h3>
+   <div class="flex gap-4 align-center flex-wrap w-3/4 justify-center">
+    <a href="/game_completed"
+        class="rounded border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000"
+        type="button">
+        Completed Tasks
+    </a>
+    <!-- Modal toggle -->
+<button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class="text-white rounded border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000" type="button">
+  Add task
+</button>
+    <%- include("templates/task_modal.ejs", {category: 'game' }) %>
+  </div>
+  <%- include("templates/task_cards_container.ejs", {tasks: tasks, activities: gamingSuggestions, type:'custom'}) %>
+
+  <h3 class="text-center text-white text-2xl font-bold rounded-lg p-1 w-3/4"> Suggested tasks</h3>
+  <%- include("templates/task_cards_container.ejs", {tasks: gamingSuggestions, type: 'gameSuggestions', rank: rank, category: 'game', userTasks: tasks, suggestionValid: true}) %>
+
+  <%- include("templates/easter_footer.ejs") %>
 </div>
