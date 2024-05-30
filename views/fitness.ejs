@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,43 +11,51 @@
 </head>
 <style>
     body {
-    background-image: url('https://img.freepik.com/premium-photo/black-background-dark-backdrop-smooth-wave-black-wallpaper_715671-1433.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;    
-}
+        background-image: url('https://img.freepik.com/premium-photo/black-background-dark-backdrop-smooth-wave-black-wallpaper_715671-1433.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
 
-.audiowide {
-    font-family: 'Audiowide', cursive;
-}
+    .audiowide {
+        font-family: 'Audiowide', cursive;
+    }
 </style>
 <%- include("templates/header_with_profile.ejs") %>
 
-<body>
-    <div class="m-2 audiowide">
-    <%- include("fitness_weather.ejs") %>
-        <div class="flex place-content-between mt-2">
-            <a href="/fitness_completed"
-                class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                type="button">
-                Completed Tasks
-            </a>
-            <%- include("templates/task_modal.ejs", {category: 'fitness' }) %>
-        </div>
-        <br>
+    <body>
+        <div class="m-2 audiowide">
+            <%- include("fitness_weather.ejs") %>
+                <div class="flex place-content-between mt-2">
+                    <a href="/fitness_completed"
+                        class="rounded border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000"
+                        type="button">
+                        Completed Tasks
+                    </a>
+                    <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
+                        class="rounded audiowide border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000"
+                        type="button">
+                        Add task
+                    </button>
+                    <%- include("templates/task_modal.ejs", {category: 'fitness' }) %>
+                </div>
+                <br>
 
-        <h3 class="text-xl font-bold bg-red-500 text-white rounded-lg p-1 w-fit">To Do List</h3>
-        <%- include("templates/task_cards_container.ejs", {tasks: tasks, activties: activities, type:'custom'}) %>
-            <br>
-            <h3 class="text-xl font-bold bg-green-500 text-white rounded-lg p-1 w-fit"> Suggested Tasks</h3>
-            <%- include("templates/task_cards_container.ejs", {tasks: activities, type:'suggestion', weatherToday:
-                weatherToday}) %>
-                <br>
-                <br>
-                <br>
-                <br>
-                <%- include("templates/footer.ejs") %>
-    </div>
-</body>
+                <h3 class="text-center text-white text-2xl font-bold rounded-lg p-1"> To Do List</h3>
+                <%- include("templates/task_cards_container.ejs", {tasks: tasks, activties: activities, type:'custom'})
+                    %>
+                    <br>
+                    <h3 class="text-center text-white text-2xl font-bold rounded-lg p-1"> Suggested
+                        tasks</h3>
+                    <%- include("templates/task_cards_container.ejs", {tasks: activities, type:'suggestion',
+                        weatherToday: weatherToday}) %>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <%- include("templates/footer.ejs") %>
+        </div>
+    </body>
+
 </html>
