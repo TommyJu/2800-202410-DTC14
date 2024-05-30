@@ -1,27 +1,27 @@
 <%- include("templates/header_with_profile.ejs") %> 
     <div id="friendPage">
         <div id="friendAddBar" class="">
-            <h3 class="text-4xl text-center mb-8">
+            <h3 class="text-4xl text-center mb-12">
                     Friends
             </h3>
             
-            <form id="friendAdd" method="post" action="/addFriend" class="mb-4">  
-                <input name="friendUsername" type="text" placeholder="Friend's Username" 
-                pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required maxlength="20" class="placeholder-black">
-                <button type="submit" class="bg-black p-1 rounded-xl">Add friend</button>
+            <form id="friendAdd" method="post" action="/addFriend" class="mb-12">  
+                <input name="friendUsername" type="text" placeholder="Username" 
+                pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required maxlength="20" class="placeholder-black p-2">
+                <button type="submit" class="rounded border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000">Add friend</button>
             </form>
             <form id="friendDisplaySearch" method="post" action="/searchFriends/display" class="mb-4">
-                <input name="friendUsername" type="text" placeholder="Search Friends" 
-                pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required maxlength="20" class="placeholder-black">
-                <button type="submit" class="bg-black p-1 rounded-xl"> Search friends</button>
+                <input name="friendUsername" type="text" placeholder="Username" 
+                pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required maxlength="20" class="placeholder-black p-2">
+                <button type="submit" class="rounded border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000">Search friends</button>
             </form>
             <form id="friendRequestSearch" method="post" action="/searchFriends/request"class="mb-4">
-                <input name="friendUsername" type="text" placeholder="Search Request" 
-                pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required maxlength="20" class="placeholder-black">
-                <button type="submit" class="bg-black p-1 rounded-xl"> Search requests</button>
+                <input name="friendUsername" type="text" placeholder="Username" 
+                pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required maxlength="20" class="placeholder-black p-2">
+                <button type="submit" class="rounded border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000">Search requests</button>
             </form>
             <form id="friendClear" method="post" action="/searchFriends/clear" class="flex justify-center">
-                <button type="submit" class="bg-black p-1 rounded-xl" > Clear search</button>
+                <button type="submit" class="mt-6 rounded border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000" >Clear search</button>
             </form>
         </div>
     <%- include("templates/friends/friend_request", {requests: requests}) %>
