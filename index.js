@@ -27,6 +27,8 @@ const apiReqestLimiter = new bottleneck({
 
 const delayedSummonerSearch = apiReqestLimiter.wrap(lolAPI.searchSummoner);
 
+const delayedDisplayStats = apiReqestLimiter.wrap(lolAPI.displayStats);
+
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const ejs = require('ejs');
@@ -274,7 +276,8 @@ app.get('/game', async (req, res) => {
     otherRiotID = req.session.otherRiotID;
 
     //Use helper function to display stats.
-    lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
+    // lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
+    await delayedDisplayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
     delete req.session.otherRiotUsername;
     delete req.session.otherRiotID;
     return;
