@@ -1,11 +1,6 @@
 const Joi = require('joi');
-const bottleneck = require('bottleneck');
 const { render } = require('ejs');
 const daily_api_key = process.env.DAILY_RIOT_API_KEY;
-
-const apiReqestLimiter = new bottleneck({
-  minTime: 50
-});
 
 function validateSummonerCredentials(summonerUsername, summonerID) {
   const summonerUsernameSchema = Joi.string().min(3).max(16).alphanum().required();
@@ -29,6 +24,31 @@ function riotCredentialsExist (RiotUsername, RiotID) {
     return true;
   }
 }
+
+async function searchSummoner (req, res) {
+  delete req.session.otherRiotUsername;
+  delete req.session.otherRiotID;
+
+  var summonerUsername = req.body.summonerUsername;
+  var summonerID = req.body.summonerID;
+
+  if (validateSummonerCredentials(summonerUsername, summonerID)) {
+    req.session.otherRiotUsername = summonerUsername;
+    req.session.otherRiotID = summonerID;
+    res.redirect('/game');
+  } else {
+    if (summonerUsername === "" && summonerID === "") {
+      console.log("Empty summoner credentials");
+      req.session.otherRiotUsername = undefined;
+      req.session.otherRiotID = undefined;
+    } else {
+      req.session.otherRiotUsername = 'inval';
+      req.session.otherRiotID = 'inval';
+    }
+    console.log("Invalid summoner credentials");
+    res.redirect('/game');
+  }
+};  
 
 function verifyLeagueRank (rank) {
   if (rank === null) {
@@ -291,4 +311,5 @@ module.exports = {
   displayStats,
   getRiotPUUID,
   getSummonerEncryptedIdAndLevel,
+  searchSummoner,
 };

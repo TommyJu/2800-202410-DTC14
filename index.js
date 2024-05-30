@@ -15,9 +15,19 @@ const readline = require('readline');
 const mongoose = require('mongoose');
 const path = require('path');
 const favicon = require('serve-favicon');
+const bottleneck = require('bottleneck');
 
 // Importing the API logic functions to link back end data to front end display.
 const lolAPI = require('./riotLeagueAPI.js');
+
+// Creating a time limiter bottleneck function to prevent API spamming due to our request limit for the free Riot API key.
+const apiReqestLimiter = new bottleneck({
+  minTime: 500
+});
+
+const delayedSummonerSearch = apiReqestLimiter.wrap(lolAPI.searchSummoner);
+
+const delayedDisplayStats = apiReqestLimiter.wrap(lolAPI.displayStats);
 
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -266,7 +276,8 @@ app.get('/game', async (req, res) => {
     otherRiotID = req.session.otherRiotID;
 
     //Use helper function to display stats.
-    lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
+    // lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
+    await delayedDisplayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
     delete req.session.otherRiotUsername;
     delete req.session.otherRiotID;
     return;
@@ -275,28 +286,29 @@ app.get('/game', async (req, res) => {
 })
 
 app.post('/searchSummoner', async (req, res) => {
-  delete req.session.otherRiotUsername;
-  delete req.session.otherRiotID;
+  // delete req.session.otherRiotUsername;
+  // delete req.session.otherRiotID;
 
-  var summonerUsername = req.body.summonerUsername;
-  var summonerID = req.body.summonerID;
+  // var summonerUsername = req.body.summonerUsername;
+  // var summonerID = req.body.summonerID;
 
-  if (lolAPI.validateSummonerCredentials(summonerUsername, summonerID)) {
-    req.session.otherRiotUsername = summonerUsername;
-    req.session.otherRiotID = summonerID;
-    res.redirect('/game');
-  } else {
-    if (summonerUsername === "" || summonerID === "") {
-      console.log("Empty summoner credentials");
-      req.session.otherRiotUsername = undefined;
-      req.session.otherRiotID = undefined;
-    } else {
-      req.session.otherRiotUsername = 'inval';
-      req.session.otherRiotID = 'inval';
-    }
-    console.log("Invalid summoner credentials");
-    res.redirect('/game');
-  };
+  // if (lolAPI.validateSummonerCredentials(summonerUsername, summonerID)) {
+  //   req.session.otherRiotUsername = summonerUsername;
+  //   req.session.otherRiotID = summonerID;
+  //   res.redirect('/game');
+  // } else {
+  //   if (summonerUsername === "" || summonerID === "") {
+  //     console.log("Empty summoner credentials");
+  //     req.session.otherRiotUsername = undefined;
+  //     req.session.otherRiotID = undefined;
+  //   } else {
+  //     req.session.otherRiotUsername = 'inval';
+  //     req.session.otherRiotID = 'inval';
+  //   }
+  //   console.log("Invalid summoner credentials");
+  //   res.redirect('/game');
+  // };
+  await delayedSummonerSearch(req, res);
 });
 
 // Fitness page
