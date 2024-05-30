@@ -31,6 +31,7 @@
     border: solid var(--yellow) 1px;
     flex-wrap: wrap;
     /* width: 300px; */
+    min-width: 100%;
     text-align: center;
     justify-content: center;
     align-items: center;
