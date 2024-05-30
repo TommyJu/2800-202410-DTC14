@@ -14,6 +14,7 @@
         .audiowide {
             font-family: 'Audiowide', cursive;
         }
+
         .audiowide {
             font-family: 'Audiowide', cursive;
         }
@@ -107,11 +108,11 @@
             </div>
             <input
                 class="btn w-full bg-transparent border-2 border-[#f5b700] text-white py-1 text-lg cursor-pointer my-3"
-                type="submit" value="Sign Up">
+                type="submit" id="signUp" value="Sign Up" onsubmit="disableButton()">
         </form>
     </div>
     <script>
-                const selectElement = document.getElementById('securityQuestion');
+        const selectElement = document.getElementById('securityQuestion');
         const marqueeElement = document.createElement('div');
         marqueeElement.style.overflow = 'hidden';
         marqueeElement.style.whiteSpace = 'nowrap';
@@ -136,6 +137,11 @@
         updateMarquee();
 
         selectElement.parentNode.appendChild(marqueeElement);
+        function disableButton() {
+            var button = document.getElementById("signUp");
+            button.disabled = true;
+            button.textContent = "Clicked!";
+        }
     </script>
 </body>
 
