@@ -163,7 +163,7 @@ function renderCaseBaseCaseInvalidSearch (res, tasks, gamingSuggestions, summone
     rank: summonerRank, 
     winrate: winrate, 
     noRiot: "", 
-    noSummoner: "Cannot search for summoner. Summoner credentials are invalid.",
+    noSummoner: "Provided summoner credentials are invalid.",
     additionalSummoner: "", 
   });
   return;
@@ -186,7 +186,7 @@ function renderCaseNoRiotInvalidSearch (res, tasks, gamingSuggestions) {
     tasks: tasks, 
     gamingSuggestions: gamingSuggestions,
     noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
-    noSummoner: "Cannot search for summoner. Summoner credentials are invalid.",
+    noSummoner: "Provided summoner credentials are invalid.",
     additionalSummoner: "", 
     rank: ["UNRANKED"],
   });
@@ -212,8 +212,13 @@ async function displayStatsNoRiotCases (res, RiotUsername, RiotID, tasks, otherR
   if (!(riotCredentialsExist(RiotUsername, RiotID)) && (riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const otherSummonerStats = await getSummonerStats(otherRiotUsername, otherRiotID);
     if (otherSummonerStats === false) {
+      if (otherRiotUsername != "" || otherRiotID != "") {
       renderCaseNoRiotInvalidSearch(res, tasks, gamingSuggestions);
       return;
+      } else {
+        renderCaseNoRiotNoSearch(res, tasks, gamingSuggestions);
+        return;
+      }
     } else {
       otherSummonerLevel = otherSummonerStats[0];
       otherRank = verifyLeagueRank(otherSummonerStats[1]);
