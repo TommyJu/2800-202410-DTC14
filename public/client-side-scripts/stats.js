@@ -99,11 +99,16 @@ const getChartOptions = () => {
     },
   }
 }
-levelGame = parseInt(document.getElementById("levelGame").innerHTML);
+
+try {
+  levelGame = parseInt(document.getElementById("levelGame").innerHTML);
 levelFitness = parseInt(document.getElementById("levelFitness").innerHTML);
 levelDiet = parseInt(document.getElementById("levelDiet").innerHTML);
 if (document.getElementById("donut-chart") && typeof ApexCharts !== 'undefined') {
   const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions());
   chart.render();
+}
+} catch (error) {
+  console.log("Donut chart not loaded for this page.")
 }
 
