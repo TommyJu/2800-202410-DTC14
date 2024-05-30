@@ -1,6 +1,6 @@
 <div id="summonerEntry" class="p-8 border border-yellow-500 border-[1px] my-8">
   <h1 class="font-bold text-center m-2 text-xl">Look up a summoner!</h1>
-  <form action='/searchSummoner' method='post' class="flex flex-col gap-6">
+  <form action='/searchSummoner' method='post' class="flex flex-col gap-6" onsubmit="preventDoubleClick()">
     <div class="searchInputs flex w-full justify-center gap-2 flex-wrap">
       <input class=" p-1 placeholder-black text-black bg-gray-300" name='summonerUsername' type='text' placeholder='Riot Username' value="">
       <input class=" p-1 placeholder-black text-black bg-gray-300" name='summonerID' type='text' placeholder='Riot ID' value="">
