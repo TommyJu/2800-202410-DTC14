@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
-    <title>Document</title>
-</head>
 <style>
     body {
         background-image: url('https://img.freepik.com/premium-photo/black-background-dark-backdrop-smooth-wave-black-wallpaper_715671-1433.jpg');
@@ -24,38 +13,34 @@
 </style>
 <%- include("templates/header_with_profile.ejs") %>
 
-    <body>
-        <div class="m-2 audiowide">
-            <%- include("fitness_weather.ejs") %>
-                <div class="flex place-content-between mt-2">
-                    <a href="/fitness_completed"
-                        class="rounded border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000"
-                        type="button">
-                        Completed Tasks
-                    </a>
-                    <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
-                        class="rounded audiowide border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000"
-                        type="button">
-                        Add task
-                    </button>
-                    <%- include("templates/task_modal.ejs", {category: 'fitness' }) %>
-                </div>
+    <div class="m-2 audiowide">
+        <%- include("fitness_weather.ejs") %>
+            <div class="flex place-content-between mt-2">
+                <a href="/fitness_completed"
+                    class="rounded border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000"
+                    type="button">
+                    Completed Tasks
+                </a>
+                <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
+                    class="rounded audiowide border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000"
+                    type="button">
+                    Add task
+                </button>
+                <%- include("templates/task_modal.ejs", {category: 'fitness' }) %>
+            </div>
+            <br>
+
+            <h3 class="text-center text-white text-2xl font-bold rounded-lg p-1"> To Do List</h3>
+            <%- include("templates/task_cards_container.ejs", {tasks: tasks, activties: activities, type:'custom'}) %>
                 <br>
-
-                <h3 class="text-center text-white text-2xl font-bold rounded-lg p-1"> To Do List</h3>
-                <%- include("templates/task_cards_container.ejs", {tasks: tasks, activties: activities, type:'custom'})
-                    %>
+                <h3 class="text-center text-white text-2xl font-bold rounded-lg p-1"> Suggested
+                    tasks</h3>
+                <%- include("templates/task_cards_container.ejs", {tasks: activities, type:'suggestion', weatherToday:
+                    weatherToday}) %>
                     <br>
-                    <h3 class="text-center text-white text-2xl font-bold rounded-lg p-1"> Suggested
-                        tasks</h3>
-                    <%- include("templates/task_cards_container.ejs", {tasks: activities, type:'suggestion',
-                        weatherToday: weatherToday}) %>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <%- include("templates/footer.ejs") %>
-        </div>
+                    <br>
+                    <br>
+                    <br>
+                    <%- include("templates/footer.ejs") %>
+    </div>
     </body>
-
-</html>
