@@ -176,6 +176,7 @@ function renderCaseNoRiotNoSearch (res, tasks, gamingSuggestions) {
     noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
     noSummoner: " ",
     additionalSummoner: "", 
+    rank: ["UNRANKED"],
   });
   return;
 };
@@ -187,6 +188,7 @@ function renderCaseNoRiotInvalidSearch (res, tasks, gamingSuggestions) {
     noRiot: "No Riot credentials linked to this account. Cannot display your stats.", 
     noSummoner: "Cannot search for summoner. Summoner credentials are invalid.",
     additionalSummoner: "", 
+    rank: ["UNRANKED"],
   });
   return;
 };
@@ -201,6 +203,7 @@ function renderCaseNoRiotValidSearch (res, tasks, gamingSuggestions, otherSummon
     otherSummonerLevel: otherSummonerLevel,
     otherRank: otherRank,
     otherWinrate: otherWinrate,
+    rank: ["UNRANKED"],
   });
   return;
 };
