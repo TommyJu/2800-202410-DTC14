@@ -325,7 +325,7 @@ app.get('/fitness', async (req, res) => {
       defaultCity = result[0].city
     }
 
-    url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity},CA&appid=${weatherKey}&units=metric`
+    url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity}&appid=${weatherKey}&units=metric`
     console.log(url)
     const physicalCollection = await database.db('physical_pillar').collection('activities').find().toArray();
     tasks = await taskFunctions.getTasksByCategory("fitness", req.session.username, userCollection);
