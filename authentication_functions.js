@@ -1,9 +1,11 @@
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const saltRounds = 12;
 const expireTime = 1 * 60 * 60 * 1000; // one hour expiry time
 const lolAPI = require('./riotLeagueAPI.js');
 const { get } = require('http');
+const weatherFunctions = require('./weather.js')
 
 module.exports = { submitUser, logInUser, resetPassword, renderSecurityQuestion };
 
@@ -67,8 +69,16 @@ async function submitUser(
     return;
   }
 
+  const weatherKey = process.env.OPEN_WEATHER_API_KEY;
   const cityValidationResult = citySchema.validate(city);
-  if (cityValidationResult.error != null) {
+  if (cityValidationResult.error != null 
+    // Check if weather data can be retrieved from the city provided at sign up
+    // This function returns undefined if there is an error
+    || await weatherFunctions.getWeather(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherKey}&units=metric`) 
+      == 
+      undefined
+  ) {
     res.render("invalid_sign_up.ejs", { type: "city" })
     return;
   }

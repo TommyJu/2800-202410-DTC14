@@ -316,11 +316,15 @@ app.get('/fitness', async (req, res) => {
   if (req.session.authenticated) {
     username = req.session.username;
     const result = await userCollection.find({ username: username }).toArray();
+    // The sign up process should ensure that the user's city is valid
+    // Check for older accounts that may not have a city field
+    let defaultCity;
     if (result[0].city === undefined) {
       defaultCity = `Vancouver`
     } else {
       defaultCity = result[0].city
     }
+
     url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity},CA&appid=${weatherKey}&units=metric`
     console.log(url)
     const physicalCollection = await database.db('physical_pillar').collection('activities').find().toArray();

@@ -14,8 +14,9 @@ app.use(cors());
 async function getWeather(url) {
     current = await fetch(url)
     currentJSON = await current.json()
+    // If there is an error converting the URL to JSON, return undefined
     if (currentJSON.message)
-        return res.send('City not found')
+        return undefined;
     const cityName = currentJSON.name
     const weatherToday = currentJSON.weather[0].main
     const weatherTemp = currentJSON.main.temp
