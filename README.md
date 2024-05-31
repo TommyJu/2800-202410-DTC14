@@ -269,12 +269,12 @@ Note: Recipes can also be added to the to-do list from the favourite recipes mod
 
 ## References
 
-- [Goku Graphic]()
-- [Sonic and Knuckles Graphic]()
-- [Home Graphic]()
-- [Gameboy Graphic]()
-- [Pizza Graphic]()
-- [GUD Logo Graphic]()
+- [Goku Graphic](https://www.textstudio.com/)
+- [Sonic and Knuckles Graphic](https://www.textstudio.com/)
+- [Home Graphic](https://www.textstudio.com/)
+- [Gameboy Graphic](https://www.textstudio.com/)
+- [Pizza Graphic](https://www.textstudio.com/)
+- [GUD Logo Graphic](https://www.textstudio.com/)
 - [Favicon](https://www.favicon.cc/)
 - [Task Card Emojis](https://emoji.aranja.com/)
 - [League of Legends Resources - Data Dragon](https://developer.riotgames.com/docs/lol#data-dragon)
@@ -284,6 +284,11 @@ Note: Recipes can also be added to the to-do list from the favourite recipes mod
 - [Google Fonts](https://fonts.google.com/)
 
 ## AI Implementation
+As one of our core features, we used ChatGPT to generate custom recipes based on prompt we give it with filters by meal type (breakfast, lunch, dinner, snack) as well as accounting for any food allergies the user specifies.  We then take that recipe text and store it to our database for use later in favoriting a recipe and adding the recipe to the to-do list so you can complete it and gain experience.
+
+Additionally, we used ChatGPT and Copilot to assist with code completion.  Copilot was used for auto-completing code lines after reading them over to confirm they will create the desired outcome.  In almost all cases, we couldn't use the Copilot suggestion as printed, and we had to adjust values or logic to match our desired outcome.  For ChatGPT, we used it for assisting with debugging to identify syntax errors or logic errors with our code due to complexity.  A specific example was finding a way to disable buttons to prevent double click errors across all of our pages.
+
+We did encounter limitations of AI because Copilot and ChatGPT didn't generate exactly the code we needed in most cases.  It worked fine for our recipe generation, but generally AI responses had to be parsed and edited to make sure it worked with the rest of our code and produced the desired outcome.
 
 ## Project Files
 ```
