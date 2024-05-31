@@ -75,7 +75,7 @@ async function submitUser(
     // Check if weather data can be retrieved from the city provided at sign up
     // This function returns undefined if there is an error
     || await weatherFunctions.getWeather(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherKey}&units=metric`) 
+      `https://api.openweathermap.org/data/2.5/weather?q=${city},CA&appid=${weatherKey}&units=metric`) 
       == 
       undefined
   ) {
