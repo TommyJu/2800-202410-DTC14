@@ -64,8 +64,8 @@ const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MON
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Error connecting to MongoDB:', err));
+  .then(() => {})
+  .catch(err => {});
 
 const userSchema = new mongoose.Schema({
   allergies: String
@@ -75,8 +75,6 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
-
-console.log('Welcome to ChatGPT!');
 
 app.use(express.json());
 
@@ -205,16 +203,16 @@ app.get('/friends', async (req, res) => {
   const searched = req.query.searched;
   // no param case
   if (!type || !searched) {
-    return friendFunctions.loadFriendsPage(req, res, userCollection);
+    return friendFunctions.loadFriendsPage(req, res, userCollection, friendFunctions);
   }
   //param case
   if (type == "requests") {
-    return friendFunctions.loadFriendsPageWithRequestSearch(req, res, userCollection, searched);
+    return friendFunctions.loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched);
   } else if (type == "display") {
-    return friendFunctions.loadFriendsPageWithFriendSearch(req, res, userCollection, searched);
+    return friendFunctions.loadFriendsPageWithFriendSearch(req, res, userCollection, friendFunctions, searched);
   } else {
     // catch faulty urls
-    return friendFunctions.loadFriendsPage(req, res, userCollection);
+    return friendFunctions.loadFriendsPage(req, res, userCollection, friendFunctions);
   }
 })
 
@@ -276,6 +274,7 @@ app.get('/game', async (req, res) => {
     otherRiotID = req.session.otherRiotID;
 
     //Use helper function to display stats.
+    // lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
     await delayedDisplayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
     delete req.session.otherRiotUsername;
     delete req.session.otherRiotID;
@@ -285,7 +284,28 @@ app.get('/game', async (req, res) => {
 })
 
 app.post('/searchSummoner', async (req, res) => {
-    //Use helper function make Riot API call for a searched account.
+  // delete req.session.otherRiotUsername;
+  // delete req.session.otherRiotID;
+
+  // var summonerUsername = req.body.summonerUsername;
+  // var summonerID = req.body.summonerID;
+
+  // if (lolAPI.validateSummonerCredentials(summonerUsername, summonerID)) {
+  //   req.session.otherRiotUsername = summonerUsername;
+  //   req.session.otherRiotID = summonerID;
+  //   res.redirect('/game');
+  // } else {
+  //   if (summonerUsername === "" || summonerID === "") {
+  //     console.log("Empty summoner credentials");
+  //     req.session.otherRiotUsername = undefined;
+  //     req.session.otherRiotID = undefined;
+  //   } else {
+  //     req.session.otherRiotUsername = 'inval';
+  //     req.session.otherRiotID = 'inval';
+  //   }
+  //   console.log("Invalid summoner credentials");
+  //   res.redirect('/game');
+  // };
   await delayedSummonerSearch(req, res);
 });
 
@@ -294,16 +314,12 @@ app.get('/fitness', async (req, res) => {
   if (req.session.authenticated) {
     username = req.session.username;
     const result = await userCollection.find({ username: username }).toArray();
-    // The sign up process should ensure that the user's city is valid
-    // Check for older accounts that may not have a city field
-    let defaultCity;
     if (result[0].city === undefined) {
       defaultCity = `Vancouver`
     } else {
       defaultCity = result[0].city
     }
-
-    url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity}&appid=${weatherKey}&units=metric`
+    url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultCity},CA&appid=${weatherKey}&units=metric`
     console.log(url)
     const physicalCollection = await database.db('physical_pillar').collection('activities').find().toArray();
     tasks = await taskFunctions.getTasksByCategory("fitness", req.session.username, userCollection);
@@ -322,19 +338,20 @@ app.get('/diet', async (req, res) => {
     return;
   }
   res.redirect("/");
-})
+});
 
+// Sends chat message to OpenAI API and returns response.
 app.post('/chat', async (req, res) => {
   const message = req.body.message;
   try {
     const reply = await sendMessage(message);
     res.json({ reply });
   } catch (error) {
-    console.error('Error communicating with OpenAI API:', error.message);
     res.status(500).json({ error: 'Failed to communicate with OpenAI API' });
   }
 });
 
+// Updates user's allergies in the database.
 app.post('/allergies', async (req, res) => {
   const allergies = req.body.allergies;
   const username = req.session.username;
@@ -346,11 +363,11 @@ app.post('/allergies', async (req, res) => {
     );
     res.json({ success: true, message: 'Allergies saved successfully' });
   } catch (error) {
-    console.error('Error saving allergies:', error.message);
     res.status(500).json({ error: 'Failed to save allergies' });
   }
 });
 
+// Retrieves user's allergies from the database.
 app.get('/get_allergies', async (req, res) => {
   const username = req.session.username;
   try {
@@ -361,14 +378,13 @@ app.get('/get_allergies', async (req, res) => {
       res.status(404).json({ error: 'User not found' });
     }
   } catch (error) {
-    console.error('Error retrieving user allergies:', error.message);
     res.status(500).json({ error: 'Failed to retrieve user allergies' });
   }
 });
 
+// Adds a recipe to user's favorite recipes.
 app.post('/favouriteRecipe', async (req, res) => {
   const recipe = req.body.recipe;
-
   try {
     await userCollection.findOneAndUpdate(
       { username: req.session.username },
@@ -377,15 +393,13 @@ app.post('/favouriteRecipe', async (req, res) => {
     );
     res.json({ success: true, message: 'Recipe added to favorites' });
   } catch (error) {
-    console.error('Error saving recipe:', error.message);
     res.status(500).json({ error: 'Failed to save recipe' });
   }
 });
 
-
-
 const lineBreaks = (str) => str.replace(/\r\n/g, '\n').trim();
 
+// Retrieves user's favorite recipes from the database.
 app.get('/favouriteRecipes', async (req, res) => {
   try {
     const user = await userCollection.findOne(
@@ -400,15 +414,13 @@ app.get('/favouriteRecipes', async (req, res) => {
       res.json({ success: false, message: 'No favorite recipes found' });
     }
   } catch (error) {
-    console.error('Error retrieving favorite recipes:', error.message);
     res.status(500).json({ error: 'Failed to retrieve favorite recipes' });
   }
 });
 
+// Removes a recipe from user's favorite recipes.
 app.post('/removeFavouriteRecipe', async (req, res) => {
   const recipe = linkeBreaks(req.body.recipe);
-
-
   try {
     const result = await userCollection.updateOne(
       { username: req.session.username },
@@ -419,11 +431,11 @@ app.post('/removeFavouriteRecipe', async (req, res) => {
     }
     res.json({ success: true, message: 'Recipe removed from favorites' });
   } catch (error) {
-    console.error('Error removing recipe:', error.message);
     res.status(500).json({ error: 'Failed to remove recipe' });
   }
 });
 
+// Adds a recipe to user's diet tasks.
 app.post('/addToDo', async (req, res) => {
   const recipe = lineBreaks(req.body.recipe);
   let recipeArray = recipe.split('\n');
@@ -434,8 +446,7 @@ app.post('/addToDo', async (req, res) => {
     recipeArray.shift();
   } else if (recipeArray[0].includes('Ingredients')) {
     recipeTitle = "Untitled Recipe"
-  }
-  else {
+  } else {
     recipeTitle = recipeArray[0];
     recipeArray.shift();
   }
@@ -446,10 +457,11 @@ app.post('/addToDo', async (req, res) => {
       { $push: { dietTasks: { _id: new ObjectId(), title: recipeTitle, description: recipeDescription, category: "diet", type: 'custom' } } },
       { upsert: true });
   } catch (error) {
-    console.error('Error adding recipe to diet tasks:', error.message);
+    res.status(500).json({ error: 'Failed to add recipe to diet tasks' });
   }
 });
 
+// Retrieves user's diet tasks from the database.
 app.get('/getToDo', async (req, res) => {
   try {
     const user = await userCollection.findOne(
@@ -462,11 +474,11 @@ app.get('/getToDo', async (req, res) => {
       res.json({ success: false, message: 'No to-do list recipes found' });
     }
   } catch (error) {
-    console.error('Error retrieving to-do list:', error.message);
     res.status(500).json({ error: 'Failed to retrieve to-do list' });
   }
 });
 
+// Removes a recipe from user's diet tasks.
 app.post('/removeToDo', async (req, res) => {
   const recipe = lineBreaks(req.body.recipe);
   try {
@@ -479,12 +491,11 @@ app.post('/removeToDo', async (req, res) => {
     }
     res.json({ success: true, message: 'Recipe removed from to-do list' });
   } catch (error) {
-    console.error('Error removing recipe from to-do list:', error.message);
     res.status(500).json({ error: 'Failed to remove recipe from to-do list' });
   }
 });
 
-
+// Sends a message to OpenAI API and returns response.
 async function sendMessage(message) {
   try {
     const response = await axios.post(
@@ -502,10 +513,10 @@ async function sendMessage(message) {
     );
     return response.data.choices[0].message.content;
   } catch (error) {
-    console.error(error.response.data);
     throw new Error('Failed to communicate with OpenAI API');
   }
 }
+
 
 // Profile page
 app.get('/profile', async (req, res) => {
