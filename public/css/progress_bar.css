@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
 .circle {
     background-image: url('https://w7.pngwing.com/pngs/490/231/png-transparent-round-red-and-brown-logo-circle-design-product-seal-badge-red-badges-and-labels-maroon-oval.png');
     background-size: cover;
@@ -29,8 +31,6 @@
     display: block;
     border-radius: 4px;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
 *,
 *:before,
