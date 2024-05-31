@@ -3,12 +3,15 @@ const { render } = require('ejs');
 const daily_api_key = process.env.DAILY_RIOT_API_KEY;
 
 function validateSummonerCredentials(summonerUsername, summonerID) {
+  //The schema below is based on RIOT's official requirements for a username and user tag.
   const summonerUsernameSchema = Joi.string().min(3).max(16).alphanum().required();
   const summonerIDSchema = Joi.string().min(3).max(5).alphanum().required();
+
   const summonerUsernameValidationResult = summonerUsernameSchema.validate(summonerUsername);
   if (summonerUsernameValidationResult.error != null) {
     return false;
   }
+
   const summonerIDValidationResult = summonerIDSchema.validate(summonerID);
   if (summonerIDValidationResult.error != null) {
     return false;
@@ -17,7 +20,6 @@ function validateSummonerCredentials(summonerUsername, summonerID) {
 };
 
 function riotCredentialsExist (RiotUsername, RiotID) {
-  console.log(RiotUsername, RiotID);
   if (!RiotUsername || !RiotID) {
     return false;
   } else {
@@ -38,14 +40,13 @@ async function searchSummoner (req, res) {
     res.redirect('/game');
   } else {
     if (summonerUsername === "" && summonerID === "") {
-      console.log("Empty summoner credentials");
       req.session.otherRiotUsername = undefined;
       req.session.otherRiotID = undefined;
     } else {
+      //A known invalid username and ID are assigned in order to display the correct error message.
       req.session.otherRiotUsername = 'inval';
       req.session.otherRiotID = 'inval';
     }
-    console.log("Invalid summoner credentials");
     res.redirect('/game');
   }
 };  
@@ -58,6 +59,7 @@ function verifyLeagueRank (rank) {
   }
 }
 
+//This helper function retrieves a user's unique ID.
 async function getRiotPUUID(riotUsername, riotID) {
   try {
     const data = await fetch(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${riotUsername}/${riotID}?api_key=${daily_api_key}`)
@@ -75,6 +77,8 @@ async function getRiotPUUID(riotUsername, riotID) {
   }
 }
 
+//This helper funciton reqtrieves another ID specific to RIOT accounts that have played League of Legends.
+//It also retrieves the user's League of Legends account level.
 async function getSummonerEncryptedIdAndLevel(PUUID) {
   try {
     const data = await fetch(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${PUUID}?api_key=${daily_api_key}`);
@@ -223,6 +227,7 @@ function renderCaseNoRiotValidSearch (res, tasks, gamingSuggestions, otherSummon
   return;
 };
 
+//Logic required for rendering ejs when the use does not have a RIOT account linked to their profile.
 async function displayStatsNoRiotCases (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
   if (!(riotCredentialsExist(RiotUsername, RiotID)) && (riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const otherSummonerStats = await getSummonerStats(otherRiotUsername, otherRiotID);
@@ -249,6 +254,7 @@ async function displayStatsNoRiotCases (res, RiotUsername, RiotID, tasks, otherR
   }
 };
 
+//Logic required for rendering ejs when the user with a RIOT account linked to their profile arrives at the game page. 
 async function displayStatsBaseCase (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
   if ((riotCredentialsExist(RiotUsername, RiotID)) && (!riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const userStats = await getSummonerStats(RiotUsername, RiotID);
@@ -260,6 +266,7 @@ async function displayStatsBaseCase (res, RiotUsername, RiotID, tasks, otherRiot
   };
 };
 
+//Logic required for rendering ejs when the user has a RIOT account linked to their profile and a valid search is made.
 async function displayStatsRiotAndSearch (res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gamingSuggestions) {
   if (riotCredentialsExist(RiotUsername, RiotID) && (riotCredentialsExist(otherRiotUsername, otherRiotID))) {
     const userStats = await getSummonerStats(RiotUsername, RiotID);
