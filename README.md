@@ -1,4 +1,5 @@
 ## GUD - Gamified User Development
+![GUD Logo](public/images/gud_logo.png)
 
 ## Project Description:
 DTC-14 is developing a web application to help gamers, both casual and hardcore, lead healthy and active lifestyles by gamifying their lifestyle with the performance statistics they enjoy in their favorite games and then combining them with their actual in-game performance so they can “git gud” in all aspects of their life.
