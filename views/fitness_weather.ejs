@@ -1,8 +1,470 @@
-<div class="flex flex-col justify-self-center" id="weatherData">
-    <h1>City: <%= cityName %>
-    </h1>
-    <div>Condition: <%= weatherToday %>
+<style>
+  html {
+    box-sizing: border-box;
+  }
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #008080;
+    font-family: "Quicksand", serif;
+  }
+
+  button {
+    padding: 20px;
+    background-color: #84c1c1;
+    box-shadow: 0 2.5px 10px;
+    border: none;
+    border-radius: 50px;
+    font-family: "Quicksand", serif;
+    font-size: 1em;
+    transition: box-shadow .2s, transform .2s;
+  }
+
+  button:hover {
+    box-shadow: 0 2.5px 10px slategrey;
+  }
+
+  button:active {
+    box-shadow: 0 2.5px 10px silver;
+    transform: translateY(2px);
+  }
+
+  #card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background-color: transparent;
+  }
+
+  #top-container {
+    height: 50%;
+  }
+
+  #icon {
+    margin: 50px;
+    width: 200px;
+    height: 200px;
+  }
+
+  #c1 {
+    position: relative;
+    z-index: 3;
+    transform: translate(40px, -25px);
+    animation: shake 2s alternate infinite ease-in-out;
+    transition: opacity 0.5s linear, visibility .5s linear;
+  }
+
+  #c2 {
+    position: relative;
+    z-index: 1;
+    transform: translate(100px, -150px);
+    animation: shake 3s alternate infinite ease-in-out;
+    transition: opacity 0.5s linear, visibility .5s linear;
+  }
+
+  #c3 {
+    position: relative;
+    z-index: 3;
+    transform: translate3d(-30px, -145px, 0);
+    animation: shake 3.5s alternate infinite ease-in-out;
+    transition: opacity 0.5s linear, visibility .5s linear;
+  }
+
+  #d1 {
+    transform: translate(25px, -2px);
+    animation-delay: 1.5s;
+  }
+
+  #d2 {
+    transform: translate(45px, -2px);
+    animation-delay: .7s;
+  }
+
+  #d3 {
+    transform: translate(78px, -2px);
+    animation-delay: .4;
+  }
+
+  #location {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    text-shadow: 0px -4px 4px dimgray;
+    transition: text-shadow 1s;
+  }
+
+  #weather-condition {
+    position: relative;
+    top: -50px;
+    font-size: 2em;
+    text-align: center;
+    text-shadow: 0px 4px 4px dimgray;
+    transition: text-shadow 1s;
+    text-transform: capitalize;
+  }
+
+  #temperature {
+    position: relative;
+    top: -50px;
+    font-size: 1.5em;
+    text-align: center;
+    text-shadow: 0px 4px 4px dimgray;
+    transition: text-shadow 1s;
+  }
+
+  #inputs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .sun {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    z-index: 2;
+    border-radius: 50%;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(yellow), to(orange));
+    background-image: -webkit-linear-gradient(top, yellow, orange);
+    background-image: -moz-linear-gradient(top, yellow, orange);
+    background-image: linear-gradient(to bottom, yellow, orange);
+    animation: shimmer 3s infinite alternate;
+    transition: opacity 0.5s, visibility linear 0.5s;
+  }
+
+  @keyframes shimmer {
+    0% {
+      box-shadow: 0px 0px 100px 10px yellow;
+    }
+
+    70% {
+      box-shadow: 0px 0px 150px 15px gold;
+    }
+
+    100% {
+      box-shadow: 0px 0px 50px 10px yellow;
+    }
+  }
+
+  .cloud {
+    width: 100px;
+    height: 30px;
+    background: #fff;
+    border-radius: 100px;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    position: relative;
+    transition: opacity 0.5s linear, visibility linear 0.5s;
+  }
+
+  .cloud:before,
+  .cloud:after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    width: 50px;
+    height: 40px;
+    position: absolute;
+    top: -7px;
+    left: 5px;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, .1);
+    border-radius: 50px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+    -moz-transform: rotate(30deg);
+  }
+
+  .cloud:after {
+    width: 60px;
+    height: 60px;
+    top: -24px;
+    left: auto;
+    right: 7px;
+  }
+
+  .drops {
+    position: relative;
+    transition: visibility .5s, opacity .5s, background-color .5s, width .5s, animation-duration 1s;
+    z-index: -1;
+    animation: fall .8s ease-in infinite;
+  }
+
+  .snow {
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background-color: white;
+  }
+
+  .attribution {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 4px;
+    background-color: #fff;
+    color: #000;
+    text-decoration: underline;
+    font: normal normal 14px/1em sans-serif;
+  }
+
+  .rain {
+    width: 1px;
+    height: 10px;
+    background-color: white;
+    border-radius: 25%;
+  }
+
+  @keyframes shake {
+    0% {
+      left: -10px;
+    }
+
+    100% {
+      left: 10px;
+    }
+  }
+
+  @keyframes fall {
+    0% {
+      top: 0px;
+    }
+
+    100% {
+      top: 200px;
+    }
+  }
+
+  @keyframes lightning {
+    0% {
+      box-shadow: 0 0 25px 10px rgba(237, 200, 17, 1);
+    }
+
+    20% {
+      box-shadow: 0 0 25px 10px rgba(17, 87, 237, 1);
+    }
+
+    30%,
+    100% {
+      box-shadow: 0 0 25px 10px rgba(0, 0, 0, .1);
+    }
+  }
+
+</style>
+
+<body>
+  <div id="card">
+    <div id="location" class="text-[#f5b700]">
+      <%= cityName %>
     </div>
-    <div>Temperature: <%=weatherTemp%> °C</div>
-    <div> <img src="https://openweathermap.org/img/wn/<%= weatherIcon %>@2x.png"> </div>
-</div>
+    <br>
+    <div>
+      <div id="temperature" class="text-[#f5b700]">
+        <%= weatherTemp %>°C
+      </div>
+    </div>
+    <div id="icon">
+      <div class="sun" id="circle"></div>
+      <div class="cloud" id="c1">
+        <div class='drops' id='d1'></div>
+        <div class='drops' id='d2'></div>
+        <div class='drops' id='d3'></div>
+      </div>
+      <div class="cloud" id="c2">
+        <div class='drops' id='d1'></div>
+        <div class='drops' id='d2'></div>
+        <div class='drops' id='d3'></div>
+      </div>
+      <div class="cloud" id="c3">
+        <div class='drops' id='d1'></div>
+        <div class='drops' id='d2'></div>
+        <div class='drops' id='d3'></div>
+      </div>
+      <div id="weather-condition" class="text-[#f5b700]">
+        <%= weatherToday %>
+      </div>
+    </div>
+  </div>
+  <script>
+    var weatherToday = "<%= weatherIcon %>";
+
+    document.addEventListener("DOMContentLoaded", function () {
+      setWeatherIcon(weatherToday);
+    });
+
+    function setWeatherIcon(icon) {
+      switch (icon) {
+        case "01n":
+        case "01d":
+          sun(true);
+          clouds(0);
+          precipitate("none");
+          lightning(false);
+          break;
+        case "02n":
+        case "02d":
+          sun(true);
+          clouds(1);
+          precipitate("none");
+          lightning(false);
+          break;
+        case "03n":
+        case "03d":
+          sun(true);
+          clouds(2);
+          precipitate("none");
+          lightning(false);
+          break;
+        case "04n":
+        case "04d":
+          sun(true);
+          clouds(3);
+          precipitate("none");
+          lightning(false);
+          break;
+        case "09n":
+        case "09d":
+          sun(false);
+          clouds(3);
+          precipitate("rain", .15);
+          lightning(false);
+          break;
+        case "10n":
+        case "10d":
+          sun(false);
+          clouds(3);
+          precipitate("rain", .5);
+          lightning(false);
+          break;
+        case "11n":
+        case "11d":
+          sun(false);
+          clouds(3);
+          precipitate("rain");
+          lightning(true);
+          break;
+        case "13n":
+        case "13d":
+          sun(false);
+          clouds(3);
+          precipitate("snow", 3);
+          lightning(false);
+          break;
+        case "50n":
+        case "50d":
+          sun(false);
+          clouds(3);
+          precipitate("rain", .15);
+          lightning(false);
+          break;
+        default:
+          console.log("Unknown weather icon");
+      }
+    }
+
+    function sun(on) {
+      var circle = document.getElementById("circle");
+      if (on) {
+        circle.style.visibility = "visible";
+        circle.style.opacity = "1";
+      } else {
+        circle.style.visibility = "hidden";
+        circle.style.opacity = "0";
+      }
+    }
+
+    function clouds(numberOfClouds) {
+      var c1 = document.getElementById("c1");
+      var c2 = document.getElementById("c2");
+      var c3 = document.getElementById("c3");
+
+      switch (numberOfClouds) {
+        case 0:
+          c1.style.visibility = "hidden";
+          c2.style.visibility = "hidden";
+          c3.style.visibility = "hidden";
+          c1.style.opacity = "0";
+          c2.style.opacity = "0";
+          c3.style.opacity = "0";
+          break;
+        case 1:
+          c1.style.visibility = "visible";
+          c2.style.visibility = "hidden";
+          c3.style.visibility = "hidden";
+          c1.style.opacity = "1";
+          c2.style.opacity = "0";
+          c3.style.opacity = "0";
+          break;
+        case 2:
+          c1.style.visibility = "visible";
+          c2.style.visibility = "visible";
+          c3.style.visibility = "hidden";
+          c1.style.opacity = "1";
+          c2.style.opacity = "1";
+          c3.style.opacity = "0";
+          break;
+        case 3:
+          c1.style.visibility = "visible";
+          c2.style.visibility = "visible";
+          c3.style.visibility = "visible";
+          c1.style.opacity = "1";
+          c2.style.opacity = "1";
+          c3.style.opacity = "1";
+          break;
+        default:
+          console.log("Must specify numberOfClouds");
+      }
+    }
+
+    function precipitate(type, speed) {
+      var drops = document.getElementsByClassName("drops");
+      if (type == "rain") {
+        for (var i = 0; i < drops.length; i++) {
+          drops[i].classList.remove("snow");
+          drops[i].classList.add("rain");
+          drops[i].style.visibility = "visible";
+          drops[i].style.opacity = "1";
+          drops[i].style.animationDuration = speed + "s";
+        }
+      } else if (type == "snow") {
+        for (var i = 0; i < drops.length; i++) {
+          drops[i].classList.remove("rain");
+          drops[i].classList.add("snow");
+          drops[i].style.visibility = "visible";
+          drops[i].style.opacity = "1";
+          drops[i].style.animationDuration = speed + "s";
+        }
+      } else if (type == "none") {
+        for (var i = 0; i < drops.length; i++) {
+          drops[i].style.visibility = "hidden";
+          drops[i].style.opacity = "0";
+        }
+      } else {
+        console.log("Must specify typeOfPrecipitate");
+      }
+    }
+
+    function lightning(on) {
+      var c1 = document.getElementById("c1");
+      var c2 = document.getElementById("c2");
+      var c3 = document.getElementById("c3");
+
+      if (on) {
+        c1.style.animation = "shake 2s alternate infinite ease-in-out, lightning 2.5s infinite ease-in-out";
+        c2.style.animation = "shake 3s alternate infinite ease-in-out, lightning 3.5s .5s infinite ease-in-out";
+        c3.style.animation = "shake 3.5s alternate infinite ease-in-out, lightning 4s 1s infinite ease-in-out";
+      } else {
+        c1.style.animation = "shake 2s alternate infinite ease-in-out";
+        c2.style.animation = "shake 3s alternate infinite ease-in-out";
+        c3.style.animation = "shake 3.5s alternate infinite ease-in-out";
+      }
+    }
+  </script>

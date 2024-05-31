@@ -1,5 +1,7 @@
-#profile-background {
-    padding-bottom: 120px;
+#game-background {
+    padding: 20px;
+    padding-bottom: 100px;
+    padding-top: 60px;
     color: var(--yellow);
     display: flex;
     flex-direction: column;
@@ -9,6 +11,7 @@
     width: 100%;
     min-height: 100%;
     background-position: center;
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     background-size: cover;
+    background-attachment: fixed;
 }

@@ -1,12 +1,13 @@
 <%- include("templates/header_with_profile.ejs") %>
   <div id="level-up-background">
     
+    <!-- <img src="./images/ranks/<%= rank %>.webp" class="h-auto w-20" alt="User rank (<%= rank %>)"> -->
+
     <div class="level-user-name">
-      <img id="level-up-gif" src="./images/level-up/<%= taskCategory %>.gif" alt="<%= taskCategory %> gif">
       <h1 class="text-3xl">Level up! Your <%= taskCategory %> is now level <%= level %>.</h1>
+      <img id="level-up-gif" src="./images/level-up/<%= taskCategory %>.gif" alt="<%= taskCategory %> gif">
     </div>
     
-    <img src="./images/ranks/<%= rank %>.webp" class="h-auto w-100" alt="User rank (<%= rank %>)">
 
     <%- include("templates/achievements_container_preview.ejs", {achievements: achievements}) %>
     

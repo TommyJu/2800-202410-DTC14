@@ -1,56 +1,61 @@
-<div class="card-container grid grid-cols-2 gap-1 overflow-auto max-h-96">
-    <!-- tasks is passed into the ejs template -->
-    <% if (type === 'suggestion') { %>   
-        <% for (let i = 0; i < tasks.length; i++) { %>
-            <% if (tasks[i].weather.includes(weatherToday)) { %>
-                <%- include("task_card.ejs", {
-                    taskId: tasks[i]._id, 
-                    title: tasks[i].title, 
-                    description: tasks[i].description,
-                    category: tasks[i].category,
-                    type: tasks[i].type,
-                    formattedTitle: tasks[i].title.replace(/ /g, '_')
-                }) %>
+<div class="card-container grid grid-cols-2 gap-4 p-2 overflow-auto max-h-96 mx-2 my-12 w-full">
+  <!-- tasks is passed into the ejs template -->
+  <% if (type==='suggestion' ) { %>
+    <% for (let i=0; i < tasks.length; i++) { %>
+      <% if (tasks[i].weather.includes(weatherToday)) { %>
+        <%- include("task_card.ejs", { taskId: tasks[i]._id, title: tasks[i].title, description: tasks[i].description,
+          category: tasks[i].category, type: tasks[i].type, formattedTitle: tasks[i].title.replace(/ /g, '_' ) }) %>
+          <% } %>
+      <% } %>
+  <% } else if (type==='gameSuggestions' ) { %>
+    <% if (rank[0]==='UNRANKED' ) { %>
+      <% for (let i=0; i < tasks.length; i++) { %>
+        <% if (tasks[i].rankRequired==='UNRANKED') { %>
+          <% let suggestionTitle = tasks[i].title %>
+          <% for (let i=0; i < userTasks.length; i++) { %> 
+            <% if (suggestionTitle===userTasks[i].title) { %>
+              <% suggestionValid = false %>
             <% } %>
-        <% } %>
-    <% } else if (type === 'gameSuggestions') {%>
-      <% if (rank[0] === 'UNRANKED') { %>
-        <%- include("task_card.ejs", {
-          taskId: tasks[0]._id, 
-          title: tasks[0].title, 
-          description: tasks[0].description,
-          category: tasks[0].category,
-          type: tasks[0].type,
-          formattedTitle: tasks[0].rankToReach
-        }) %>
-      <% } else { %>
-        <% for (let i = 0; i < tasks.length; i++) { %>
-          <% if (tasks[i].rankRequired === (rank[0] + ' ' + rank[1])) { %>
-              <%- include("task_card.ejs", {
-                  taskId: tasks[i]._id, 
-                  title: tasks[i].title, 
-                  description: tasks[i].description,
-                  category: tasks[i].category,
-                  type: tasks[i].type,
-                  formattedTitle: tasks[i].rankToReach
-              }) %>
+          <% } %>
+          <% if (suggestionValid) { %>
+            <%- include("task_card.ejs", { taskId: tasks[6]._id, title: tasks[6].title, description:
+            tasks[6].description, category: tasks[6].category, type: tasks[6].type, formattedTitle:
+            tasks[6].rankToReach }) %>
           <% } %>
         <% } %>
       <% } %>
-    <% } else {%>
-        <% for (let i = 0; i < tasks.length; i++) { %>
-            <% if (tasks[i].type === type) { %>
-                <%- include("task_card.ejs", {
-                    taskId: tasks[i]._id, 
-                    title: tasks[i].title, 
-                    description: tasks[i].description,
-                    category: tasks[i].category,
-                    type: tasks[i].type,
-                    formattedTitle: tasks[i].title.replace(/ /g, '_')
-                }) %>
-                <% } %>
+    <% } else { %>
+      <% for (let i=0; i < tasks.length; i++) { %>
+        <% if (tasks[i].rankRequired===(rank[0] + ' ' + rank[1])) { %>
+          <% let suggestionTitle = tasks[i].title %>
+          <% for (let i=0; i < userTasks.length; i++) { %> 
+            <% if (suggestionTitle===userTasks[i].title) { %>
+              <% suggestionValid = false %>
             <% } %>
+          <% } %>
+          <% if (suggestionValid) { %>
+            <%- include("task_card.ejs", { taskId: tasks[i]._id, title: tasks[i].title, description:
+            tasks[i].description, category: tasks[i].category, type: tasks[i].type, formattedTitle:
+            tasks[i].rankToReach }) %>
+          <% } %>
+        <% } %>
+      <% } %>
     <% } %>
-
-    
+  <% } else {%>
+    <% for (let i=0; i < tasks.length; i++) { %>
+      <% if (tasks[i].type===type) { %>
+        <% console.log(tasks[i]) %>
+        <% if (tasks[i].rankToReach) { %>
+          <% console.log("rank to reach:" + tasks[i].rankToReach) %>
+          <%- include("task_card.ejs", { taskId: tasks[i]._id, title: tasks[i].title,
+            description: tasks[i].description, category: tasks[i].category, type:
+            tasks[i].type, formattedTitle: tasks[i].rankToReach }) %>
+        <% } else { %>
+        <%- include("task_card.ejs", { taskId: tasks[i]._id, title: tasks[i].title,
+          description: tasks[i].description, category: tasks[i].category, type:
+          tasks[i].type, formattedTitle: tasks[i].title.replace(/ /g, '_' ) }) %>
+        <% } %>
+      <% } %>
+    <% } %>
+  <% } %>
 </div>

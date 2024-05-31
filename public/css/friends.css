@@ -1,0 +1,112 @@
+#friendPage {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 120px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: var(--black);
+    color: var(--yellow);
+    
+    background-image: url("../images/backgrounds/home_background3.jpg");
+    background-position: center;
+    background-repeat: none;
+    background-size: cover;
+    background-attachment: fixed;
+    width: 100%;
+    min-height: 100%;
+}
+
+.friendCardContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.friendCard {
+    display: flex;
+    border: solid var(--yellow) 1px;
+    flex-wrap: wrap;
+    /* width: 300px; */
+    min-width: 100%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: black;
+
+    box-shadow: 0 0 20px 0px var(--yellow);
+}
+
+.friendCard img {
+    height: auto;
+    width: 200px;
+}
+
+.friendCard p {
+    font-size: 2rem;
+}
+
+.progress-container {
+    width: 220px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.all-progress-containers {
+    display: flex;
+    flex-direction: column;
+}
+
+.friend-name-and-level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.friendRequestContainer {
+    margin-top: 40px;
+    overflow-x: scroll;
+    display: flex;
+    gap: 24px;
+    /* box-shadow: 
+    -10px 0 10px -5px var(--yellow),
+    10px 0 10px -5px var(--yellow); */
+}
+
+#friendRequestDisplay {
+    width: 80%;
+}
+
+.friendRequestCard {
+    background-color: black;
+    border: solid 1px var(--yellow);
+}
+
+.textNoWrap {
+    white-space: nowrap;
+}
+#friendAddBar form {
+    display: flex;
+    text-align: center;
+    gap: 16px;
+}
+
+#friendAddBar input {
+    background-color: rgb(202, 201, 201);
+    color: black;
+}
+
+
+@media (max-width: 450px) {
+    #friendAddBar form {
+        flex-direction: column;
+        align-items: center;
+        
+    }
+    
+}

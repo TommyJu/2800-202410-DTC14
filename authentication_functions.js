@@ -1,24 +1,27 @@
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const saltRounds = 12;
 const expireTime = 1 * 60 * 60 * 1000; // one hour expiry time
 const lolAPI = require('./riotLeagueAPI.js');
 const { get } = require('http');
+const weatherFunctions = require('./weather.js')
 
-module.exports = { submitUser, logInUser, resetPassword, renderSecurityQuestion};
+module.exports = { submitUser, logInUser, resetPassword, renderSecurityQuestion };
 
 async function submitUser(
   req, res,
   username, userCollection,
   email, password,
   securityQuestion, securityAnswer,
-  RiotUsername, RiotID) {
+  RiotUsername, RiotID, city) {
   const usernameSchema = Joi.string().max(20).required();
   const emailSchema = Joi.string().max(40).required();
   const passwordSchema = Joi.string().max(20).required();
-  const securityAnswerSchema = Joi.string().max(20).required();
+  const securityAnswerSchema = Joi.string().max(20).alphanum().required();
   const RiotUsernameSchema = Joi.string().min(3).max(16).alphanum().allow("").optional();
   const RiotIDSchema = Joi.string().min(3).max(5).alphanum().allow("").optional();
+  const citySchema = Joi.string().min(3).alphanum().allow("").optional();
 
   // Username verification
   const usernameValidationResult = usernameSchema.validate(username);
@@ -65,14 +68,28 @@ async function submitUser(
     res.render("invalid_sign_up.ejs", { type: "Riot ID" })
     return;
   }
-  
-  if ((await lolAPI.getRiotPUUID(RiotUsername, RiotID) === false) && (RiotUsername != "" && RiotID != "")){
-    console.log("Riot account does not exists lil bro.")
-    res.render("invalid_sign_up.ejs", { type: "Riot account does not exists lil bro." })
+
+  const weatherKey = process.env.OPEN_WEATHER_API_KEY;
+  const cityValidationResult = citySchema.validate(city);
+  if (cityValidationResult.error != null 
+    // Check if weather data can be retrieved from the city provided at sign up
+    // This function returns undefined if there is an error
+    || await weatherFunctions.getWeather(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city},CA&appid=${weatherKey}&units=metric`) 
+      == 
+      undefined
+  ) {
+    res.render("invalid_sign_up.ejs", { type: "city" })
     return;
   }
 
-  if ((await lolAPI.getSummonerLevelAndID(await lolAPI.getRiotPUUID(RiotUsername, RiotID)) === false) && (RiotUsername != "" && RiotID != "")) {
+  if ((await lolAPI.getRiotPUUID(RiotUsername, RiotID) === false) && (RiotUsername != "" && RiotID != "")) {
+    console.log("Riot account does not exists lil bro.")
+    res.render("invalid_sign_up.ejs", { type: "Riot account does not exist lil bro." })
+    return;
+  }
+
+  if ((await lolAPI.getSummonerEncryptedIdAndLevel(await lolAPI.getRiotPUUID(RiotUsername, RiotID)) === false) && (RiotUsername != "" && RiotID != "")) {
     console.log("No League on this rito account lil bro.")
     res.render("invalid_sign_up.ejs", { type: "No League on this rito account lil bro." })
     return;
@@ -111,7 +128,10 @@ async function submitUser(
       }
     },
     rank: "unranked",
-    achievements: []
+    achievements: [],
+    city: city,
+    friends: [],
+    friendRequests: []
   });
 
   req.session.authenticated = true;
@@ -124,8 +144,8 @@ async function submitUser(
 }
 
 async function logInUser(req, res, username, password, userCollection) {
-  const usernameSchema = Joi.string().max(20).required();
-  const passwordSchema = Joi.string().max(20).required();
+  const usernameSchema = Joi.string().max(20).alphanum().required();
+  const passwordSchema = Joi.string().max(20).alphanum().required();
 
   // username verification
   const usernameValidationResult = usernameSchema.validate(username);
@@ -159,8 +179,8 @@ async function logInUser(req, res, username, password, userCollection) {
       req.session.RiotUsername = result[0].in_game_name;
     }
     if (!(result[0].RiotID == null)) {
-        req.session.RiotID= result[0].RiotID;
-      }  
+      req.session.RiotID = result[0].RiotID;
+    }
     res.redirect('/');
     return;
   }
@@ -175,9 +195,9 @@ async function resetPassword(req, res, username, securityAnswer, newPassword, us
     { username: username },
     { projection: { securityAnswer: 1 } });
 
-  const newPasswordSchema = Joi.string().max(20).required();
+  const newPasswordSchema = Joi.string().max(20).alphanum().required();
   const newPasswordValidationResult = newPasswordSchema.validate(newPassword);
-  const securityAnswerSchema = Joi.string().max(20).required();
+  const securityAnswerSchema = Joi.string().max(20).alphanum().required();
   const securityAnswerValidationResult = securityAnswerSchema.validate(securityAnswer);
 
   if (newPasswordValidationResult.error != null) {
@@ -207,7 +227,7 @@ async function resetPassword(req, res, username, securityAnswer, newPassword, us
 }
 
 async function renderSecurityQuestion(req, res, username, userCollection) {
-  const usernameSchema = Joi.string().max(20).required();
+  const usernameSchema = Joi.string().max(20).alphanum().required();
   const usernameValidationResult = usernameSchema.validate(username);
 
   if (usernameValidationResult.error != null) {
@@ -218,6 +238,13 @@ async function renderSecurityQuestion(req, res, username, userCollection) {
   user = await userCollection.findOne(
     { username: username },
     { projection: { securityQuestion: 1 } });
+
+  // User not found
+  if (!user) {
+    res.render("invalid_password_recovery.ejs", { type: "username (user not found)" });
+    return;
+  }
+
   securityQuestion = user.securityQuestion;
 
   // Render security question
@@ -225,4 +252,6 @@ async function renderSecurityQuestion(req, res, username, userCollection) {
     username: username,
     securityQuestion: securityQuestion
   })
+
+
 }

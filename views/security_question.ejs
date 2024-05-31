@@ -18,12 +18,15 @@
             <label for="securityAnswer"><%= securityQuestion %></label>
             <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
                 <img src="answer.png" alt="Password Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
-                <input type="password" id="securityAnswer" name="securityAnswer" placeholder="Security answer" class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
+                <input type="password" id="securityAnswer" name="securityAnswer" placeholder="Security answer *" pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" 
+                maxlength="20" required 
+                class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
             </div>
             <div class="textbox w-full overflow-hidden text-lg py-2 my-2 border-b border-gray-500 relative">
                 <img src="password.png" alt="Password Icon" class="absolute left-0 top-1/2 transform -translate-y-1/2 ml-2 w-6 h-6">
                 <label for="newPassword" class="sr-only">New Password:</label>
-                <input type="password" id="newPassword" name="newPassword" placeholder="New password" class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full">
+                <input type="password" id="newPassword" name="newPassword" placeholder="New password *" class="border-none outline-none bg-transparent text-white text-lg pl-10 w-full" 
+                maxlength="20" required>
             </div>
             <input class="btn w-full bg-transparent border-2 border-gray-500 text-white py-1 text-lg cursor-pointer my-3" type="submit" value="Submit">
         </form>

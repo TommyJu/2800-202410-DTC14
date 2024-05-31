@@ -1,0 +1,15 @@
+<%- include("templates/header_with_profile.ejs") %>
+    <div id="completed-background">
+        <h3 class="text-center text-white text-2xl font-bold"> Diet Completed Tasks</h3>
+
+        <%- include("templates/task_cards_container.ejs", {tasks: tasks, category: 'fitness' , type:'completed'}) %>
+            <a href="/diet"
+                class="rounded border-solid border-2 border-yellow-500 p-2 text-yellow-500 bg-black hover:text-black hover:bg-yellow-500 text-center duration-1000"
+                type="button">
+                Go Back
+            </a>
+    </div>
+    <br>
+    <br>
+    <br>
+    <%- include("templates/footer.ejs") %>
