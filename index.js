@@ -276,7 +276,6 @@ app.get('/game', async (req, res) => {
     otherRiotID = req.session.otherRiotID;
 
     //Use helper function to display stats.
-    // lolAPI.displayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
     await delayedDisplayStats(res, RiotUsername, RiotID, tasks, otherRiotUsername, otherRiotID, gameSuggestions);
     delete req.session.otherRiotUsername;
     delete req.session.otherRiotID;
@@ -286,28 +285,7 @@ app.get('/game', async (req, res) => {
 })
 
 app.post('/searchSummoner', async (req, res) => {
-  // delete req.session.otherRiotUsername;
-  // delete req.session.otherRiotID;
-
-  // var summonerUsername = req.body.summonerUsername;
-  // var summonerID = req.body.summonerID;
-
-  // if (lolAPI.validateSummonerCredentials(summonerUsername, summonerID)) {
-  //   req.session.otherRiotUsername = summonerUsername;
-  //   req.session.otherRiotID = summonerID;
-  //   res.redirect('/game');
-  // } else {
-  //   if (summonerUsername === "" || summonerID === "") {
-  //     console.log("Empty summoner credentials");
-  //     req.session.otherRiotUsername = undefined;
-  //     req.session.otherRiotID = undefined;
-  //   } else {
-  //     req.session.otherRiotUsername = 'inval';
-  //     req.session.otherRiotID = 'inval';
-  //   }
-  //   console.log("Invalid summoner credentials");
-  //   res.redirect('/game');
-  // };
+    //Use helper function make Riot API call for a searched account.
   await delayedSummonerSearch(req, res);
 });
 

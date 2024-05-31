@@ -62,7 +62,6 @@ async function getRiotPUUID(riotUsername, riotID) {
   try {
     const data = await fetch(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${riotUsername}/${riotID}?api_key=${daily_api_key}`)
     if (data.status != 200) {
-      console.log('puuid response was not 200');
       return false;
     }
     const dataJson = await data.json();
@@ -70,7 +69,6 @@ async function getRiotPUUID(riotUsername, riotID) {
     if (PUUID === undefined) {
       return false;
     }
-    console.log('puuid=' + PUUID);
     return PUUID;
   } catch (error){
     console.error('Could not fetch puuid:', error);
@@ -81,7 +79,6 @@ async function getSummonerEncryptedIdAndLevel(PUUID) {
   try {
     const data = await fetch(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${PUUID}?api_key=${daily_api_key}`);
     if (data.status != 200) {
-      console.log('summonerv4 api call response was not 200');
       return false;
     }
     const dataJson = await data.json();
@@ -103,7 +100,6 @@ async function getSummonerRankAndWinrate(encryptedSummonerId) {
   try {
     const data = await fetch(`https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/${encryptedSummonerId}?api_key=${daily_api_key}`);
     const dataJson = await data.json();
-    console.log(dataJson);
     if (dataJson.length === 0) {
       return null;
     } else {
@@ -147,7 +143,6 @@ async function getSummonerStats(riotUsername, riotID) {
     const encryptedSummonerId = summonerDetails[0];
     summonerLevel = summonerDetails[1];
     const summonerRankAndWinrate = await getSummonerRankAndWinrate(encryptedSummonerId);
-    console.log(summonerRankAndWinrate);
     if (summonerRankAndWinrate === null) {
       summonerRank = ["UNRANKED"];
       summonerWinrate = 0.00;
