@@ -29,14 +29,24 @@ Database:
 - [MongoDB](https://www.mongodb.com/)
 
 Utilities:
+- [Zoom](https://zoom.us/)
+- [Slack](https://slack.com/)
+- [Figma](https://www.figma.com/)
+- [Trello](https://trello.com/)
+- [Discord](https://discord.com/)
+
 - [NPM](https://www.npmjs.com/)
 - [Copilot](https://github.com/features/copilot)
 - [git](https://git-scm.com/)
 
-Styling Libraries:
+Styling:
 - [Tailwind](https://tailwindcss.com/)
 - [Flowbite](https://flowbite.com/)
 - [ApexCharts](https://apexcharts.com/)
+- [Codepen](https://codepen.io/idifyable/pen/gmPjQK?editors=0010)
+- [CSS Scan](https://getcssscan.com/css-buttons-examples)
+- [Google Icons](https://fonts.google.com/icons)
+- [Google Fonts](https://fonts.google.com/)
 
 NPM Packages:
 - [apexcharts](https://www.npmjs.com/package/apexcharts)
@@ -66,52 +76,49 @@ APIs:
 Our Websites:
 - [Github Repo](https://github.com/TommyJu/2800-202410-DTC14/tree/dev)
 - [Drive](https://drive.google.com/drive/folders/1zTf8fKFSBhaj_pGA8hPnRvvesX9evUct?usp=sharing)
-- [GUD App]
-
-## Project Files
+- [GUD App] (https://two800-202410-dtc14.onrender.com/)
+- [FigJam] (https://www.figma.com/board/UleQygiIcOihk7g9SDWQ10/2800-202410-DTC14?node-id=0-1&t=KrVbZLyiDg6QQdBQ-0)
+- [Trello] (https://trello.com/b/qmC5fiAS/2800-202410-dtc14)
 
 ## Set up Instructions
-
 Assumptions: 
  - You are a developer with some experience or understanding of HTML, CSS, and Javascript languages.  
  - You have some experience or understanding of a VCS (Version Control System). You know what clone, commit, pull, and push mean.  
+ - You have experience or understanding of Gitflow Workflow.  You know what branch, merge, dev, and main mean.
  - You know what the Node runtime environment is.
  - You have experience with databases.  Knowing MongoDB is a bonus!
  - You are a PC user.  All keyboard commands given will be based on PC.  You will need to look up the equivalent for Mac or Linux if you are using those operating systems.
 
 1. It is recommend that you download and install an IDE that can handle HTML, Javascript, CSS, and EJS files at a minimum.  Microsoft Visual Studio, listed above, would be a good choice.  These remaining instructions will assume you are using Visual Studio. Installing to the default directory on your computer is fine.
 2. Next you should install git on your computer if you haven't already. See the link above to install it.  Once again, the default directory when you run the installer is fine.
-3. Since you found this repository from Github, you most likely have a Github account.  If you do not, you will need to create a new account on Github (see link above).  
-4. Next, you should clone our project repo (see the link under Our Websites). Make sure that when you select the directory to clone the repo to, you use a local drive on your computer (C: or D:). Do not use a network or cloud folder!  Cloning should always be done to your local machine!
-5. Before getting into the project, you need to install NodeJS as well as NPM (Node Package Manager).  See the links in the Technologies Used section above for instructions on how to do this.
-6. While not required, it is recommended that you install the following extensions in Visual Studio to make navigating the project easier: Github Copilot, Live Server, MongoDB for VS, and Tailwind CSS Intellisense.  You can look up online how to install extensions in Visual Studio.
-7. Next, open the terminal in Visual Studio using Ctrl + Shift + `.  This will open a powershell terminal within Visual Studio at the directory of the your cloned repo. 
-8. In the ternminal, run the command: npm init.  This will create a package.json and package-lock.json file in your directory. This is expected.
-8. In the terminal run the command: npm install.  This will start a install procedure where all of the necessary node modules needed for the website are installed in your repo directory in the node_modules folder.  This will also populate your package.json and package-lock.json files to match our project. If you are ever in doubt if you have the necessary modules, review these folders and you can manual install them using command: npm i <module name>
-10. While not required, it is recommend that you install nodemon using: npm i nodemon.  Nodemon is similar to node, but more advanced in that it will restart the server code if there are any changes to any of the files in the repo.
-11.  You can start the app locally by using the command: nodemon index.js.  From there, you type in localhost/3000
+3. You will need to set up a MongoDB account to access our database information.  Use the link above to set up your account, and then contact Matthew at the email in the Contact Information to get the right permissions to work with our database.
+4. Since you found this repository from Github, you most likely have a Github account.  If you do not, you will need to create a new account on Github (see link above).  
+5. Next, you should clone our project repo (see the link under Our Websites). Make sure that when you select the directory to clone the repo to, you use a local drive on your computer (C: or D:). Do not use a network or cloud folder!  Cloning should always be done to your local machine!
+6. Before getting into the project, you need to install NodeJS as well as NPM (Node Package Manager).  See the links in the Technologies Used section above for instructions on how to do this.
+7. While not required, it is recommended that you install the following extensions in Visual Studio to make navigating the project easier: Github Copilot, Live Server, MongoDB for VS, and Tailwind CSS Intellisense.  You can look up online how to install extensions in Visual Studio.
+8. Next, open the terminal in Visual Studio using Ctrl + Shift + `.  This will open a powershell terminal within Visual Studio at the directory of the your cloned repo. 
+9. In the ternminal, run the command: npm init.  This will create a package.json and package-lock.json file in your directory. This is expected.
+10. In the terminal run the command: npm install.  This will start a install procedure where all of the necessary node modules needed for the website are installed in your repo directory in the node_modules folder.  This will also populate your package.json and package-lock.json files to match our project. If you are ever in doubt if you have the necessary modules, review these folders and you can manual install them using command: npm i <module name>
+11. While not required, it is recommend that you install nodemon using: npm i nodemon.  Nodemon is similar to node, but more advanced in that it will restart the server code if there are any changes to any of the files in the repo.
+12. Before you run the program for the first time, you will need to set up your local .env file.  This is where all necesary keys, passwords, and secrets are stored.  By running the "npm install" command, a .env file should have been created, but if not, just create a new file through Visual Studio or your IDE as a ".env", no name added to this.  Your .env file should have the following variable definitions:
+MONGODB_HOST=
+MONGODB_USER=
+MONGODB_PASSWORD=
+MONGODB_DATABASE=
+MONGODB_SESSION_SECRET=
+NODE_SESSION_SECRET=
+OPEN_WEATHER_API_KEY=
+OPENAI_API_KEY=
+DAILY_RIOT_API_KEY=
 
-## Testing
-- [Testing Log](https://docs.google.com/spreadsheets/d/1s7U9PNt-C_CLHe35D92rPmViHjbnB3pAfi7hmVTAtvA/edit?usp=sharing)
+For the mongodb and Node values, contact Matthew in the Contact Information to get this information.  For the OpenWeatherAPI key and OpenAI key, contact Michael.  For the Riot API key, contact Ephraim. If you want, you can also request your own keys for each of the APIs, using the links given above in the Technologies Used section. Note, the only version of the Riot API key you can get without the project is one that expires 24 hours after generation.
 
-Assumptions: 
- - You are a developer with some experience or understanding of HTML, CSS, and Javascript languages.  
- - You have some experience or understanding of a VCS (Version Control System). You know what clone, commit, pull, and push mean.  
- - You know what the Node runtime environment is.
- - You have experience with databases.  Knowing MongoDB is a bonus!
- - You are a PC user.  All keyboard commands given will be based on PC.  You will need to look up the equivalent for Mac or Linux if you are using those operating systems.
+13.  You can start the app locally by using the command: nodemon index.js.  From there, you type in localhost/3000.  Make sure you've pulled the latest code from the branch you are on.
 
-1. It is recommend that you download and install an IDE that can handle HTML, Javascript, CSS, and EJS files at a minimum.  Microsoft Visual Studio, listed above, would be a good choice.  These remaining instructions will assume you are using Visual Studio. Installing to the default directory on your computer is fine.
-2. Next you should install git on your computer if you haven't already. See the link above to install it.  Once again, the default directory when you run the installer is fine.
-3. Since you found this repository from Github, you most likely have a Github account.  If you do not, you will need to create a new account on Github (see link above).  
-4. Next, you should clone our project repo (see the link under Our Websites). Make sure that when you select the directory to clone the repo to, you use a local drive on your computer (C: or D:). Do not use a network or cloud folder!  Cloning should always be done to your local machine!
-5. Before getting into the project, you need to install NodeJS as well as NPM (Node Package Manager).  See the links in the Technologies Used section above for instructions on how to do this.
-6. While not required, it is recommended that you install the following extensions in Visual Studio to make navigating the project easier: Github Copilot, Live Server, MongoDB for VS, and Tailwind CSS Intellisense.  You can look up online how to install extensions in Visual Studio.
-7. Next, open the terminal in Visual Studio using Ctrl + Shift + `.  This will open a powershell terminal within Visual Studio at the directory of the your cloned repo. 
-8. In the ternminal, run the command: npm init.  This will create a package.json and package-lock.json file in your directory. This is expected.
-8. In the terminal run the command: npm install.  This will start a install procedure where all of the necessary node modules needed for the website are installed in your repo directory in the node_modules folder.  This will also populate your package.json and package-lock.json files to match our project. If you are ever in doubt if you have the necessary modules, review these folders and you can manual install them using command: npm i <module name>
-10. While not required, it is recommend that you install nodemon using: npm i nodemon.  Nodemon is similar to node, but more advanced in that it will restart the server code if there are any changes to any of the files in the repo.
-11.  You can start the app locally by using the command: nodemon index.js.  From there, you type in localhost/3000
+14.  If you'd like to work on creating new features, it is recommended you create a new branch off of the dev branch where you can work on your own features without disturbing the code of others.
+
+15.  If you have any question, PLEASE REACH OUT!  The Contact Information below provides our first source of contact, but from there we can set you up with Discord and/or Slack if those are your preferred communication streams.  We use them all!
+
 
 ## Testing
 - [Testing Log](https://docs.google.com/spreadsheets/d/1s7U9PNt-C_CLHe35D92rPmViHjbnB3pAfi7hmVTAtvA/edit?usp=sharing)
