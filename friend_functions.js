@@ -1,7 +1,7 @@
 const Joi = require('joi');
-module.exports = { loadFriendsPage, loadFriendsPageWithRequestSearch, loadFriendsPageWithFriendSearch,searchFriendRequest , searchFriendDisplay, sendFriendRequest, searchFriendClear, acceptFriend, rejectFriend, deleteFriend, captureText}
+module.exports = { loadFriendsPage, loadFriendsPageWithRequestSearch, loadFriendsPageWithFriendSearch,searchFriendRequest , searchFriendDisplay, sendFriendRequest, searchFriendClear, acceptFriend, rejectFriend, deleteFriend}
 
-async function loadFriendsPage(req, res, userCollection, friendFunctions) {
+async function loadFriendsPage(req, res, userCollection) {
     if (req.session.authenticated) {
         // if logged in
         // gets user from DB based on session username
@@ -25,7 +25,7 @@ async function loadFriendsPage(req, res, userCollection, friendFunctions) {
     }
 }
 
-async function loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched) {
+async function loadFriendsPageWithRequestSearch(req, res, userCollection, searched) {
     if (req.session.authenticated) {
         // if logged in
         // gets user from DB based on session username
@@ -54,7 +54,7 @@ async function loadFriendsPageWithRequestSearch(req, res, userCollection, friend
     }
 }
 // when param is /display/someuser
-async function loadFriendsPageWithFriendSearch(req, res, userCollection, friendFunctions, searched) {
+async function loadFriendsPageWithFriendSearch(req, res, userCollection, searched) {
     if (req.session.authenticated) {
         // if logged in
         // gets user from DB based on session username
@@ -229,8 +229,3 @@ async function deleteFriend(req, res, userCollection) {
     res.redirect("/friends");
 }
 
-async function captureText() {
-    const externalInput = document.querySelector('[name="testUsername"]').value
-    console.log("test:", externalInput);
-    
-}
