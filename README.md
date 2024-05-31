@@ -15,70 +15,69 @@ Team Members:
 ## Technologies used
 
 Programming Languages:
-- [HTML](https://www.w3schools.com/html/)
-- [CSS](https://www.w3schools.com/css/)
-- [Javascript](https://www.w3schools.com/js/)
+- [HTML 5](https://www.w3schools.com/html/)
+- [W3.CSS 4.15](https://www.w3schools.com/css/)
+- [Javascript ECMAScript 2020](https://www.w3schools.com/js/)
 
 IDEs:
-- [Microsoft Visual Studio](https://visualstudio.microsoft.com/)
+- [Microsoft Visual Studio 2022](https://visualstudio.microsoft.com/)
 
 Runtime Environments:
-- [NodeJS](https://nodejs.org/en)
+- [NodeJS v20.13.1](https://nodejs.org/en)
 
 Database: 
-- [MongoDB](https://www.mongodb.com/)
+- [MongoDB 7.0 - 2023](https://www.mongodb.com/)
 
 Utilities:
-- [Zoom](https://zoom.us/)
-- [Slack](https://slack.com/)
+- [Zoom 5.17.11](https://zoom.us/)
+- [Slack 4.38.127](https://slack.com/)
 - [Figma](https://www.figma.com/)
 - [Trello](https://trello.com/)
-- [Discord](https://discord.com/)
+- [Discord 1.0.9011](https://discord.com/)
 
-- [NPM](https://www.npmjs.com/)
-- [Copilot](https://github.com/features/copilot)
-- [git](https://git-scm.com/)
+- [NPM 10.8.1](https://www.npmjs.com/)
+- [Copilot 1.197.0](https://github.com/features/copilot)
+- [git 2.45.1](https://git-scm.com/)
 
 Styling:
-- [Tailwind](https://tailwindcss.com/)
-- [Flowbite](https://flowbite.com/)
-- [ApexCharts](https://apexcharts.com/)
-- [Codepen](https://codepen.io/idifyable/pen/gmPjQK?editors=0010)
-- [CSS Scan](https://getcssscan.com/css-buttons-examples)
-- [Google Icons](https://fonts.google.com/icons)
-- [Google Fonts](https://fonts.google.com/)
+- [TailwindCSS 3.4.3](https://tailwindcss.com/)
+- [Flowbite 2.3.0](https://flowbite.com/)
+- [ApexCharts 3.49.1](https://apexcharts.com/)
 
 NPM Packages:
-- [apexcharts](https://www.npmjs.com/package/apexcharts)
-- [axios](https://www.npmjs.com/package/axios)
-- [bcrypt](https://www.npmjs.com/package/bcrypt)
-- [bottleneck](https://www.npmjs.com/package/bottleneck)
-- [connect-mongo](https://www.npmjs.com/package/connect-mongo)
-- [cors](https://www.npmjs.com/package/cors)
-- [dotenv](https://www.npmjs.com/package/dotenv)
-- [ejs](https://www.npmjs.com/package/ejs)
-- [express-session](https://www.npmjs.com/package/express-session)
-- [gitignore](https://www.npmjs.com/package/gitignore)
-- [joi](https://www.npmjs.com/package/joi)\
-- [mongodb](https://www.npmjs.com/package/mongodb)
-- [mongoose](https://www.npmjs.com/package/mongoose)
-- [node](https://www.npmjs.com/package/node)
-- [nodemon](https://www.npmjs.com/package/nodemon)
-- [readline](https://www.npmjs.com/package/readline)
-- [serve-favicon](https://www.npmjs.com/package/serve-favicon)
-- [tailwindcss](https://www.npmjs.com/package/tailwindcss)
+- [apexcharts 3.49.1](https://www.npmjs.com/package/apexcharts)
+- [axios 1.6.8](https://www.npmjs.com/package/axios)
+- [bcrypt 5.1.1](https://www.npmjs.com/package/bcrypt)
+- [bottleneck 2.19.5](https://www.npmjs.com/package/bottleneck)
+- [connect-mongo 5.1.0](https://www.npmjs.com/package/connect-mongo)
+- [cors 2.8.5](https://www.npmjs.com/package/cors)
+- [dotenv 16.4.5](https://www.npmjs.com/package/dotenv)
+- [ejs 3.1.10](https://www.npmjs.com/package/ejs)
+- [express-session 1.18.0](https://www.npmjs.com/package/express-session)
+- [gitignore 0.7.0](https://www.npmjs.com/package/gitignore)
+- [joi 17.13.1](https://www.npmjs.com/package/joi)
+- [mongodb 6.6.1](https://www.npmjs.com/package/mongodb)
+- [mongoose 8.3.5](https://www.npmjs.com/package/mongoose)
+- [node 20.13.1](https://www.npmjs.com/package/node)
+- [nodemon 3.1.2](https://www.npmjs.com/package/nodemon)
+- [readline 1.3.0 ](https://www.npmjs.com/package/readline)
+- [serve-favicon 2.5.0](https://www.npmjs.com/package/serve-favicon)
+- [tailwindcss 3.4.3](https://www.npmjs.com/package/tailwindcss)
 
 APIs:
-- [OpenWeatherMap](https://openweathermap.org/)
-- [ChatGPT](https://platform.openai.com/docs/overview)
-- [RiotAPI](https://developer.riotgames.com/)
+- [OpenWeatherMap 3.0](https://openweathermap.org/)
+- [ChatGPT 4.0.0](https://platform.openai.com/docs/overview)
+- [RiotAPI - Account-V1](https://developer.riotgames.com/)
+- [RiotAPI - League-V4](https://developer.riotgames.com/)
+- [RiotAPI - Match-V5](https://developer.riotgames.com/)
+- [RiotAPI - Summoner-V4](https://developer.riotgames.com/)
 
 Our Websites:
+- [GUD App](https://two800-202410-dtc14.onrender.com/)
 - [Github Repo](https://github.com/TommyJu/2800-202410-DTC14/tree/dev)
-- [Drive](https://drive.google.com/drive/folders/1zTf8fKFSBhaj_pGA8hPnRvvesX9evUct?usp=sharing)
-- [GUD App] (https://two800-202410-dtc14.onrender.com/)
-- [FigJam] (https://www.figma.com/board/UleQygiIcOihk7g9SDWQ10/2800-202410-DTC14?node-id=0-1&t=KrVbZLyiDg6QQdBQ-0)
-- [Trello] (https://trello.com/b/qmC5fiAS/2800-202410-dtc14)
+- [Google Drive](https://drive.google.com/drive/folders/1zTf8fKFSBhaj_pGA8hPnRvvesX9evUct?usp=sharing)
+- [FigJam](https://www.figma.com/board/UleQygiIcOihk7g9SDWQ10/2800-202410-DTC14?node-id=0-1&t=KrVbZLyiDg6QQdBQ-0)
+- [Trello](https://trello.com/b/qmC5fiAS/2800-202410-dtc14)
 
 ## Set up Instructions
 Assumptions: 
@@ -100,24 +99,24 @@ Assumptions:
 9. In the ternminal, run the command: npm init.  This will create a package.json and package-lock.json file in your directory. This is expected.
 10. In the terminal run the command: npm install.  This will start a install procedure where all of the necessary node modules needed for the website are installed in your repo directory in the node_modules folder.  This will also populate your package.json and package-lock.json files to match our project. If you are ever in doubt if you have the necessary modules, review these folders and you can manual install them using command: npm i <module name>
 11. While not required, it is recommend that you install nodemon using: npm i nodemon.  Nodemon is similar to node, but more advanced in that it will restart the server code if there are any changes to any of the files in the repo.
-12. Before you run the program for the first time, you will need to set up your local .env file.  This is where all necesary keys, passwords, and secrets are stored.  By running the "npm install" command, a .env file should have been created, but if not, just create a new file through Visual Studio or your IDE as a ".env", no name added to this.  Your .env file should have the following variable definitions:
-MONGODB_HOST=
-MONGODB_USER=
-MONGODB_PASSWORD=
-MONGODB_DATABASE=
-MONGODB_SESSION_SECRET=
-NODE_SESSION_SECRET=
-OPEN_WEATHER_API_KEY=
-OPENAI_API_KEY=
-DAILY_RIOT_API_KEY=
+12. Before you run the program for the first time, you will need to set up your local .env file.  This is where all necesary keys, passwords, and secrets are stored.  By running the "npm install" command, a .env file should have been created, but if not, just create a new file through Visual Studio or your IDE as a ".env", no name added to this.  Your .env file should have the following variable definitions as text:
+MONGODB_HOST=\
+MONGODB_USER=\
+MONGODB_PASSWORD=\
+MONGODB_DATABASE=\
+MONGODB_SESSION_SECRET=\
+NODE_SESSION_SECRET=\
+OPEN_WEATHER_API_KEY=\
+OPENAI_API_KEY=\
+DAILY_RIOT_API_KEY=\
 
-For the mongodb and Node values, contact Matthew in the Contact Information to get this information.  For the OpenWeatherAPI key and OpenAI key, contact Michael.  For the Riot API key, contact Ephraim. If you want, you can also request your own keys for each of the APIs, using the links given above in the Technologies Used section. Note, the only version of the Riot API key you can get without the project is one that expires 24 hours after generation.
+13. For the mongodb and Node values, contact Matthew in the Contact Information to get this information.  For the OpenWeatherAPI key and OpenAI key, contact Michael.  For the Riot API key, contact Ephraim. If you want, you can also request your own keys for each of the APIs, using the links given above in the Technologies Used section. Note, the only version of the Riot API key you can get without the project is one that expires 24 hours after generation.
 
-13.  You can start the app locally by using the command: nodemon index.js.  From there, you type in localhost/3000.  Make sure you've pulled the latest code from the branch you are on.
+14. You can start the app locally by using the command: nodemon index.js.  From there, you type in localhost/3000.  Make sure you've pulled the latest code from the branch you are on.
 
-14.  If you'd like to work on creating new features, it is recommended you create a new branch off of the dev branch where you can work on your own features without disturbing the code of others.
+15.  If you'd like to work on creating new features, it is recommended you create a new branch off of the dev branch where you can work on your own features without disturbing the code of others.
 
-15.  If you have any question, PLEASE REACH OUT!  The Contact Information below provides our first source of contact, but from there we can set you up with Discord and/or Slack if those are your preferred communication streams.  We use them all!
+16.  If you have any question, PLEASE REACH OUT!  The Contact Information below provides our first source of contact, but from there we can set you up with Discord and/or Slack if those are your preferred communication streams.  We use them all!
 
 
 ## Testing
@@ -266,21 +265,27 @@ Note: Recipes can also be added to the to-do list from the favourite recipes mod
 1. Click "Clear search"
 
 #### Delete a friend:
-1. Click "Delete" on the corresonding friend card.
+1. Click "Delete" on the corresponding friend card.
 
 ## References
 
+- [Goku Graphic]()
+- [Sonic and Knuckles Graphic]()
+- [Home Graphic]()
+- [Gameboy Graphic]()
+- [Pizza Graphic]()
+- [GUD Logo Graphic]()
+- [Favicon](https://www.favicon.cc/)
+- [Task Card Emojis](https://emoji.aranja.com/)
+- [League of Legends Resources - Data Dragon](https://developer.riotgames.com/docs/lol#data-dragon)
+- [Codepen - Weather Icons](https://codepen.io/idifyable/pen/gmPjQK?editors=0010)
+- [CSS Scan](https://getcssscan.com/css-buttons-examples)
+- [Google Icons](https://fonts.google.com/icons)
+- [Google Fonts](https://fonts.google.com/)
+
 ## AI Implementation
 
-## Contact Information
-Ephraim Hsu - ehsu18bcit@gmail.com\
-Tommy Ju - tju1@my.bcit.ca\
-Alzen Landayan - alzenlandayan1616@gmail.com\
-Michael McBride - mcbride1987@gmail.com\
-Matthew Yoon - myoon928@gmail.com
-
 ## Project Files
-
 ```
 .
 ├── README.md
@@ -449,3 +454,10 @@ Matthew Yoon - myoon928@gmail.com
 │       └── task_modal.ejs
 └── weather.js
 ```
+
+## Contact Information
+Ephraim Hsu - ehsu18bcit@gmail.com\
+Tommy Ju - tju1@my.bcit.ca\
+Alzen Landayan - alzenlandayan1616@gmail.com\
+Michael McBride - mcbride1987@gmail.com\
+Matthew Yoon - myoon928@gmail.com
