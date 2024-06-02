@@ -203,16 +203,16 @@ app.get('/friends', async (req, res) => {
   const searched = req.query.searched;
   // no param case
   if (!type || !searched) {
-    return friendFunctions.loadFriendsPage(req, res, userCollection, friendFunctions);
+    return friendFunctions.loadFriendsPage(req, res, userCollection);
   }
   //param case
   if (type == "requests") {
-    return friendFunctions.loadFriendsPageWithRequestSearch(req, res, userCollection, friendFunctions, searched);
+    return friendFunctions.loadFriendsPageWithRequestSearch(req, res, userCollection, searched);
   } else if (type == "display") {
-    return friendFunctions.loadFriendsPageWithFriendSearch(req, res, userCollection, friendFunctions, searched);
+    return friendFunctions.loadFriendsPageWithFriendSearch(req, res, userCollection, searched);
   } else {
     // catch faulty urls
-    return friendFunctions.loadFriendsPage(req, res, userCollection, friendFunctions);
+    return friendFunctions.loadFriendsPage(req, res, userCollection);
   }
 })
 
