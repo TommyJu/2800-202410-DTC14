@@ -13,6 +13,13 @@ Team Members:
 - Michael McBride
 - Matthew Yoon
 
+## Image Gallery
+![](preview-images/sign_in.png)
+![](preview-images/home.png)
+![](preview-images/tasks.png)
+![](preview-images/friends.png)
+![](preview-images/level_up.png)
+
 ## Technologies used
 
 Programming Languages:
